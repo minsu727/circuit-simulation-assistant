@@ -469,3 +469,17 @@ Evidence:
 - HTML width=800, 중앙 정렬, 높이 자동, 원본 이미지 링크를 통일했다. GitHub와 유사한 responsive image CSS를 적용한 로컬 Edge에서 desktop 1280px의 이미지 폭 800px, mobile 390px의 폭 358px를 확인했다. 5장 모두 로딩·종횡비·컨테이너 내 표시 및 펼치기 동작 통과. 실제 GitHub 배포 화면 검증은 아니다. 상대 링크/이미지 참조 41개 정상.
 - 시각 검토에서 개인 경로·사용자명·이메일·secret은 보이지 않았고 PNG metadata는 색상/gamma/DPI 항목이었다. 이미지 생성·편집 없이 원본 5개를 보존했다. DC curve screenshot은 기존 분압 fixture의 1.775 V 검증과 같은 사례로 주장하지 않는다. docs/screenshots/README.md를 실제 파일명/용도/검토 결과로 갱신했다.
 - 기존 source/tests/fixture/requirements 40개 및 이미지 원본 5개 SHA-256 동일. 소스/tests/requirements 변경, simulation, commit/push는 수행하지 않았다. 공개 문서는 README·스크린샷 안내·두 로그만 수정했다. 제공된 PNG 5개는 untracked 상태를 유지하며 staging하지 않았다.
+
+---
+
+## Prompt 011 — Development Blog Reconstruction
+
+### Request
+
+기존 원본 개발/prompt 로그를 바탕으로 GitHub 개발 블로그 00–08을 작성하고 기존 09와 README 구조를 보존한다. 단계별 scope·실패/수정·검증·한계를 설명하고 시점을 구분한다. 근거 없는 수치·사건·완료 주장은 제외하며 source/tests/requirements, simulation, commit/push는 건드리지 않는다.
+
+### Result / Validation
+
+- docs/devlog에 문제 정의·초기 UI·LTspice 연동·AC·Transient·DC·Parameter Sweep·Summary·AI architecture 9개 글을 추가하고 목차를 실제 링크로 갱신했다. 원본 section과 관련 공개 screenshot 4개를 연결했다. 프로젝트 README와 기존 09는 변경하지 않았다.
+- 공개 Markdown 18개, 상대 참조 113개(devlog 81개), 신규 글/목차 10페이지의 로컬 HTML DOM 렌더링을 확인했다. 상세 수치 39개의 원본 일치, 기존 파일 47개 SHA-256 동일, 두 로그의 과거 bytes 보존 및 Git diff whitespace 검사를 통과했다.
+- 당시 test 수·actual LTspice 기록을 인용했으며 이번에는 앱 tests나 simulation을 실행하지 않았다. 기록 없는 편집기/들여쓰기 사건을 생략하고 실제 API smoke·물리적 교차검증 미완료를 유지했다. Git commit/push는 수행하지 않았다.

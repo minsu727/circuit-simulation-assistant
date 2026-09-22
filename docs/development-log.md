@@ -847,3 +847,13 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - HTML width=800, 중앙 정렬, 높이 자동, 원본 이미지 링크를 통일했다. GitHub와 유사한 responsive image CSS를 적용한 로컬 Edge에서 desktop 1280px의 이미지 폭 800px, mobile 390px의 폭 358px를 확인했다. 5장 모두 로딩·종횡비·컨테이너 내 표시 및 펼치기 동작 통과. 실제 GitHub 배포 화면 검증은 아니다. 상대 링크/이미지 참조 41개 정상.
 - 시각 검토에서 개인 경로·사용자명·이메일·secret은 보이지 않았고 PNG metadata는 색상/gamma/DPI 항목이었다. 이미지 생성·편집 없이 원본 5개를 보존했다. DC curve screenshot은 기존 분압 fixture의 1.775 V 검증과 같은 사례로 주장하지 않는다. docs/screenshots/README.md를 실제 파일명/용도/검토 결과로 갱신했다.
 - 기존 source/tests/fixture/requirements 40개 및 이미지 원본 5개 SHA-256 동일. 소스/tests/requirements 변경, simulation, commit/push는 수행하지 않았다. 공개 문서는 README·스크린샷 안내·두 로그만 수정했다. 제공된 PNG 5개는 untracked 상태를 유지하며 staging하지 않았다.
+
+---
+
+## 2026-09-22 — Prompt 011 — Development Blog Reconstruction
+
+- 원본 로그와 SPEC/problem definition, README·검증·후속 Issue·공개 screenshot 안내를 바탕으로 docs/devlog의 00–08 글 9개를 작성하고 목차를 실제 00–09 링크와 설명으로 바꿨다. 문제·범위 결정·구현·검증·실패/수정·다음 단계로 재구성하며 원본 section을 연결했다. 기존 09 글과 프로젝트 README는 그대로 유지했다.
+- 최초 입력 화면과 후속 임시 parser, AC directive와 결과 계산, Parameter parser/존재 검증/실행, prompt builder와 provider 계층의 시점을 구분했다. MOSFET·synthetic·fixture 측정과 당시 test 수를 원본에 맞췄다. 확인되지 않은 들여쓰기/copy-paste/편집기 buffer 사건은 넣지 않았다. 실제 OpenAI API smoke 및 AC–Transient/DC–Transient 물리적 교차검증을 완료했다고 쓰지 않았다.
+- AC·Transient·DC·Parameter 글에 기존 공개 이미지 4개의 링크를 연결했다. 후속 UX 이후 화면임을 명시하고 DC 이미지를 분압/mirror 검증 결과와 혼동하지 않았다. 새 이미지 생성·편집은 없다.
+- 문서 검증: 공개 Markdown 18개에서 상대 링크/anchor/이미지 참조 113개 통과(그중 devlog 81개), 새 글 9개와 목차의 로컬 Edge HTML DOM 렌더링 통과. 상세 소수 수치 39개는 원본 로그의 동일 문자열을 대조했다. source/tests/fixtures/requirements 및 README·09·이미지를 포함한 기존 47개 파일 SHA-256 동일, 양쪽 원본 로그의 기존 bytes prefix 보존. Git diff whitespace 검사도 통과했다. 임시 검증 도구/HTML/결과는 공개 제외된 simulation_output/publication_audit에만 보관했다.
+- 이번에는 문서만 검증했다. 기존 unit/integration 및 simulation, LLM/API 호출을 재실행하지 않았고 기능·tests·requirements 수정, Git commit/push도 하지 않았다. 과거 검증 기록을 이번 실행 성과로 주장하지 않는다.
