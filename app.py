@@ -3,6 +3,7 @@ import json
 import hashlib
 import re
 from pathlib import Path
+from runtime_paths import is_packaged, locate_ltspice, MISSING_LTSPICE, LTspiceNotFoundError
 from simulation_runner import run_ltspice
 from ac_analysis import parse_request, build_ac_directive, apply_analysis_directive
 from ac_reference import suggest_ac_references
@@ -250,6 +251,8 @@ page_style()
 st.title("Circuit Simulation Assistant")
 st.write('Natural-language setup and deterministic LTspice analysis.')
 st.caption('Upload an LTspice schematic, describe your simulation, review the settings, and run only after approval.')
+if is_packaged() and locate_ltspice() is None:
+    st.warning(MISSING_LTSPICE)
 workflow_slot = st.empty()
 results_rendered = False
 
@@ -645,7 +648,7 @@ if st.session_state.get("show_conditions", False):
         except Exception as e:
             summary_error, simulation_failed = e, True
             raw_file, log_file = getattr(e, 'raw_file', None), getattr(e, 'log_file', None)
-            technical_error('LTspice simulation failed.', f'{type(e).__name__}: {e}')
+            technical_error(MISSING_LTSPICE if isinstance(e, LTspiceNotFoundError) else 'LTspice simulation failed.', f'{type(e).__name__}: {e}')
         else:
             if applied_directive and analysis_type == "AC":
                 st.subheader("Measured Results")

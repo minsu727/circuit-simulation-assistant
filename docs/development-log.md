@@ -919,3 +919,42 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - Preview는 로컬 단일 검증용이며 실제 simulation evidence를 생성하는 도구가 아니다. fixture에는 정상 point와 의도된 실패 point가 포함된다. 검증 결과 geometry JSON과 일회성 audit helper는 공개 제외 영역에 둔다.
 - 작은 화면에서는 정적 Matplotlib 이미지의 글씨도 함께 축소된다. 모든 임의의 긴 label/대량 overlay, 모든 브라우저를 검증한 것은 아니다. 저장 graph가 삭제되면 rerun에서는 복구 대신 안내한다. 실제 LLM API smoke와 물리적 cross-validation 미완료 한계는 그대로다.
 - 다음 screenshot 후보는 AC review/suggestion, AC metrics/response, Parameter comparison이다. 이번에는 README 및 기존 이미지 교체, 새 분석 기능, 실제 LTspice/API 실행을 하지 않았다.
+
+---
+
+## 2026-09-29 — Prompt 014A — Windows Portable Packaging
+
+### Architecture / scope
+
+- `launcher.py`를 별도 entrypoint로 추가하고 PyInstaller **onedir / console**로 패키징했다. Python 3.13.5 x64, PyInstaller 6.22.3, hooks-contrib 2026.7, Streamlit 1.63.0을 사용했다. `requirements-build.txt`는 build-only이며 기존 core 및 optional LLM requirements는 변경하지 않았다.
+- Launcher는 설치된 Streamlit 코드에서 확인한 `bootstrap.load_config_options()`와 `bootstrap.run()`을 같은 프로세스의 main thread에서 호출한다. shell의 streamlit/Python 실행 파일을 찾거나 별도 서버 subprocess를 만들지 않는다. 127.0.0.1에만 bind하고 8501부터 빈 포트를 선택한다. Proxy를 사용하지 않는 health 응답 확인 후 기본 browser를 열며 60초 timeout, 실패 시 수동 URL 안내, 종료 신호와 log handler 정리를 제공한다. 가짜 준비 sleep/진행률은 없다.
+- `runtime_paths.py`는 unpackaged/frozen resource와 writable data를 구분한다. Frozen resource는 `_MEIPASS`, 실행 데이터는 `%LOCALAPPDATA%/CircuitSimulationAssistant/`를 사용한다. 이 폴더의 simulation_input/output과 logs를 쓰며 원본·bundle resource는 수정하지 않는다. 개발 실행의 프로젝트 내부 저장 위치는 그대로다. Launcher 로그는 startup/readiness/browser/stop 상태와 exception 종류만 기록하며 환경 값·API key·회로 본문을 기록하지 않는다.
+- 기존 파일 수정은 `simulation_runner.py`의 실행 데이터 root 및 packaged LTspice 구성 연결, `app.py`의 packaged missing-LTspice 안내와 오류 구분에 한정했다. 승인 검사가 먼저 실행되며 parser/계산/engine 실행 절차/Summary/provider/기존 UI 기능은 보존했다. 분석 알고리즘 변경이나 LLM/API 호출은 없다.
+
+### LTspice / optional dependencies
+
+- `LTSPICE_EXECUTABLE` 명시 경로 → 사용자 LocalAppData의 ADI/LTspice → Program Files의 ADI 및 구버전 LTC → PATH 순서로 탐색한다. 잘못된 명시 경로는 다른 프로그램으로 조용히 대체하지 않는다. exe 파일을 `Path`로 공식 `LTspice.create_from()`에 전달해 공백/문장부호를 shell argument로 해석하지 않는다. 현재 PC의 사용자별 LTspice **26.0.1.0** 설치를 실제 탐지했다. 개인 설치 경로는 코드/공개 문서에 넣지 않았다.
+- 없으면 앱을 열고 설치/환경 변수 설정 방법을 표시한다. 승인 후 실행을 눌러도 복사본/결과 생성 전에 명확한 missing-dependency 오류로 처리한다. LTspice 자체와 private schematic/model을 배포하지 않는다.
+- Core build에서는 OpenAI SDK를 제외한다. 기존 lazy import 덕분에 초기 UI와 simulation은 SDK 없이 동작하고 mock/provider 구조는 유지한다. 실제 OpenAI provider 사용은 optional SDK를 설치한 개발 실행으로 안내하며 core portable의 지원 범위로 주장하지 않는다.
+
+### Build / 발생한 문제와 해결
+
+- `powershell -ExecutionPolicy Bypass -File scripts/build_windows.ps1`로 빌드한다. 스크립트는 버전 확인, workspace 안의 정확한 generated 하위 폴더 확인 후 정리, PyInstaller 실행, exe 존재 확인을 수행한다. `CircuitSimulationAssistant.spec`는 유지하는 source config이며 `build/`, `dist/`는 ignore한다. Streamlit data/static assets와 metadata, Matplotlib Agg 및 공식 dependency hooks를 사용하고 무조건적인 collect-all은 하지 않았다.
+- 첫 build의 exe/server는 시작됐지만 실제 UI 요청에서 Streamlit AST가 삽입하는 `streamlit.runtime.scriptrunner.magic_funcs` 누락이 발견됐다. 해당 모듈과 data로 동적 실행되는 `app.py`의 dependency 분석을 hidden import로 명시해 재빌드했다. 다른 모듈을 추측으로 대량 추가하지 않았다.
+- 초기 shell stderr 리디렉션은 성공 로그에도 외부 exit 1을 보고해, 최종 빌드는 Python subprocess로 stdout/stderr와 실제 process exit를 수집했다. **최종 build exit 0**. `dist/CircuitSimulationAssistant/CircuitSimulationAssistant.exe`와 `_internal/` 생성 확인. 최종 폴더는 2,294개 파일, 289,771,440 bytes(약 276 MiB)다.
+- Smoke 도구에서 Windows 환경 변수 대소문자 처리와 RAW 선택을 보정했다. 처음 `.op.raw`를 선택했고, 이를 제외한 뒤에도 `RawRead.get_axis()`를 lazy-load 전에 호출해 실패했다. 기존 앱의 `read_ac_result`와 동일하게 frequency trace를 명시적으로 읽도록 도구만 수정했다. 앱의 실제 AC 계산/표시는 이미 성공했으며 계산 코드를 변경하지 않았다.
+
+### Actual executable validation / regression
+
+- `tests/verify_portable.py`는 생성된 exe를 임시 CWD에서 실행하고 PATH를 System32만 남긴다. PYTHONPATH/PYTHONHOME/VIRTUAL_ENV/API key 변수를 제거해 프로젝트 CWD나 개발 Python 경로를 직접 사용하지 않는다. Playwright/Edge는 검증 도구에만 필요하며 bundle에는 포함하지 않는다. 별도 clean Windows VM에서 Python을 제거한 실험은 수행하지 않았다.
+- `--open-browser` 실행에서 health 준비 후 기본 browser 열기 요청이 OS에 수락됨(True)을 launcher 로그로 확인했다. Headless Edge에서는 실제 executable의 초기 UI/upload, 경로 노출 없음, AC 요청 parsing, 10 Hz/1 MHz review, 승인 전 disabled, 명시 승인 후 Run, 결과와 graph를 확인했다. Production UI를 mock으로 대체하지 않았다.
+- `python tests/verify_portable.py --simulate` 최종 **exit 0**. 공개 equal-resistor divider fixture에서 `.ac dec 100 10 1Meg` 적용, 실제 LTspice AC 실행, non-empty RAW/LOG와 graph 생성 확인. RAW frequency **10–1,000,000 Hz**, `V(out)/V(in)` gain **-6.020599913279624 dB**, UI **-6.021 dB**로 이론적 0.5 V/V와 일치했다. Flat response의 bandwidth는 sweep 내 미검출이며 MOSFET 결과와 혼동하지 않는다. 원본 fixture bytes 보존. 검증 도구 수정에 따른 재실행을 포함해 실제 fixture AC run 3회였고 마지막 전체 smoke가 통과했다.
+- `python tests/verify_portable.py --missing-ltspice`도 **exit 0**. 존재하지 않는 명시 exe 설정에서 초기 안내, parser/review, 승인 후 요청의 crash 없는 차단, simulation_output 추가 없음 확인. 정상/누락 두 경우 모두 CTRL_BREAK로 launcher **exit 0**, 이후 health 접속 불가로 서버 정지 확인. 서버는 같은 process라 별도 orphan Streamlit subprocess가 없다. Browser tab 닫기만으로 종료하는 기능은 추가하지 않았다.
+- 기존 **151 + 신규 15 = 166 tests 모두 통과(243.118초, exit 0)**. `tests/test_portable.py`는 port fallback, 내부 URL, resource/CWD/data 분리, LTspice 일반/명시/누락 경로, Path 전달, 승인 우선, readiness timeout, browser 실패/중단을 mock으로 검증한다. 신규 unit test는 실제 browser/server/simulator를 실행하지 않는다. `app.py` 포함 변경/신규 Python 6개 문법 검사 통과. 기존 tests·parser·계산·Summary/provider·requirements 변경 없음.
+
+### Public safety / limitations / next step
+
+- Bundle archive에서 app/필수 모듈/Streamlit magic import와 OpenAI SDK 제외를 확인했다. Bundle app.py는 현재 source와 byte-identical이다. exe는 launcher 하나뿐이며 .env/secrets.toml/private local script/ASC/RAW/LOG는 bundle에 없다. 공개 변경 source/config에서 credential·개인 절대 경로·email 패턴 일치 없음. 기존 로그 내용을 보존하고 이번 기록만 추가했다.
+- `git diff --check` 통과, staged files 0개, build/dist/venv/simulation_output tracked 파일 0개. Audit helper·build/test/geometry 로그는 공개 제외 영역에 둔다. README에 build/run/종료, LTspice 설정, 데이터 위치와 optional SDK 정책을 최소 추가했으며 기존 screenshot과 validation 수치는 바꾸지 않았다.
+- Windows x64/현재 pinned 환경 검증이며 bootstrap은 내부 API라 Streamlit 변경 시 재검증이 필요하다. 최초 font cache 생성으로 첫 화면 로딩이 느릴 수 있다. 포트 확인과 실제 bind 사이의 짧은 race에서는 재실행이 필요할 수 있다. 기존 외부 model/include 제약, 현재 분석 범위는 그대로다. 진행 중 LTspice task의 cancel/resume 기능은 추가하지 않았다.
+- Console launcher 유지, installer/MSI/signing/updater 및 SmartScreen 우회 없음. Actual OpenAI smoke, GitHub Release upload, commit/push도 하지 않았다. 다음 Prompt 014B에서 검증된 onedir 폴더를 installer로 묶는 작업을 검토할 수 있다.

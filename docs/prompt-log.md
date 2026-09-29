@@ -514,3 +514,20 @@ Evidence:
 - localhost Headless Edge에서 1280px/390px의 14개 UI 상태 통과. 83% 중앙 graph, 종횡비, 좁은 화면 metric 세로 배치/overflow 없음, 경로·JSON 기본 숨김, 추천·승인·no-key 및 rerun을 확인했다. 브라우저는 synthetic 결과와 차단된 runner/API를 사용한다. 실제 app.py health/root HTTP 200 및 실제 MOSFET ASC 읽기 전용 후보/원본 보존 검사도 통과했다. 실제 LTspice/API나 별도 수동 시각 검수 완료 주장 없음.
 - 신규 `tests/test_ui_polish.py` 외 fixture/preview/browser verification 3개는 반복 가능한 공개 검증 자산으로 유지한다. 단발 debug 출력은 제거하고 geometry/audit는 ignored simulation_output에 남긴다. 브라우저 검증만 선택적 Playwright/Edge가 필요하며 requirements는 그대로다.
 - 기존 파일 47개 hash 동일, README/공개 screenshot 5장 보존, 원본 로그 prefix 보존. 공개 변경 범위의 secret/개인 절대경로 패턴 미발견, whitespace 검사 통과, staged/generated tracked 파일 없음. 다음 screenshot 후보는 AC review/result와 Parameter comparison이며 파일 생성·교체 및 Git commit/push는 하지 않았다.
+
+---
+
+## Prompt 014A — Windows Portable Packaging
+
+### Request
+
+기존 simulation/analysis/parser/approval/원본 보존을 유지하며 Python 개발환경 없이 실행하는 Windows portable 폴더를 만든다. 별도 launcher와 PyInstaller onedir, localhost readiness 후 browser open, 포트 대체, 종료/로그, 별도 LTspice 탐지를 제공한다. 실제 build 및 exe 검증, 기존 151개 회귀와 신규 unit tests, 공개 안전성·문서화를 수행한다. Installer/LTspice/keys 포함, 실제 OpenAI smoke, signing/release upload, Git commit/push는 제외한다.
+
+### Result / Validation
+
+- `launcher.py`, `runtime_paths.py`, maintained `.spec`, `scripts/build_windows.ps1`, `requirements-build.txt`를 추가했다. 기존 app/runner 변경은 packaged data root 및 LTspice 탐지/누락 안내 연결뿐이다. 서버는 launcher와 같은 process에서 127.0.0.1로 실행하며 readiness 확인 후 browser를 연다. 실행 데이터·로그는 LocalAppData, 개발 실행은 기존 project 폴더를 사용한다.
+- Python 3.13.5 x64 / PyInstaller 6.22.3 / hooks 2026.7 / Streamlit 1.63.0. 최초 실제 UI의 magic_funcs 누락을 숨은 import와 동적 app dependency 분석으로 보정했다. 최종 build **exit 0**, `dist/CircuitSimulationAssistant/` 생성(약 276 MiB). Streamlit static/metadata 포함, OpenAI SDK·LTspice·개인 회로·secret 파일 제외.
+- 실제 exe를 별도 CWD와 개발 Python 경로를 제거한 환경에서 실행했다. localhost health/초기 UI/upload/review/승인 gate, OS의 기본 browser open 요청 수락, 정상 종료와 서버 정지를 확인했다. 별도 Python 미설치 clean VM 검증은 아니다.
+- 공개 분압 fixture의 actual AC smoke 통과: `.ac dec 100 10 1Meg`, RAW 10 Hz–1 MHz, gain -6.020599913279624 dB(UI -6.021 dB), non-empty RAW/LOG, graph, 원본 보존. Verification의 `.op.raw` 및 lazy-loading 선택 오류만 고쳐 재실행했다. 앱 계산 변경 없음. LTspice 26.0.1 탐지와 missing-LTspice의 crash 없는 실행 차단도 확인했다. 두 최종 smoke 모두 CTRL_BREAK 종료 exit 0 및 서버 정지.
+- 기존 151 + 신규 15 = **166 tests 통과**, 변경/신규 Python 문법 검사 통과. 기존 계산/parser/Summary/provider/tests 및 core/LLM requirements 유지. `tests/verify_portable.py`는 선택적 Playwright/Edge로 실제 exe를 검증하며 `--simulate`가 있을 때만 실제 fixture를 실행한다.
+- README와 두 로그에 실행 정책·실제 결과·내부 bootstrap 버전/console/clean VM 미검증 한계를 기록했다. Whitespace 검사 통과, staged 파일 0개, build/dist/venv/simulation_output 공개 제외, 새 개인 절대경로/secret 패턴 미발견. Screenshot 교체·installer·API smoke·release upload·Git commit/push 없음.

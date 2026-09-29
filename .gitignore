@@ -41,3 +41,7 @@ htmlcov/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Portable packaging output (the maintained .spec is source configuration)
+/build/
+/dist/

@@ -3,8 +3,9 @@ from uuid import uuid4
 from ac_analysis import build_ac_directive, apply_analysis_directive
 from transient_analysis import build_transient_directive
 from dc_analysis import build_dc_directive, validate_sweep_source
+from runtime_paths import simulation_data_root, is_packaged, configure_ltspice
 
-PROJECT_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = simulation_data_root()
 
 
 def run_ltspice(uploaded_file, ac_conditions=None, *, transient_conditions=None, dc_conditions=None,
@@ -14,6 +15,8 @@ def run_ltspice(uploaded_file, ac_conditions=None, *, transient_conditions=None,
     if uploaded_file is None:
         raise ValueError("Please upload an LTspice .asc file first.")
     from PyLTSpice import SimRunner, SpiceEditor, AscEditor, LTspice
+    if is_packaged():
+        configure_ltspice()
     if component_update is not None:
         from parameter_sweep import validate_asc_component, component_value
         component, value = component_update

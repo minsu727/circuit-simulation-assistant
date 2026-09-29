@@ -117,6 +117,31 @@ OpenAI provider를 사용할 때만 core 설치에 다음을 추가합니다. �
 
 실제 provider 사용 시에는 `LLM_PROVIDER=openai`와 `OPENAI_API_KEY`를 환경변수 또는 로컬 `.streamlit/secrets.toml`로 설정합니다. 실제 키는 저장소에 넣지 않습니다. 앞서 설정한 mock provider는 자동으로 변경되지 않습니다.
 
+## Windows Portable Build
+
+개발 환경 실행은 기존처럼 `streamlit run app.py`를 사용합니다. Windows x64 portable build는 Python runtime을 포함한 **폴더 전체**를 복사해 실행하며, **LTspice는 별도로 설치해야 합니다**. GitHub Release binary는 아직 업로드하지 않았습니다.
+
+빌드 개발 환경에 기존 core requirements와 build-only 도구를 설치한 뒤 실행합니다:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt -r requirements-build.txt
+powershell -ExecutionPolicy Bypass -File scripts/build_windows.ps1
+```
+
+```text
+dist/CircuitSimulationAssistant/
+  CircuitSimulationAssistant.exe
+  _internal/                     Python runtime, libraries, app resources
+```
+
+- `CircuitSimulationAssistant.exe`를 실행하면 사용 가능한 localhost 포트(8501 우선)를 선택하고 서버 준비 후 기본 브라우저를 엽니다. 자동 열기가 실패하면 console의 URL을 직접 엽니다.
+- Console launcher를 열어 두고 사용합니다. 종료는 `Ctrl+C` 또는 launcher 창 닫기이며, browser tab만 닫으면 서버는 유지됩니다. `--no-browser` 옵션으로 자동 열기를 생략할 수 있습니다.
+- LTspice는 사용자별/Program Files의 일반 설치 위치와 PATH에서 탐지합니다. 비표준 설치는 `LTSPICE_EXECUTABLE` 환경 변수에 exe 전체 경로를 지정하고 재시작합니다. 잘못된 명시 경로는 다른 binary로 자동 대체하지 않습니다.
+- 입력 복사본·결과·launcher 로그는 `%LOCALAPPDATA%/CircuitSimulationAssistant/`의 `simulation_input/`, `simulation_output/`, `logs/`에 저장합니다. 실행 폴더나 원본 회로를 덮어쓰지 않습니다. Developer run의 프로젝트 내부 저장 방식은 유지합니다.
+- 이 core portable build에는 OpenAI SDK와 LTspice를 포함하지 않습니다. Mock은 유지하며 실제 OpenAI provider는 기존 optional `requirements-llm.txt`를 설치한 개발 환경에서 사용합니다. API key를 배포 파일에 넣지 않습니다.
+- PyInstaller 6.22.3 onedir / Streamlit 1.63.0 bootstrap을 사용합니다. Bootstrap은 내부 API이므로 버전 변경 시 재검증해야 합니다. Installer, signing, 자동 업데이트는 포함하지 않습니다.
+- 빌드 후 선택적 Playwright/Edge 검증은 `python tests/verify_portable.py`로 수행합니다. `--simulate`는 공개 저항 분압 fixture를 실제 LTspice로 실행하고, `--open-browser`는 기본 browser 자동 열기를 확인합니다. `--missing-ltspice`는 누락 안내와 review를 검증합니다. 검증 로그는 Git에서 제외됩니다.
+
 ## Project Structure
 
 ```text
