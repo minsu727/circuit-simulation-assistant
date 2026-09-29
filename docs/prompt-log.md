@@ -483,3 +483,18 @@ Evidence:
 - docs/devlog에 문제 정의·초기 UI·LTspice 연동·AC·Transient·DC·Parameter Sweep·Summary·AI architecture 9개 글을 추가하고 목차를 실제 링크로 갱신했다. 원본 section과 관련 공개 screenshot 4개를 연결했다. 프로젝트 README와 기존 09는 변경하지 않았다.
 - 공개 Markdown 18개, 상대 참조 113개(devlog 81개), 신규 글/목차 10페이지의 로컬 HTML DOM 렌더링을 확인했다. 상세 수치 39개의 원본 일치, 기존 파일 47개 SHA-256 동일, 두 로그의 과거 bytes 보존 및 Git diff whitespace 검사를 통과했다.
 - 당시 test 수·actual LTspice 기록을 인용했으며 이번에는 앱 tests나 simulation을 실행하지 않았다. 기록 없는 편집기/들여쓰기 사건을 생략하고 실제 API smoke·물리적 교차검증 미완료를 유지했다. Git commit/push는 수행하지 않았다.
+
+---
+
+## Prompt 012 — AC Reference/Input Auto Suggestion
+
+### Request
+
+첫 AC 실행의 Reference 수동 입력을 줄이기 위해 업로드 ASC의 명확한 AC excitation과 연결된 label만 deterministic하게 제안한다. 명시 입력·같은 회로/AC의 이전 성공 조건이 우선하고, 후보 선택 후에도 기존 Review/Approve/Run을 유지한다. 여러 source/label 또는 미지원 연결은 임의 선택하지 않는다. 원본/engine/기존 기능을 보존하며 실제 schematic의 parser/UI와 전체 regression을 검증한다. LLM/자동 실행/full topology reconstruction/commit/push는 제외한다.
+
+### Result / Validation
+
+- `ac_reference.py` 추가, `app.py`에 AC Reference candidate 버튼 연결. `tests/test_ac_reference.py`와 읽기 전용 실제 회로 검증용 `tests/verify_ac_reference.py` 추가. 기존 trace 선택/approval callback과 previous-condition defaults를 재사용했다.
+- 표준 voltage.asy의 실제 pin 좌표를 확인해 R0, nonzero numeric AC, grounded negative pin, positive pin의 wire/FLAG label을 제안한다. 여러 후보는 직접 선택, 불명확하거나 미지원인 경우 안내와 수동 입력을 유지한다. Reference가 이미 있으면 덮어쓰지 않는다.
+- 신규 21개 및 전체 **142개 tests 통과**, Python exit 0. 문법 검사와 Streamlit health/root HTTP 200 통과. 기존 MOSFET ASC의 `V2 / AC 1 / Vin`에서 `V(vin)` 후보와 명시 선택·재승인·원본 bytes 보존·실행/파일 생성 없음 확인. 실제 LTspice/API는 재실행하지 않았다.
+- 전체 unit/AppTest로 AC/Transient/DC/Parameter/Summary/AI architecture·기존 UX 회귀를 확인했다. 회전/custom/current/floating/복잡한 연결/표현은 limitation으로 기록했다. Git diff whitespace 검사 통과, staged files 없음, 기존 engine/계산/requirements/README 무변경. Git commit/push 없음.

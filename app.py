@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from simulation_runner import run_ltspice
 from ac_analysis import parse_request, build_ac_directive, apply_analysis_directive
+from ac_reference import suggest_ac_references
 from ac_result_analysis import read_ac_result, MissingTraceError, format_frequency, gain_figure
 from transient_analysis import is_transient_request, parse_transient_request, build_transient_directive, MEASUREMENTS
 from transient_result_analysis import read_transient_result, waveform_figure, format_value
@@ -43,6 +44,24 @@ def remember_successful_review(analysis):
 def accept_trace(field, candidate):
     st.session_state[field] = candidate
     reset_approval()
+
+
+def show_ac_reference_suggestions():
+    # Explicit edits and same-circuit successful history already populate this
+    # field. Never overwrite either; candidates require a separate user click.
+    if st.session_state.get('review_reference', '').strip() or circuit_file is None:
+        return
+    hints = suggest_ac_references(circuit_file.getvalue())
+    for notice in hints.notices:
+        st.caption(notice + ' Manual reference entry is available.')
+    if hints.candidates:
+        st.caption(('Possible AC references' if hints.ambiguous else 'Suggested from AC excitation')
+                   + ': ' + ', '.join(hints.candidates))
+        if hints.ambiguous:
+            st.caption('Multiple sources or labels may be involved. No reference has been selected.')
+        for candidate in hints.candidates:
+            st.button(f'Use suggestion: {candidate}', key=f'ac_reference_{candidate}',
+                      on_click=accept_trace, args=('review_reference', candidate))
 
 
 def show_trace_suggestions(available, source='circuit labels'):
@@ -360,6 +379,7 @@ if st.session_state.get("show_conditions", False):
             placeholder="Enter the input voltage trace name from your circuit",
             on_change=reset_approval
         )
+        show_ac_reference_suggestions()
 
         sweep_type = st.selectbox(
             "Sweep Type",

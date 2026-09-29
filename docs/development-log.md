@@ -857,3 +857,33 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - AC·Transient·DC·Parameter 글에 기존 공개 이미지 4개의 링크를 연결했다. 후속 UX 이후 화면임을 명시하고 DC 이미지를 분압/mirror 검증 결과와 혼동하지 않았다. 새 이미지 생성·편집은 없다.
 - 문서 검증: 공개 Markdown 18개에서 상대 링크/anchor/이미지 참조 113개 통과(그중 devlog 81개), 새 글 9개와 목차의 로컬 Edge HTML DOM 렌더링 통과. 상세 소수 수치 39개는 원본 로그의 동일 문자열을 대조했다. source/tests/fixtures/requirements 및 README·09·이미지를 포함한 기존 47개 파일 SHA-256 동일, 양쪽 원본 로그의 기존 bytes prefix 보존. Git diff whitespace 검사도 통과했다. 임시 검증 도구/HTML/결과는 공개 제외된 simulation_output/publication_audit에만 보관했다.
 - 이번에는 문서만 검증했다. 기존 unit/integration 및 simulation, LLM/API 호출을 재실행하지 않았고 기능·tests·requirements 수정, Git commit/push도 하지 않았다. 과거 검증 기록을 이번 실행 성과로 주장하지 않는다.
+
+---
+
+## 2026-09-22 — Prompt 012 — AC Reference/Input Auto Suggestion
+
+### User testing finding / 구현
+
+- 첫 AC 실행에서는 이전 성공 조건이 없어 Reference/Input을 직접 입력해야 했다. `ac_reference.py`에 업로드 bytes만 읽는 deterministic 후보 탐지기를 추가했다. 기존 `app.py`의 AC Reference 아래에 작은 candidate/caption UI를 붙였으며 단일 AC와 Parameter AC review에서 공통 사용한다. 기존 `accept_trace()`와 `reset_approval()`을 재사용했다. Parser/계산/실행/Summary/LLM 모듈과 ui_helpers의 기존 조건 재사용은 변경하지 않았다.
+- 설치된 LTspice 표준 `lib/sym/voltage.asy`를 읽어 positive pin=(0,16), negative pin=(0,96), SpiceOrder=1/2를 확인했다. 기존 실제 MOSFET ASC의 V2는 `SYMBOL voltage 32 160 R0`, `Value2 AC 1`, 양극 위치의 `FLAG 32 176 Vin`, 음극의 ground FLAG를 가진다. 좌표를 추측하거나 Vin이라는 이름만 보고 선택하지 않았다.
+- Value/Value2/SpiceLine/SpiceLine2의 numeric nonzero AC magnitude를 탐지한다. DC/SINE만 있거나 AC=0이면 후보가 없다. 표준 voltage/R0의 양극에서 WIRE endpoint/T-junction 및 FLAG 연결만 따라가고 소자를 관통해 topology를 추론하지 않는다. 음극은 ground로 명확히 확인되어야 한다. 확인한 label은 casefold해 `V(vin)` 형식으로 제안한다. 파일 편집, netlist 생성, simulator/API 호출은 하지 않는다.
+
+### Priority / ambiguity / approval
+
+- 현재 요청에서 명시했거나 사용자가 수정한 Reference → 같은 circuit/AC의 이전 성공 Reference → schematic 후보 → 수동 입력 순서다. 기존 로직이 채운 Reference가 비어 있지 않으면 새 후보 UI를 표시하지 않으며 절대 덮어쓰지 않는다. 후보가 하나여도 자동 입력하지 않고 `Use suggestion: V(vin)` 클릭이 필요하다.
+- 여러 AC source/연결 label이면 가능한 후보와 ambiguity를 표시하고 사용자가 선택한다. Source는 있으나 label이 없거나 연결/표현이 지원 범위 밖이면 이유를 안내하고 수동 입력을 유지한다. 일부 source만 해석돼도 전체를 단일 명확한 후보로 간주하지 않는다. Ground node나 불명확한 crossing에서 trace를 만들지 않는다.
+- 후보 선택은 기존 callback으로 단일/Parameter approval을 모두 해제한다. 사용자가 Review/Approve/Run 순서를 다시 거쳐야 한다. 기존 Target의 `Did you mean ...?` 추천과 입력·업로드·조건 변경 시 승인 해제도 유지했다.
+
+### 실제 검증 / 문제와 해결
+
+- `python -m py_compile app.py ac_reference.py tests/test_ac_reference.py tests/verify_ac_reference.py` 통과.
+- 새 `tests/test_ac_reference.py` 21개 통과(순수 parsing/priority 14, AppTest 7). 단일/다중 source, DC/SINE/zero AC 제외, 연결되지 않은 Vin 제외, case/encoding, wire/T-junction, multiple labels, crossing/diagonal/floating/rotation/custom/current/미해석 magnitude, malformed input, 명시값/이전값 우선, 후보 선택과 재승인, Target 추천, 다른 회로·analysis 분리 및 Parameter approval을 검사했다.
+- 기존 전체와 신규 tests 합계 **142개 모두 통과(121 + 21)**. 처음 PowerShell stderr 리디렉션 실행은 unittest가 OK였지만 shell 종료 코드 1로 보고돼, Python subprocess가 직접 로그와 returncode를 수집하도록 재확인했다. 최종 **142 tests, 42.486초, Python exit 0**. 테스트 실패나 계산 알고리즘 수정은 없었다. 최종 로그: `simulation_output/prompt_012_unit_tests_verified.log`.
+- `tests/verify_ac_reference.py --expected V(vin)`로 기존 로컬 MOSFET ASC를 AST 설정에서 읽어 검증했다. 첫 사용자 예문에서 source=V2, candidate=V(vin), 선택 전 Reference 빈칸/Run 비활성, 선택 후 V(vin)/재승인 필요를 확인했다. 원본 ASC bytes 동일, simulation_input/output 파일 추가 없음, simulator/Parameter runner/API mock 호출 0회. 원본 경로나 모델 파일 내용은 새 공개 문서/코드에 넣지 않았다.
+- 임시 localhost Streamlit 서버 health/root HTTP 200을 확인한 후 해당 서버만 종료했다. 기존 AC/Transient/DC/Parameter/Summary/AI provider·mock/UX unit 및 AppTest 회귀는 전체 suite로 확인했다. 실제 LTspice simulation 및 OpenAI smoke는 이번 범위에서 재실행하지 않았다.
+
+### Limitation / final checks
+
+- v1 후보 탐지는 표준 independent voltage symbol의 R0만 지원한다. Current source는 AC 존재를 알리되 input 방향을 임의 확정하지 않는다. 회전·mirror/custom symbol, floating/differential source, parameter-expression AC magnitude, 복잡한 topology는 수동 검토 대상이다. 숫자로 시작하는 label/복잡한 label 문법도 추측하지 않는다. Wire와 symbol은 각각 최대 1000개까지 검사한다.
+- Endpoint로 확인되지 않는 interior crossing과 diagonal 연결은 보수적으로 수동 입력 안내한다. ASC label 후보는 RAW trace 존재나 적절한 입력 선택을 보증하지 않으며 기존 RAW 검증은 그대로 유지한다. Full netlist extraction, LLM input selection, 자동 실행 기능은 추가하지 않았다.
+- `git diff --check` 통과. Staged files 없음(simulation_output 포함), 새 secret/개인 절대 경로 없음. 기존 ASC fixtures와 engine/계산/requirements/README는 변경하지 않았다. 두 원본 로그에 이번 기록만 추가했으며 Git commit/push는 수행하지 않았다.
