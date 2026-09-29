@@ -887,3 +887,35 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - v1 후보 탐지는 표준 independent voltage symbol의 R0만 지원한다. Current source는 AC 존재를 알리되 input 방향을 임의 확정하지 않는다. 회전·mirror/custom symbol, floating/differential source, parameter-expression AC magnitude, 복잡한 topology는 수동 검토 대상이다. 숫자로 시작하는 label/복잡한 label 문법도 추측하지 않는다. Wire와 symbol은 각각 최대 1000개까지 검사한다.
 - Endpoint로 확인되지 않는 interior crossing과 diagonal 연결은 보수적으로 수동 입력 안내한다. ASC label 후보는 RAW trace 존재나 적절한 입력 선택을 보증하지 않으며 기존 RAW 검증은 그대로 유지한다. Full netlist extraction, LLM input selection, 자동 실행 기능은 추가하지 않았다.
 - `git diff --check` 통과. Staged files 없음(simulation_output 포함), 새 secret/개인 절대 경로 없음. 기존 ASC fixtures와 engine/계산/requirements/README는 변경하지 않았다. 두 원본 로그에 이번 기록만 추가했으며 Git commit/push는 수행하지 않았다.
+
+---
+
+## 2026-09-29 — Prompt 013 — Final UI Polish
+
+### UX 문제와 변경 범위
+
+- 기존의 긴 입력 폼, 결과와 개발용 정보의 혼재, 승인 상태 안내 부족을 정리했다. 중단 직전의 구현을 보존하고 남은 검증·legend 수정·문서화만 마무리했다. `app.py`는 Header → Circuit & Request → Simulation Review → Results로 구성하고, 실제 session state에 따른 단계 안내와 업로드 파일명/크기, 짧은 예시, editable review card를 표시한다.
+- 기존 widget key와 callback, 실행 전 검증을 유지했다. Analyze는 조건 준비, Approve는 사용자 검토, Run은 실행으로 구분한다. 승인 전 Run은 disabled이며 조건·추천 선택 변경 시 기존 승인 해제와 함께 재승인 안내를 표시한다. Target trace와 AC Reference는 후보 근거와 선택 버튼을 제공하며 자동 대체하지 않는다. 같은 회로/analysis의 이전 성공 조건 재사용도 유지한다.
+- `ui_presentation.py`는 표시 전용 모듈이다. 주요 metric/graph와 비교표를 먼저 표시하고 Summary는 Confirmed Measurements / Derived Results / Comparison Findings / Warnings로 구분한다. RAW/LOG, directive, 상세 오류·warning, JSON, AI 설정/preview는 펼쳐볼 수 있다. 내부 수치와 Summary schema/JSON precision은 바꾸지 않았다.
+- UI rerun에서는 기존 Summary의 측정값과 저장된 graph를 다시 표시한다. RAW 재분석·수치 재계산·simulation 재실행은 없다. 저장 이미지가 없어지면 안내하고 기존 측정값/evidence를 보존한다. 실제 RAW 분석 호출에는 spinner를 붙였으며 임의 진행률은 추가하지 않았다. AI는 optional로 안내하고 key 없음과 mock demonstration을 구분한다. provider/guardrail은 변경하지 않았다.
+
+### Graph / responsive / 발생한 문제
+
+- 기존 공통 83% 중앙 정렬과 figure 종횡비를 유지한다. 긴 legend는 52자 기준으로 줄바꿈하며 폰트 최소 크기를 유지한다. 신규 경계 검사에서 긴 원문 legend가 `tight_layout`의 축 영역을 과도하게 줄이는 문제가 발견돼, 축 내부 legend를 layout 계산에서 제외했다. 계산 데이터와 종횡비 보존 및 legend 경계 검사가 통과했다.
+- 신규 검증 도구 작성 중 AppTest expander/image 조회 방식, Agg canvas 연결, Streamlit styled checkbox의 클릭 overlay 문제를 수정했다. 브라우저에서는 accessible keyboard Space로 실제 checkbox를 선택한다. preview 임시 evidence의 수명을 session에 맞춰 AI 준비 이후 rerun에서도 graph를 확인했다. 임시 shell audit의 인용 오류는 공개 제외 Python 검사 파일로 정리했다.
+- Headless Edge의 실제 localhost UI에서 1280px/390px 각각 initial, AC review/suggestion, AC/Transient/DC/Parameter result, no-key 상태를 검증했다(합계 14개). Desktop graph 폭 929.609px, 컨테이너 대비 약 83%; narrow 폭 358px, 중앙 오차 최대 0.008px. 종횡비, 가로 overflow 없음, 버튼 경계, narrow metric 세로 배치, 기본 path/JSON 숨김, 승인 및 결과 재표시를 확인했다. 별도 수동 시각 검수를 완료했다고 주장하지 않는다.
+
+### 최종 검증
+
+- `python -m py_compile app.py ui_helpers.py ui_presentation.py tests/test_ui_polish.py tests/ui_polish_fixtures.py tests/ui_polish_preview.py tests/verify_ui_polish.py` 통과.
+- `python -m unittest discover -s tests -p "test_*.py"`: **151 tests, 87.897초, OK / exit 0**. 기존 142개와 신규 9개(8개 AppTest 및 1개 legend 렌더링 검사)를 포함한다. initial/upload, 승인/추천/변경, 3종 결과 및 rerun, Summary precision, Parameter evidence, no-key/no-call, 실패 details, 긴 legend를 검증했다. 기존 AC/Transient/DC/Parameter/Summary/AI architecture/조건 재사용/원본 보존 회귀도 통과했다.
+- `python tests/verify_ui_polish.py`: 위 14개 브라우저 상태 통과. Synthetic fixture와 기존 분석 함수를 사용해 실제 production UI를 구동하되 LTspice/API는 mock으로 차단했다. 실제 simulation integration을 이번에 재실행한 것으로 주장하지 않는다. 스크린샷 파일 생성·교체 없음.
+- 실제 `app.py` 임시 localhost 서버의 health/root HTTP 200 확인 후 해당 서버만 종료했다. `python tests/verify_ac_reference.py --expected "V(vin)"`로 실제 로컬 MOSFET ASC의 V2/V(vin) 후보, 명시 선택, 재승인, 원본 bytes 보존, simulator/API 호출 0회 및 simulation 입력/출력 추가 없음도 확인했다.
+- Baseline 49개 중 의도된 UI 파일 `app.py`/`ui_helpers.py`를 제외한 기존 47개가 SHA-256 동일하다. 기존 tests/fixtures, parser/engine/계산/Summary/provider, requirements, README, 공개 screenshot 5장을 유지했다. 기존 로그 bytes에 이번 기록만 추가했다. 공개 변경 파일에 credential/개인 절대경로/email 패턴 일치 없음. `simulation_output` audit·로그·geometry는 ignore되고 tracked/staged 파일은 없다. `git diff --check` 통과(Windows LF→CRLF 안내만 존재). Git staging/commit/push는 하지 않았다.
+
+### 공개 검증 자산 / 한계 / 다음 단계
+
+- `tests/ui_polish_fixtures.py`는 AppTest와 브라우저가 공유하는 synthetic 결과 자산이므로 유지한다. `tests/ui_polish_preview.py`는 production 앱의 승인 흐름을 그대로 재현하면서 외부 실행을 차단한다. `tests/verify_ui_polish.py`는 14개 화면/viewport 회귀를 반복 검증하므로 영구 공개 validation asset으로 유지하고 일회성 debug 출력은 제거했다. 실행은 repository root에서 위 명령을 사용하며, 브라우저 검증에만 선택적 Playwright와 설치된 Microsoft Edge가 필요하다. core requirements는 추가하지 않았다.
+- Preview는 로컬 단일 검증용이며 실제 simulation evidence를 생성하는 도구가 아니다. fixture에는 정상 point와 의도된 실패 point가 포함된다. 검증 결과 geometry JSON과 일회성 audit helper는 공개 제외 영역에 둔다.
+- 작은 화면에서는 정적 Matplotlib 이미지의 글씨도 함께 축소된다. 모든 임의의 긴 label/대량 overlay, 모든 브라우저를 검증한 것은 아니다. 저장 graph가 삭제되면 rerun에서는 복구 대신 안내한다. 실제 LLM API smoke와 물리적 cross-validation 미완료 한계는 그대로다.
+- 다음 screenshot 후보는 AC review/suggestion, AC metrics/response, Parameter comparison이다. 이번에는 README 및 기존 이미지 교체, 새 분석 기능, 실제 LTspice/API 실행을 하지 않았다.

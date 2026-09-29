@@ -498,3 +498,19 @@ Evidence:
 - 표준 voltage.asy의 실제 pin 좌표를 확인해 R0, nonzero numeric AC, grounded negative pin, positive pin의 wire/FLAG label을 제안한다. 여러 후보는 직접 선택, 불명확하거나 미지원인 경우 안내와 수동 입력을 유지한다. Reference가 이미 있으면 덮어쓰지 않는다.
 - 신규 21개 및 전체 **142개 tests 통과**, Python exit 0. 문법 검사와 Streamlit health/root HTTP 200 통과. 기존 MOSFET ASC의 `V2 / AC 1 / Vin`에서 `V(vin)` 후보와 명시 선택·재승인·원본 bytes 보존·실행/파일 생성 없음 확인. 실제 LTspice/API는 재실행하지 않았다.
 - 전체 unit/AppTest로 AC/Transient/DC/Parameter/Summary/AI architecture·기존 UX 회귀를 확인했다. 회전/custom/current/floating/복잡한 연결/표현은 limitation으로 기록했다. Git diff whitespace 검사 통과, staged files 없음, 기존 engine/계산/requirements/README 무변경. Git commit/push 없음.
+
+---
+
+## Prompt 013 — Final UI Polish
+
+### Request
+
+기존 계산·parser·실행·Summary schema·AI provider/guardrail을 유지하면서 화면 구조, 정보 우선순위, approval/suggestion 안내와 responsive 표시를 정리한다. 중단된 working tree를 보존하고 남은 검증과 기록만 완료한다. 검증용 파일의 공개 유지 필요성을 검토하고, 불필요한 실제 simulation/API·dependency·screenshot 교체·Git commit/push는 하지 않는다.
+
+### Result / Validation
+
+- `app.py`, `ui_helpers.py` 및 새 표시 전용 `ui_presentation.py`로 Header / Circuit & Request / Simulation Review / Results를 정리했다. 실제 상태의 단계 안내, 검토 카드, 재승인 안내, 명시 선택하는 추천, metric/graph 우선 결과, 접힌 evidence/JSON/AI 설정을 제공한다. 기존 Summary와 저장 graph로 UI rerun 결과를 복원하며 수치 재계산·재실행은 없다.
+- 재개 후 긴 legend가 축 영역을 과도하게 줄이는 표시 문제만 수정하고 신규 경계 검사를 통과했다. 기존 142 + 신규 9 = **151 tests 모두 통과(87.897초, exit 0)**. 7개 변경/신규 Python 파일 문법 검사 통과. 기존 분석/실행/승인/원본 보존/Summary/AI architecture 회귀 없음.
+- localhost Headless Edge에서 1280px/390px의 14개 UI 상태 통과. 83% 중앙 graph, 종횡비, 좁은 화면 metric 세로 배치/overflow 없음, 경로·JSON 기본 숨김, 추천·승인·no-key 및 rerun을 확인했다. 브라우저는 synthetic 결과와 차단된 runner/API를 사용한다. 실제 app.py health/root HTTP 200 및 실제 MOSFET ASC 읽기 전용 후보/원본 보존 검사도 통과했다. 실제 LTspice/API나 별도 수동 시각 검수 완료 주장 없음.
+- 신규 `tests/test_ui_polish.py` 외 fixture/preview/browser verification 3개는 반복 가능한 공개 검증 자산으로 유지한다. 단발 debug 출력은 제거하고 geometry/audit는 ignored simulation_output에 남긴다. 브라우저 검증만 선택적 Playwright/Edge가 필요하며 requirements는 그대로다.
+- 기존 파일 47개 hash 동일, README/공개 screenshot 5장 보존, 원본 로그 prefix 보존. 공개 변경 범위의 secret/개인 절대경로 패턴 미발견, whitespace 검사 통과, staged/generated tracked 파일 없음. 다음 screenshot 후보는 AC review/result와 Parameter comparison이며 파일 생성·교체 및 Git commit/push는 하지 않았다.

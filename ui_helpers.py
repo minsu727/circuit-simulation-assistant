@@ -1,6 +1,7 @@
 """Review defaults and display-only helpers; no simulation or numeric analysis."""
 import math
 import re
+import textwrap
 from io import BytesIO
 
 from ac_analysis import parse_request, FREQUENCY, normalize_frequency
@@ -46,8 +47,12 @@ def style_graph(figure):
         for text in [axis.xaxis.label, axis.yaxis.label, *axis.get_xticklabels(), *axis.get_yticklabels()]:
             text.set_fontsize(max(11, text.get_fontsize()))
         if axis.get_legend():
+            # These legends are inside the axes. Let labels wrap without the
+            # original long label making tight_layout shrink the plotting area.
+            axis.get_legend().set_in_layout(False)
             for text in axis.get_legend().get_texts():
                 text.set_fontsize(max(10.5, text.get_fontsize()))
+                text.set_text(textwrap.fill(text.get_text(), width=52))
     figure.tight_layout()
     return figure
 

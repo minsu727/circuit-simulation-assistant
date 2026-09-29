@@ -17,7 +17,7 @@ from parameter_sweep import (is_parameter_sweep_request, parse_parameter_sweep, 
                              generate_sweep_values, validate_asc_component, ComponentNotFoundError)
 from parameter_sweep_execution import (run_parameter_sweep, validate_sweep_analysis, comparison_table,
                                        comparison_summary, comparison_figures, overlay_figure)
-from analysis_summary import build_analysis_summary, build_sweep_summary, summary_lines
+from analysis_summary import build_analysis_summary, build_sweep_summary
 from ai_interpretation import build_interpretation_prompt, prompt_as_text
 from dataclasses import replace
 from llm_client import load_config, interpret_analysis, input_estimate, SECTIONS
@@ -25,6 +25,9 @@ from ui_helpers import (REUSABLE_FIELDS, review_defaults, requested_dc_point,
                         asc_voltage_traces, trace_suggestion, human_value, show_graph,
                         compact_comparison_rows, compact_extrema_rows,
                         show_point_evidence, show_dc_requested_point)
+from ui_presentation import (page_style, show_workflow, review_card, approval_note,
+                             metric_grid, technical_error, directive_details,
+                             simulation_evidence, show_summary_sections, show_saved_result)
 
 PROJECT_DIR = Path(__file__).resolve().parent
 
@@ -71,6 +74,7 @@ def show_trace_suggestions(available, source='circuit labels'):
         candidate = trace_suggestion(requested, available)
         if candidate:
             st.warning(f'{requested} not found in {source}. Did you mean {candidate}?')
+            st.caption(f'Suggested from available traces: {candidate}. Select to use it, then review and approve again.')
             st.button(f'Use {candidate} for {label}', key=f'trace_suggestion_{source}_{field}',
                       on_click=accept_trace, args=(field,candidate))
     if available:
@@ -109,19 +113,22 @@ def show_ai_execution(prompt):
     except (ValueError, TypeError):
         st.error('Invalid LLM configuration. Check environment variables or Streamlit secrets.')
         return
-    provider = st.selectbox('AI Provider', ['openai', 'mock'],
+    with st.expander('AI settings / Advanced'):
+        provider = st.selectbox('AI Provider', ['openai', 'mock'],
                             index=['openai', 'mock'].index(config.provider),
                             key='ai_provider', on_change=clear_ai_result)
-    model = st.text_input('AI Model', value=config.model, key='ai_model', on_change=clear_ai_result)
+        model = st.text_input('AI Model', value=config.model, key='ai_model', on_change=clear_ai_result)
     config = replace(config, provider=provider, model=model.strip())
     estimate = input_estimate(prompt)
-    st.caption(f"Selected model: {config.model} | Input characters: {estimate['characters']} | "
-               f"Conservative token estimate: ~{estimate['token_estimate']} (UTF-8 bytes; not billing tokens).")
+    with st.expander('Request size and model details'):
+        st.caption(f"Selected model: {config.model} | Input characters: {estimate['characters']} | "
+                   f"Conservative token estimate: ~{estimate['token_estimate']} (UTF-8 bytes; not billing tokens).")
     st.caption('OpenAI sends this prepared prompt to the API and may incur cost. Only Run AI Interpretation makes a call.')
     if provider == 'mock':
-        st.info('Mock mode — no API call or cost. Output is a fixed demonstration, not circuit analysis.')
+        st.caption('Demonstration mode · No API call or cost. Output is a fixed example, not circuit analysis.')
     elif not config.api_key:
         st.info('API key not configured')
+        st.caption('Deterministic simulation analysis is fully available. Optional AI interpretation is unavailable until a key is configured.')
     too_large = estimate['characters'] > config.max_input_characters
     if too_large:
         st.warning('Prompt exceeds the configured input limit. Reduce sweep points before preparing again.')
@@ -135,11 +142,13 @@ def show_ai_execution(prompt):
     if result['status'] == 'error':
         st.error(result['error'])
         return
-    st.caption(f"Interpretation provider: {result['provider']} | model: {result['model']}")
+    with st.expander('Interpretation details'):
+        st.caption(f"Interpretation provider: {result['provider']} | model: {result['model']}")
     st.caption('AI text is separate from verified measurements. Numerical checks do not prove correct trace/point attribution or physical causes.')
     if result['warnings']:
         st.warning('AI response validation warning')
-        st.json(result['warnings'])
+        with st.expander('AI validation details'):
+            st.json(result['warnings'])
     if result['data'] is not None:
         for key, title in SECTIONS.items():
             st.subheader(title)
@@ -149,17 +158,41 @@ def show_ai_execution(prompt):
         st.text(result['raw_text'] or '(empty response)')
 
 
+def begin_results():
+    global results_rendered
+    if not results_rendered:
+        st.divider()
+        st.subheader('4. Results')
+        results_rendered = True
+
+
 def show_analysis_summary():
+    show_workflow(workflow_slot, circuit_file is not None, simulation_request, st.session_state)
     summary = st.session_state.get('completed_analysis_summary')
     if summary is None:
+        if not results_rendered:
+            begin_results()
+            st.caption('Results will appear here after an approved simulation run.')
         return
+    had_result_ui = results_rendered
+    begin_results()
+    if not had_result_ui:
+        show_saved_result(summary)
     st.subheader('Analysis Summary')
     st.caption('Verified measurements and deterministic comparisons only. No circuit-cause inference.')
-    st.text('\n'.join(summary_lines(summary)))
-    with st.expander('Summary JSON'):
-        st.json(summary)
+    show_summary_sections(summary)
+    if summary.get('analysis_type') != 'Parameter Sweep' and not had_result_ui:
+        evidence = summary.get('evidence', {})
+        with st.expander('Result Evidence / Details'):
+            st.text('RAW: ' + str(evidence.get('raw_file') or 'Not generated'))
+            st.text('LOG: ' + str(evidence.get('log_file') or 'Not generated'))
+            st.text('Directive: ' + str(evidence.get('applied_directive') or 'Not applied'))
+            for note in summary.get('simulation_conditions', {}).get('calculation_notes', []):
+                st.text(note)
     show_point_evidence(summary)
+    st.divider()
     st.subheader('AI Interpretation')
+    st.caption('Optional · Deterministic results above do not require AI. Actual API response quality has not yet been validated.')
     st.info('Prepare locally, then explicitly run AI interpretation. Simulation approval does not authorize an API call.')
     if st.button('Prepare AI Interpretation'):
         clear_ai_result()
@@ -169,7 +202,7 @@ def show_analysis_summary():
             st.error(f'Prompt preparation failed: {error}')
     prompt = st.session_state.get('prepared_interpretation')
     if prompt is not None:
-        with st.expander('Interpretation Prompt Preview', expanded=True):
+        with st.expander('Interpretation Prompt Preview'):
             st.text(prompt_as_text(prompt))
         with st.expander('Structured Facts Preview'):
             st.json(prompt['user']['analysis_summary'])
@@ -188,13 +221,17 @@ def show_evidence_figure(figure, raw_file, filename):
     try:
         figure.savefig(path, dpi=130)
     except OSError as error:
-        st.caption(f'Graph displayed; evidence file could not be saved: {error}')
+        st.caption('Graph displayed; evidence file could not be saved.')
+        with st.expander('Graph save details'):
+            st.text(str(error))
         return []
     return [str(path.resolve())]
 
 
 
 def reset_approval():
+    if st.session_state.get('execution_approved') or st.session_state.get('parameter_approved'):
+        st.session_state['ui_approval_changed'] = True
     st.session_state["execution_approved"] = False
     st.session_state["parameter_approved"] = False
     clear_analysis_preview()
@@ -209,44 +246,61 @@ st.set_page_config(
     layout="wide"
 )
 
+page_style()
 st.title("Circuit Simulation Assistant")
-st.write("LTspice simulation setup and analysis assistant")
+st.write('Natural-language setup and deterministic LTspice analysis.')
+st.caption('Upload an LTspice schematic, describe your simulation, review the settings, and run only after approval.')
+workflow_slot = st.empty()
+results_rendered = False
 
 
 # -------------------------
 # 1. Circuit file
 # -------------------------
 
-st.subheader("1. Upload LTspice Circuit")
-
-circuit_file = st.file_uploader(
-    "Upload an LTspice schematic file",
-    type=["asc"],
-    on_change=reset_review
-)
+st.subheader('Circuit & Request')
+circuit_column, request_column = st.columns([1, 2], gap='large')
+with circuit_column:
+    st.markdown('**1. Circuit**')
+    circuit_file = st.file_uploader(
+        "Upload an LTspice schematic file", type=["asc"], on_change=reset_review
+    )
+    if circuit_file is None:
+        st.caption('Upload an LTspice .asc schematic to begin.')
+    else:
+        st.caption('Schematic loaded')
+        st.text(circuit_file.name)
+        st.caption(f'{len(circuit_file.getvalue()) / 1024:.1f} KB · ASC schematic')
+    st.caption('.asc only · Your source file is preserved. Runs use a separate execution copy.')
 
 
 # -------------------------
 # 2. Natural-language request
 # -------------------------
 
-st.subheader("2. Describe the Simulation")
-
-simulation_request = st.text_area(
-    "Describe what simulation you want to run",
-    placeholder=(
-        "Example: Run an AC simulation from 10 Hz to 100 MHz "
-        "and measure the gain and -3 dB bandwidth of V(out)."
-    ),
-    on_change=reset_review
-)
+with request_column:
+    st.markdown('**2. Request**')
+    simulation_request = st.text_area(
+        "Describe what simulation you want to run",
+        placeholder='V(out)을 10 Hz부터 1 MHz까지 AC simulation하고 V(vin) 대비 gain과 -3 dB bandwidth를 구해줘.',
+        on_change=reset_review, height=130
+    )
+    with st.expander('Request examples'):
+        st.caption('Use trace and component names from your own circuit; review every extracted condition.')
+        st.text('AC: V(out) V(in), 10 Hz to 1 MHz, gain and -3 dB bandwidth.\n'
+                'Transient: V(out) V(in), 1 ms, voltage gain and output swing.\n'
+                'DC: V1 from 0 V to 5 V step 0.1 V; V(out) at V1=3 V.\n'
+                'Parameter: R1을 1k, 2k, 5k로 바꿔가며 AC gain 비교.')
+    st.caption('Analyze Request prepares editable settings. It does not run a simulation.')
 
 
 # -------------------------
 # Rule-based parser
 # -------------------------
 
-if st.button("Analyze Request"):
+with request_column:
+    analyze_requested = st.button('Analyze Request', type='primary')
+if analyze_requested:
     reset_approval()
 
     if circuit_file is None:
@@ -289,8 +343,9 @@ parameter_mode = st.session_state.get("show_parameter_sweep", False)
 parameter_valid = True
 if st.session_state.get("show_conditions", False) and parameter_mode:
     st.divider()
-    st.subheader("3. Review Parameter Sweep Conditions")
-    st.info("Review every value and the analysis settings below. Execution requires final approval.")
+    st.subheader("3. Simulation Review")
+    st.markdown('**Parameter Sweep · Component values**')
+    st.caption("Review every value and the analysis settings below. Execution requires final approval.")
     sweep_type = st.selectbox("Sweep Type", ["Component Value"], key="parameter_sweep_type", on_change=reset_approval)
     component = st.text_input("Component", key="parameter_component", on_change=reset_approval)
     mode = st.selectbox("Value Input", ["Explicit Values", "Start / Stop / Step"], key="parameter_value_mode", on_change=reset_approval)
@@ -331,15 +386,16 @@ if st.session_state.get("show_conditions", False) and parameter_mode:
     parameter_measurements = measurements
     if analysis == 'Not specified':
         st.checkbox('Select analysis settings before approval.', key='parameter_approved', disabled=True)
+        show_analysis_summary()
         st.stop()
     st.session_state['review_analysis_type'] = analysis
 
 if st.session_state.get("show_conditions", False):
 
-    st.divider()
-    st.subheader("3. Review Simulation Conditions")
-
-    st.info("Conditions were extracted using rules. Review and correct them before approval.")
+    if not parameter_mode:
+        st.divider()
+        st.subheader("3. Simulation Review")
+    st.caption("Conditions were extracted using rules. Review and correct them before approval.")
     if st.session_state.get('reused_review_fields'):
         st.caption('Initial values reused from the last successful analysis of this circuit: '
                    + ', '.join(st.session_state['reused_review_fields']) + '. Review and approve before execution.')
@@ -359,7 +415,8 @@ if st.session_state.get("show_conditions", False):
         on_change=reset_approval
     )
 
-    target = st.text_input(
+    signal_columns = st.columns(2)
+    target = signal_columns[0].text_input(
         "Target Signal / Current" if analysis_type == "DC Sweep" else "Target Signal",
         key="review_target",
         on_change=reset_approval
@@ -374,33 +431,36 @@ if st.session_state.get("show_conditions", False):
         for field, value in parse_request(simulation_request).items():
             st.session_state.setdefault(f"review_{field}", value)
 
-        reference = st.text_input(
+        reference = signal_columns[1].text_input(
             "Reference / Input Signal", key="review_reference",
             placeholder="Enter the input voltage trace name from your circuit",
             on_change=reset_approval
         )
-        show_ac_reference_suggestions()
+        with signal_columns[1]:
+            show_ac_reference_suggestions()
 
-        sweep_type = st.selectbox(
+        sweep_columns = st.columns(2)
+        sweep_type = sweep_columns[0].selectbox(
             "Sweep Type",
             ["Decade", "Octave", "Linear"],
             key="review_sweep_type",
             on_change=reset_approval
         )
 
-        points = st.number_input(
+        points = sweep_columns[1].number_input(
             "Points", min_value=1, step=1, key="review_points",
             help="Points per decade/octave; total points for a linear sweep.",
             on_change=reset_approval
         )
 
-        start_frequency = st.text_input(
+        frequency_columns = st.columns(2)
+        start_frequency = frequency_columns[0].text_input(
             "Start Frequency",
             key="review_start_frequency",
             on_change=reset_approval
         )
 
-        stop_frequency = st.text_input(
+        stop_frequency = frequency_columns[1].text_input(
             "Stop Frequency",
             key="review_stop_frequency",
             on_change=reset_approval
@@ -422,8 +482,7 @@ if st.session_state.get("show_conditions", False):
                              start_frequency=start_frequency, stop_frequency=stop_frequency)
         try:
             directive_preview = build_ac_directive(**ac_conditions)
-            st.write("### Simulation Directive Preview")
-            st.code(directive_preview, language="text")
+            directive_details(directive_preview)
             if not target.strip() or not reference.strip():
                 raise ValueError("Enter both Target Signal and Reference / Input Signal before approval.")
         except ValueError as error:
@@ -432,18 +491,18 @@ if st.session_state.get("show_conditions", False):
     elif analysis_type == "Transient":
         for field, value in parse_transient_request(simulation_request).items():
             st.session_state.setdefault(f"review_{field}", value)
-        reference = st.text_input("Reference / Input Signal", key="review_reference",
+        reference = signal_columns[1].text_input("Reference / Input Signal", key="review_reference",
                                   help="Optional unless Voltage Gain is requested.", on_change=reset_approval)
-        stop_time = st.text_input("Stop Time", key="review_stop_time", on_change=reset_approval)
-        start_saving_time = st.text_input("Start Saving Time (optional)", key="review_start_saving_time", on_change=reset_approval)
-        maximum_timestep = st.text_input("Maximum Timestep (optional)", key="review_maximum_timestep", on_change=reset_approval)
+        time_columns = st.columns(3)
+        stop_time = time_columns[0].text_input("Stop Time", key="review_stop_time", on_change=reset_approval)
+        start_saving_time = time_columns[1].text_input("Start Saving Time (optional)", key="review_start_saving_time", on_change=reset_approval)
+        maximum_timestep = time_columns[2].text_input("Maximum Timestep (optional)", key="review_maximum_timestep", on_change=reset_approval)
         measurements = parameter_measurements if parameter_mode else st.multiselect("Measurements", MEASUREMENTS, key="review_transient_measurements", on_change=reset_approval)
         st.caption("Vpp gain requires stable periodic input/output. Edge and step-response metrics are shown only when the waveform supports them.")
         transient_conditions = dict(stop_time=stop_time, start_saving_time=start_saving_time, maximum_timestep=maximum_timestep)
         try:
             directive_preview = build_transient_directive(**transient_conditions)
-            st.write("### Simulation Directive Preview")
-            st.code(directive_preview, language="text")
+            directive_details(directive_preview)
             if not target.strip():
                 raise ValueError("Enter Target Signal before approval.")
             if "Voltage Gain" in measurements and not reference.strip():
@@ -455,10 +514,11 @@ if st.session_state.get("show_conditions", False):
         for field, value in parse_dc_request(simulation_request).items():
             st.session_state.setdefault(f"review_{field}", value)
         sweep_source = st.text_input("Sweep Source", key="review_sweep_source", on_change=reset_approval)
-        dc_start = st.text_input("Start Value", key="review_dc_start", on_change=reset_approval)
-        dc_stop = st.text_input("Stop Value", key="review_dc_stop", on_change=reset_approval)
-        dc_step = st.text_input("Step Value", key="review_dc_step", on_change=reset_approval)
-        comparison = st.text_input("Optional Comparison Signal / Current", key="review_dc_comparison", on_change=reset_approval)
+        value_columns = st.columns(3)
+        dc_start = value_columns[0].text_input("Start Value", key="review_dc_start", on_change=reset_approval)
+        dc_stop = value_columns[1].text_input("Stop Value", key="review_dc_stop", on_change=reset_approval)
+        dc_step = value_columns[2].text_input("Step Value", key="review_dc_step", on_change=reset_approval)
+        comparison = signal_columns[1].text_input("Optional Comparison Signal / Current", key="review_dc_comparison", on_change=reset_approval)
         measurements = parameter_measurements if parameter_mode else st.multiselect("Measurements", DC_MEASUREMENTS, key="review_dc_measurements", on_change=reset_approval)
         selected_point = st.text_input("Selected Sweep Point (for Value at Sweep Point)", key="review_dc_point", on_change=reset_approval)
         st.caption("One ascending voltage/current source sweep. Difference = Target − Comparison. Matching Error = abs(Target − Comparison) / abs(Target) × 100%; Target is the denominator. Near-zero denominators have no result.")
@@ -466,8 +526,7 @@ if st.session_state.get("show_conditions", False):
         dc_point = None
         try:
             directive_preview = build_dc_directive(**dc_conditions)
-            st.write("### Simulation Directive Preview")
-            st.code(directive_preview, language="text")
+            directive_details(directive_preview)
             target_unit = trace_unit(target.strip())
             if comparison.strip():
                 trace_unit(comparison.strip())
@@ -489,10 +548,13 @@ if st.session_state.get("show_conditions", False):
             "Review the circuit's saved directive before approving execution."
         )
 
-    st.write("### Original Request")
-    st.write(simulation_request)
+    with st.expander('Original request'):
+        st.text(simulation_request)
     if circuit_file is not None:
         show_trace_suggestions(asc_voltage_traces(circuit_file.getvalue()))
+    review_card(st.session_state, analysis_type, parameter_mode)
+    approval_box = st.container(border=True)
+    approval_box.markdown('**Approve & Run**')
 
     if parameter_mode:
         settings = ac_conditions if analysis_type == 'AC' else transient_conditions if analysis_type == 'Transient' else dc_conditions
@@ -503,9 +565,13 @@ if st.session_state.get("show_conditions", False):
         except ValueError as error:
             directive_error = str(error)
             st.error(directive_error)
-        approved = st.checkbox('I reviewed all Parameter Sweep values and analysis conditions and approve execution.',
+        approved = approval_box.checkbox('I reviewed all Parameter Sweep values and analysis conditions and approve execution.',
                                key='parameter_approved', disabled=not parameter_valid or directive_error is not None)
-        if st.button('Run Parameter Sweep', disabled=not approved or not parameter_valid or directive_error is not None):
+        with approval_box:
+            approval_note(approved, st.session_state.get('ui_approval_changed', False))
+            run_requested = st.button('Run Parameter Sweep', type='primary', disabled=not approved or not parameter_valid or directive_error is not None)
+        if run_requested:
+            begin_results()
             clear_analysis_preview()
             try:
                 if not approved or not parameter_valid or directive_error is not None:
@@ -540,19 +606,22 @@ if st.session_state.get("show_conditions", False):
                 if any(entry.result is not None for entry in sweep_results):
                     remember_successful_review(analysis_type)
             except Exception as error:
-                st.error(f'Parameter Sweep failed: {error}')
+                technical_error('Parameter Sweep failed. Review the details before trying again.', error)
         show_analysis_summary()
         st.stop()
 
-    approved = st.checkbox(
+    approved = approval_box.checkbox(
         "I reviewed the simulation conditions and directive and approve execution.",
         key="execution_approved", disabled=directive_error is not None
     )
-
-    if st.button(
-        "Run Simulation",
-        disabled=not approved or circuit_file is None or not simulation_request.strip() or directive_error is not None
-    ):
+    with approval_box:
+        approval_note(approved, st.session_state.get('ui_approval_changed', False))
+        run_requested = st.button(
+            'Run Simulation', type='primary',
+            disabled=not approved or circuit_file is None or not simulation_request.strip() or directive_error is not None
+        )
+    if run_requested:
+        begin_results()
         clear_analysis_preview()
         summary_result, summary_error = None, None
         raw_file, log_file, applied_directive = None, None, None
@@ -571,35 +640,32 @@ if st.session_state.get("show_conditions", False):
 
             st.success("Simulation completed")
 
-            st.write("### Simulation Files")
-            st.write(f"RAW: {raw_file}")
-            st.write(f"LOG: {log_file}")
-            if applied_directive:
-                st.write("### Applied Simulation Directive")
-                st.code(applied_directive, language="text")
+            simulation_evidence(raw_file, log_file, applied_directive)
 
         except Exception as e:
             summary_error, simulation_failed = e, True
             raw_file, log_file = getattr(e, 'raw_file', None), getattr(e, 'log_file', None)
-            st.error("LTspice simulation failed.")
-            st.error(f"{type(e).__name__}: {e}")
+            technical_error('LTspice simulation failed.', f'{type(e).__name__}: {e}')
         else:
             if applied_directive and analysis_type == "AC":
                 st.subheader("Measured Results")
                 try:
-                    result = read_ac_result(raw_file, target, reference)
+                    with st.spinner('Reading RAW data and analyzing the AC response...'):
+                        result = read_ac_result(raw_file, target, reference)
                     summary_result = result
-                    st.metric("Low-Frequency Gain", f"{result.low_frequency_gain_db:.3f} dB")
-                    st.metric("-3 dB Level", f"{result.threshold_db:.3f} dB")
-                    st.metric("-3 dB Bandwidth", human_value(result.bandwidth_hz, 'Hz')
-                              if result.bandwidth_hz is not None else result.bandwidth_status)
+                    metric_grid([('Low-Frequency Gain', f'{result.low_frequency_gain_db:.3f} dB'),
+                                 ('-3 dB Level', f'{result.threshold_db:.3f} dB'),
+                                 ('-3 dB Bandwidth', human_value(result.bandwidth_hz, 'Hz')
+                                  if result.bandwidth_hz is not None else result.bandwidth_status)])
                     st.caption(
                         f"{result.target_name} / {result.reference_name}. Low-pass estimate: median of "
                         f"{result.baseline_count} valid initial samples from {format_frequency(result.frequency[0])} "
                         f"to {format_frequency(result.baseline_stop_hz)}. Crossing interpolated in dB vs log10(frequency)."
                     )
-                    for note in result.notes:
-                        st.warning(note)
+                    if result.notes:
+                        with st.expander('AC analysis notes'):
+                            for note in result.notes:
+                                st.warning(note)
                     graph_paths = show_evidence_figure(gain_figure(result), raw_file, 'gain_frequency.png')
                 except MissingTraceError as error:
                     summary_error = error
@@ -609,22 +675,24 @@ if st.session_state.get("show_conditions", False):
                     show_trace_suggestions(error.available, 'RAW traces')
                 except Exception as error:
                     summary_error = error
-                    st.error(f"AC result analysis failed: {error}")
+                    technical_error('AC result analysis failed. Simulation files remain available.', error)
             elif applied_directive and analysis_type == "Transient":
                 st.subheader("Measured Results")
                 try:
-                    result = read_transient_result(raw_file, target, reference, measurements)
+                    with st.spinner('Reading RAW data and analyzing the waveform...'):
+                        result = read_transient_result(raw_file, target, reference, measurements)
                     summary_result = result
                     st.caption(f"Waveform assessment: {result.kind}. Measurements use saved data only.")
                     for name, measurement in result.measurements.items():
                         if measurement.values:
-                            st.write(f"### {name}")
-                            for label, (value, unit) in measurement.values.items():
-                                st.metric(label, human_value(value, unit))
+                            st.markdown(f'**{name}**')
+                            metric_grid((label, human_value(value, unit)) for label, (value, unit) in measurement.values.items())
                         else:
                             st.info(f"{name}: Measurement not applicable / could not be reliably determined. {measurement.reason}")
-                    for note in result.notes:
-                        st.caption(note)
+                    if result.notes:
+                        with st.expander('Transient analysis notes'):
+                            for note in result.notes:
+                                st.caption(note)
                     graph_paths = show_evidence_figure(waveform_figure(result), raw_file, 'transient_waveform.png')
                 except MissingTraceError as error:
                     summary_error = error
@@ -634,28 +702,30 @@ if st.session_state.get("show_conditions", False):
                     show_trace_suggestions(error.available, 'RAW traces')
                 except Exception as error:
                     summary_error = error
-                    st.error(f"Transient result analysis failed: {error}")
+                    technical_error('Transient result analysis failed. Simulation files remain available.', error)
             elif applied_directive and analysis_type == "DC Sweep":
                 st.subheader("Measured Results")
                 try:
-                    result = read_dc_result(raw_file, target, comparison, measurements, dc_point,
-                                            sweep_source=sweep_source.strip())
+                    with st.spinner('Reading RAW data and analyzing the DC sweep...'):
+                        result = read_dc_result(raw_file, target, comparison, measurements, dc_point,
+                                                sweep_source=sweep_source.strip())
                     summary_result = result
                     st.caption(f"Target: {result.target_name}; Comparison: {result.comparison_name if result.comparison is not None else 'none'}. Sweep: {result.sweep_source}.")
                     if result.point is not None:
                         st.caption(f"Selected point: {result.sweep_source} = {result.point:.9g} {source_unit(result.sweep_source)}")
                     show_dc_requested_point(result)
-                    for label, (value, unit) in result.metrics.items():
-                        if label == 'Value at Sweep Point' and result.point is not None:
-                            continue  # Already shown in the dedicated requested-point card.
-                        st.metric(label, human_value(value, unit))
-                    for note in result.notes:
-                        st.info(note)
+                    metric_grid((label, human_value(value, unit)) for label, (value, unit) in result.metrics.items()
+                                if not (label == 'Value at Sweep Point' and result.point is not None))
+                    if result.notes:
+                        with st.expander('DC analysis notes'):
+                            for note in result.notes:
+                                st.info(note)
                     if result.curves:
                         table = {f"{result.sweep_source} [{source_unit(result.sweep_source)}]": result.sweep,
                                  result.target_name: result.target, result.comparison_name: result.comparison}
                         table.update({f"{name} [{unit}]": values for name, (values, unit) in result.curves.items()})
-                        st.dataframe(table, hide_index=True)
+                        with st.expander('DC comparison samples'):
+                            st.dataframe(table, hide_index=True, width='stretch')
                     graph_paths = show_evidence_figure(dc_figure(result), raw_file, 'dc_sweep.png')
                 except MissingTraceError as error:
                     summary_error = error
@@ -665,7 +735,7 @@ if st.session_state.get("show_conditions", False):
                     show_trace_suggestions(error.available, 'RAW traces')
                 except Exception as error:
                     summary_error = error
-                    st.error(f"DC result analysis failed: {error}")
+                    technical_error('DC result analysis failed. Simulation files remain available.', error)
         if analysis_type in ('AC', 'Transient', 'DC Sweep'):
             if summary_result is not None and summary_error is None:
                 remember_successful_review(analysis_type)
