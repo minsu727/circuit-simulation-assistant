@@ -1,11 +1,14 @@
 """Opt-in real install/launch/uninstall/reinstall validation on Windows.
 
 Requires the built Setup.exe, optional Playwright/Edge, and an unused current-user
-installation/shortcut identity. Does not run LTspice or call any API. Reports and
-logs stay in ignored installer_output. Never removes a pre-existing installation.
-Run: python tests/verify_installer.py
+installation/shortcut identity. Default mode does not run LTspice; optional
+--release-checks runs one real AC fixture and isolated missing-dependency checks.
+No API calls. Reports/logs stay in ignored installer_output. Never removes a
+pre-existing installation. This developer-host check does not certify a clean VM.
+Run: python tests/verify_installer.py [--release-checks] [--install-dir PATH]
 """
 import ctypes
+import argparse
 import hashlib
 import json
 import os
@@ -81,10 +84,17 @@ def stop_owned_process(proc):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--release-checks', action='store_true',
+                        help='Also run missing-dependency/actual AC UI and PowerShell runtime checks on this host (not a clean VM).')
+    parser.add_argument('--install-dir', type=Path,
+                        help='Optional unused custom directory under the current user Programs folder.')
+    args = parser.parse_args()
     output = PROJECT / 'installer_output'
     setup = output / 'CircuitSimulationAssistant-Setup.exe'
     portable = PROJECT / 'dist/CircuitSimulationAssistant'
-    target = Path(os.environ['LOCALAPPDATA']) / 'Programs' / NAME
+    target = args.install_dir or Path(os.environ['LOCALAPPDATA']) / 'Programs' / NAME
+    target = target.resolve()
     executable = target / APP_EXE
     uninstaller = target / 'unins000.exe'
     group = known_folder(2) / NAME
@@ -103,15 +113,19 @@ def main():
     ltspice_hash = hash_file(ltspice)
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=PROJECT, text=True).splitlines()
     repo_before = {p: hash_file(PROJECT / p) for p in tracked if (PROJECT / p).is_file()}
-    report = {'installer_mode': 'current user; default user Program Files location', 'simulation_run': False}
+    report = {'installer_mode': 'current user; custom location' if args.install_dir else 'current user; default user Program Files location',
+              'simulation_run': args.release_checks, 'clean_vm_verified': False}
+    generated_data = {name: {} for name in data_before}
     owns_install = False
     with tempfile.TemporaryDirectory(prefix='csa-installer-check-') as cwd:
         def install(desktop, cycle):
             nonlocal owns_install
             owns_install = True
-            args = [str(setup), '/CURRENTUSER', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART',
+            install_args = [str(setup), '/CURRENTUSER', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART',
                     '/TASKS=desktopicon' if desktop else '/TASKS=', f'/LOG={output / (cycle + "-install.log")}']
-            code = subprocess.run(args, cwd=cwd, creationflags=subprocess.CREATE_NO_WINDOW, timeout=180).returncode
+            if args.install_dir:
+                install_args.append('/DIR=' + str(target))
+            code = subprocess.run(install_args, cwd=cwd, creationflags=subprocess.CREATE_NO_WINDOW, timeout=180).returncode
             assert code == 0, ('Setup failed', code)
             assert executable.is_file() and uninstaller.is_file()
             assert registration()['DisplayVersion'] == '0.1.0'
@@ -153,6 +167,27 @@ def main():
             assert smoke.returncode == 0, 'Installed UI smoke failed; inspect installed-ui.log'
             report['installed_app'] = json.loads((PROJECT / 'simulation_output/prompt_014a_smoke.json').read_text())
 
+            if args.release_checks:
+                for label, option in [('missing', '--missing-ltspice'), ('simulation', '--simulate')]:
+                    with (output / ('release-' + label + '.log')).open('wb') as log:
+                        check = subprocess.run([sys.executable, '-X', 'utf8', str(PROJECT / 'tests/verify_portable.py'),
+                                                '--exe', str(executable), option, '--shutdown-timeout', '45'], cwd=cwd,
+                                               stdout=log, stderr=subprocess.STDOUT, timeout=240)
+                    assert check.returncode == 0, 'Release UI check failed: ' + label
+                    source = 'missing' if label == 'missing' else 'smoke'
+                    report[label] = json.loads((PROJECT / f'simulation_output/prompt_014a_{source}.json').read_text())
+                    assert report[label]['shutdown'] == 'CTRL_BREAK' and report[label]['exe_exit_code'] == 0, 'Graceful shutdown failed: ' + label
+                report['missing_dependency_method'] = 'Child-process invalid LTSPICE_EXECUTABLE override; LTspice remains installed on host.'
+                generated_data = {name: {p: digest for p, digest in folder_hashes(user_data / name).items()
+                                         if p not in data_before[name]} for name in data_before}
+                with (output / 'release-runtime.log').open('wb') as log:
+                    check = subprocess.run(['powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+                                            str(PROJECT / 'scripts/verify_release.ps1'), '-Setup', str(setup),
+                                            '-InstalledExe', str(executable)], cwd=cwd,
+                                           stdout=log, stderr=subprocess.STDOUT, timeout=120)
+                assert check.returncode == 0, 'PowerShell runtime smoke failed; inspect release-runtime.log'
+                report['runtime'] = json.loads((output / 'release-validation/release-smoke.json').read_text(encoding='utf-8-sig'))
+
             # Check the real running-file guard without forcibly killing apps.
             with (output / 'running-launcher.log').open('wb') as log:
                 proc = subprocess.Popen([str(executable), '--no-browser'], cwd=cwd, stdout=log,
@@ -185,6 +220,13 @@ def main():
                     raise AssertionError('Owned server remained after shutdown')
             uninstall('first')
             install(True, 'reinstall')
+            if args.release_checks:
+                with (output / 'release-reinstalled-ui.log').open('wb') as log:
+                    check = subprocess.run([sys.executable, '-X', 'utf8', str(PROJECT / 'tests/verify_portable.py'),
+                                            '--exe', str(executable)], cwd=cwd,
+                                           stdout=log, stderr=subprocess.STDOUT, timeout=180)
+                assert check.returncode == 0, 'Reinstalled executable smoke failed'
+                report['reinstalled_app'] = json.loads((PROJECT / 'simulation_output/prompt_014a_smoke.json').read_text())
             uninstall('reinstall')
         finally:
             # Only the installation created after the preflight belongs to us.
@@ -197,7 +239,7 @@ def main():
     assert folder_hashes(portable) == baseline
     assert all(hash_file(PROJECT / p) == digest for p, digest in repo_before.items())
     assert hash_file(ltspice) == ltspice_hash
-    assert all(folder_hashes(user_data / name) == before for name, before in data_before.items())
+    assert all(folder_hashes(user_data / name) == {**before, **generated_data[name]} for name, before in data_before.items())
     report.update(portable_unchanged=True, repository_unchanged=True, ltspice_unchanged=True, user_simulation_data_retained=True)
     (output / 'verification.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(json.dumps(report, indent=2))

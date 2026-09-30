@@ -27,6 +27,8 @@ def main():
     parser.add_argument('--simulate', action='store_true')
     parser.add_argument('--open-browser', action='store_true')
     parser.add_argument('--missing-ltspice', action='store_true')
+    parser.add_argument('--shutdown-timeout', type=int, choices=(15, 45), default=15,
+                        help='Grace period for the owned launcher; report forced fallback honestly.')
     args = parser.parse_args()
     assert args.exe.is_file(), 'Build the portable executable first.'
     assert not (args.missing_ltspice and args.simulate)
@@ -145,7 +147,7 @@ def main():
                 if proc.poll() is None:
                     try:
                         proc.send_signal(signal.CTRL_BREAK_EVENT)
-                        proc.wait(timeout=15)
+                        proc.wait(timeout=args.shutdown_timeout)
                         report['shutdown'] = 'CTRL_BREAK'
                     except (OSError, subprocess.TimeoutExpired):
                         proc.terminate()

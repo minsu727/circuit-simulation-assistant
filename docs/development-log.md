@@ -995,3 +995,42 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - 시작 시 기존 tracked 파일 81개의 hash를 기록했다. 요청된 README·두 로그·ignore 설정 외 기존 77개 파일은 byte-level 보존했다. 앱/tests/requirements/portable build 설정에 의도치 않은 수정 없음. Public additions의 credential/개인 절대경로/email 패턴 검사, `git diff --check`, generated output·venv·simulation_output tracked/staged 없음 확인. 일회성 audit/helper/log는 공개 제외 영역에만 둔다.
 - 생성된 Setup의 Authenticode 상태는 **NotSigned**다. Windows SmartScreen warning 가능성을 README에 명시했으며 코드 서명·SmartScreen 우회를 하지 않았다. 전체 사용자 관리자 설치, 대화형 wizard/post-install launch 선택, 별도 clean Windows VM 및 향후 in-place upgrade는 아직 별도 검증 대상이다. 사용자 파일이 설치 폴더에 추가돼 있으면 이를 강제로 삭제하지 않는다.
 - GitHub Release upload, updater/MSI/CI/CD, icon 제작, Git staging/commit/push는 수행하지 않았다.
+
+---
+
+## 2026-09-30 — Prompt 015A — Clean Windows Release Validation
+
+### 환경 / 검증 범위
+
+- **Clean Windows VM validation not performed.** 실제 host는 Windows 11 Home 25H2 x64, build 26200.9457, 일반 사용자 token이다. Python/source/.venv/Git/LTspice가 설치되어 있으므로 clean machine으로 부르지 않는다.
+- Sandbox 실행 파일, Hyper-V 관리 command, 일반 설치 경로/PATH의 VirtualBox/VMware를 찾지 못했다. HypervisorPresent=true는 clean guest의 존재를 증명하지 않는다. Home은 Microsoft의 Sandbox 지원 edition이 아니다. 별도 guest/machine을 사용할 수 없어 요청에 명시된 fallback인 artifact·checklist·helper 준비와 host isolation 검증을 수행했다. Windows feature/보안 설정 변경 및 VM/LTspice 다운로드·라이선스 자동 동의는 하지 않았다.
+- 시작 working tree는 clean, 기준 commit은 `d85a76490b5d3fe8b38ad766634a1afd7bf52163`이다. App/parser/analysis/runtime/portable architecture/installer recipe/requirements/README는 보존했다. 검증 스크립트와 문서만 변경했다.
+
+### Fresh build / artifact
+
+- 기존 installer를 재사용하지 않고 `scripts/build_windows.ps1`로 committed application source를 새로 빌드한 뒤 `scripts/build_installer.ps1`로 포장했다. 두 build 모두 **exit 0**, PyInstaller 6.22.3 / Inno Setup 6.7.3 / AppVersion 0.1.0.
+- `installer_output/CircuitSimulationAssistant-Setup.exe`: **87,193,866 bytes**, output last-write UTC **2026-09-30T13:03:34.1785807Z**, SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`**, Authenticode **NotSigned**. Hash는 이 artifact에만 적용되며 재빌드하면 다시 기록한다.
+- `docs/release-checklist.md`에 checked host 결과와 unchecked clean-machine 항목을 분리했다. 첫 guest test는 Setup.exe만 전달하고 helper/공개 fixture는 이후 별도로 제공한다. AC excitation을 추가한 공개 divider 복사본도 ignored 검증 폴더에 준비했으며 installer에 포함하지 않았다.
+
+### 검증 도구 / 발견한 문제
+
+- `scripts/verify_release.ps1`: Python/Git 없는 Windows PowerShell용 opt-in artifact/runtime helper. SHA-256·Windows build·user token·HTTP health·실제 netstat listen 주소·설치 bundle에서 로딩된 Python DLL을 기록한다. 개발 env를 제거한 자체 child만 시작/종료하며 기존 사용자 process/설치/보안 설정을 건드리지 않는다. helper의 종료는 자체 smoke child termination이며 정상 Ctrl+C 검증과 구분한다. 자동으로 clean VM/Python absence를 인증하지 않는다.
+- `tests/verify_installer.py`에 opt-in `--release-checks`와 사용자 Programs 아래의 unused custom `--install-dir`를 추가했다. 기존 기본 검증을 재사용하며 release 모드만 실제 AC를 실행한다. 기존 설치/shortcut은 덮어쓰지 않고, 실행 전 사용자 데이터와 LTspice·portable·repo hash를 보존 검사한다. 새 simulation 결과도 uninstall 후 보존한다.
+- 첫 실제 helper 실행에서 Windows PowerShell의 parameter-default 평가 시 `$PSScriptRoot`가 비어 기본 report 경로 계산이 실패했다. script body에서 default를 초기화하도록 수정하고, 별도 디렉터리에 복사한 helper의 standalone/default-report 회귀 test를 추가했다.
+- 첫 AC verification은 수치/graph 검증에 성공했지만 기존 15초 종료 대기를 초과해 테스트의 termination fallback을 사용했다. console에 ConnectionResetError도 관찰됐으나 원인 관계는 확정하지 않았다. `tests/verify_portable.py`에 opt-in 45초 종료 대기를 추가하고 release verifier가 fallback/nonzero exit를 성공으로 처리하지 않도록 했다. 전체 재검증에서 **CTRL_BREAK / exit 0 / 서버 정지**를 확인했다. 앱 코드 수정으로 종료 문제가 해결됐다고 주장하지 않으며 다른 환경의 종료 지연은 후속 관찰 대상이다.
+
+### 실제 host 검증 결과
+
+- 기본 current-user 경로의 **install → launch → uninstall → reinstall → launch → uninstall**, 별도 공백 포함 custom 경로의 install/launch/uninstall/reinstall/uninstall 모두 **exit 0**. 각 설치에서 portable 2,294개 파일 hash 일치, registry·시작 메뉴 shortcut·desktop task off/on·silent no-launch를 확인했다. 실행 중 uninstall은 **exit 1**로 차단하며 앱을 강제 종료하지 않았다. Inno install/uninstall 로그에 `Need to restart Windows? No`. 마지막에는 두 테스트 설치가 모두 제거됐다.
+- 설치된 exe를 unrelated CWD, System32-only PATH, PYTHONPATH/PYTHONHOME/VIRTUAL_ENV 제거 환경에서 실행했다. 실제 Edge 초기 UI/upload/review/승인 gate 및 결과 graph/metric/Summary 통과. 기본 browser open 요청은 OS에 수락됐다. 설치 wizard의 대화형 최종 체크박스나 native browser를 사람이 직접 관찰한 검증은 아니다.
+- 실제 listener **127.0.0.1:8501**만 관찰했고, `python313.dll` / `python3.DLL`은 설치된 `_internal`에서 로딩됐다. source/venv가 다른 위치에 여전히 있는 host 검사이므로 물리적으로 없는 환경의 독립성을 증명하지 않는다. startup console/기본 UI에서 개발 repo/.venv 경로 누출은 관찰되지 않았다.
+- LTspice의 일반 설치 위치 탐지 통과(명시 path override 없음). 누락 case는 **child의 invalid LTSPICE_EXECUTABLE 설정**으로 유도했다. 앱/UI/review는 정상이며 안내 후 실행을 안전하게 차단하고 새 simulation output을 만들지 않았다. 실제 LTspice 미설치 및 설치 전후 전환 검증은 pending이다.
+- 공개 분압 fixture의 실제 AC: **`.ac dec 100 10 1Meg`**, RAW **10–1,000,000 Hz**, gain **-6.020599913279624 dB**(UI **-6.021 dB**). 모든 RAW sample을 `20*log10(0.5)`와 비교해 tolerance 1e-5 dB 통과, RAW/LOG nonempty·parsing·graph·원본 ASC hash 보존 확인. 일반 사용자 token에서 LocalAppData input/output/cache/log를 사용했다. 실패한 첫 검증 attempt도 AC를 완료했으며 그 결과는 로컬 evidence로 남겼다.
+- Simulation diagnostic console에는 현재 사용자 LocalAppData 결과 경로가 들어간다. 개발 source 고정 경로 의존성은 아니지만 raw log는 공유 전 가려야 한다. 해당 logs/evidence/fixture/manifests는 모두 ignored `installer_output` 또는 `simulation_output`에만 남겼다.
+- No block observed in tested environment. **Defender AntivirusEnabled/RealTimeProtectionEnabled=false**였으므로 Defender 안전성 검증이 아니다. SmartScreen·firewall dialog·완전 offline/outbound 동작·관리자 Program Files 설치·clean VM은 미검증이다. Unsigned development release; Windows may display a SmartScreen warning.
+
+### Regression / 공개 안전성 / 다음 단계
+
+- 먼저 기존 **170 tests, 127.447초, OK**. 신규 deterministic helper test 4개는 hash/실패 처리/경로/clean-claim 경계를 검사하며 VM·AV 결과를 mock으로 인증하지 않는다. 최종 전체 **174 tests, 197.240초, OK / exit 0**. 검증 Python 파일 문법 검사 및 실제 helper 재실행 통과. 기존 AC/Transient/DC/Parameter/Summary/AI architecture/승인·원본 보존의 unit/AppTest 회귀 없음; 실제 이번 simulation은 AC fixture 범위다.
+- 최종 보고서와 build/test 로그는 `installer_output/release-validation/`에 저장했다. 공개 변경은 checklist/helper/tests/두 로그이며 README에 clean-machine 성공 문구를 추가하지 않았다. 기존 tracked 86개 중 의도한 두 로그·두 verification script 외 **82개 byte-level 보존**. 공개 text 7개 credential/개인 절대경로/email 패턴 미발견, `git diff --check` 통과, staged 0개·generated tracked 0개·최종 artifact SHA-256 동일 확인. Application source/requirements/build recipe 변경, commit/push/Release upload/API 호출 없음.
+- 다음 gate는 checklist의 unchecked clean Windows/Python absent/LTspice absent→present/관리자·대화형 설치/보안 제품·firewall 실제 관찰이다. 현재 결과를 모든 Windows에서의 release readiness나 antivirus 안전성으로 일반화하지 않는다.

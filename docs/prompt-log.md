@@ -548,3 +548,22 @@ Prompt 014A의 portable onedir를 그대로 설치하는 Inno Setup 6 installer�
 - 설치된 exe의 localhost/browser-open 요청/초기 UI/LTspice 탐지/AC review/승인 gate 및 정상 종료 확인. 원래 portable exe도 재검증했다. 기존 user simulation 데이터·LTspice·portable·repository hash 보존. Simulation/API는 반복 실행하지 않았다.
 - 기존 166 + 신규 build preflight 4 = **170 tests 모두 통과(310.821초, exit 0)**. README와 개발 로그에 실제 결과·현재 사용자 검증 범위·관리자/대화형/clean VM 미검증 한계를 구분했다. Setup은 unsigned이며 SmartScreen 가능성을 명시했다.
 - 기존 source/test/requirements 및 사용자 app.py 상태를 보존했다. Public additions의 secret/개인 경로 패턴 미발견, whitespace 검사 통과, installer/build/dist/venv/log 공개 제외 및 staged 파일 0개. Git commit/push, Release upload, signing/우회 없음.
+
+---
+
+## Prompt 015A — Clean Windows Release Validation
+
+### Request
+
+v0.1.0 Setup-only 사용자의 clean Windows 배포를 검증한다. 실제 VM이 없으면 성공으로 가장하지 않고 release artifact/checklist/자동 smoke helper와 host isolation 검사까지 수행한다. Fresh build/hash, LTspice 누락/탐지/실제 AC, 설치·제거·재설치, user-mode/localhost/개인 경로와 보안 관찰을 기록한다. 앱 기능·parser·계산·UI 변경, Windows feature 임의 활성화, API 호출·commit/push/Release upload는 제외한다.
+
+### Result / Validation
+
+- **Clean Windows VM validation not performed.** Windows 11 Home 25H2 x64 build 26200.9457의 개발 PC이며 Sandbox/접근 가능한 clean VM을 찾지 못했다. Python/source/.venv가 존재하는 상태의 env/CWD isolation임을 명시하고 Windows/보안 설정은 변경하지 않았다.
+- 기준 `d85a764`의 application source로 portable와 installer를 새로 빌드해 모두 exit 0. Setup **87,193,866 bytes**, UTC **2026-09-30T13:03:34.1785807Z**, SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`**, unsigned. Binary와 local evidence는 Git 제외.
+- 새 `scripts/verify_release.ps1`, `tests/test_release_validation.py`, `docs/release-checklist.md`를 추가하고 기존 installer/portable verification을 확장했다. Python 없는 PowerShell helper는 integrity/health/실제 listen/bundled DLL/자체 process cleanup을 검사하며 clean VM을 자동 인증하지 않는다. 첫 실행의 default report 경로 초기화 오류를 수정하고 standalone 회귀 test를 추가했다.
+- 기본/공백 포함 custom current-user 경로의 설치/실행/제거/재설치 검증 통과. 기본 경로는 재설치 후 launch까지 통과. 설치 payload 2,294개 hash, 시작 메뉴/선택 desktop shortcut, silent no-launch, running uninstall 차단, restart 불필요, user data/LTspice/repo 보존 확인. 테스트 설치는 모두 제거됐다.
+- Installed UI/승인 gate/OS browser-open 요청 수락, **127.0.0.1:8501** bind, 설치 `_internal` Python DLL, non-admin 실행 통과. Invalid child LTspice override로 누락 안내·crash 없는 실행 차단을 검증했다. 실제 미설치 guest를 검증한 것은 아니다.
+- 실제 AC fixture **10 Hz–1 MHz, -6.020599913279624 dB**, RAW/LOG·graph·Summary·원본 보존 통과. 첫 attempt의 15초 종료 timeout/termination fallback을 기록하고 opt-in 45초 대기 및 정상 종료 판정을 추가했다. 최종 재검증은 CTRL_BREAK / exit 0. 앱 코드는 수정하지 않았다.
+- 기존 170개 먼저 통과, 최종 **174 tests, 197.240초, OK / exit 0**. 신규 4개는 deterministic helper 검증이다. 실제 이번 simulation은 AC 범위이며 다른 분석의 새 실제 integration 완료로 과장하지 않는다.
+- Defender 보호가 비활성화된 host이므로 AV 안전성은 검증하지 못했다. SmartScreen/firewall dialog/관리자 설치/clean Windows는 unchecked checklist로 남겼다. Simulation 로컬 로그의 사용자 데이터 경로는 공유 전 redaction 대상이며 공개에 포함하지 않는다. README/requirements/기능 코드/패키징 설계 유지, API·Git commit/push·Release upload 없음.
