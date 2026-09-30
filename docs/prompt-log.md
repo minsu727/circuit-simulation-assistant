@@ -531,3 +531,20 @@ Evidence:
 - 공개 분압 fixture의 actual AC smoke 통과: `.ac dec 100 10 1Meg`, RAW 10 Hz–1 MHz, gain -6.020599913279624 dB(UI -6.021 dB), non-empty RAW/LOG, graph, 원본 보존. Verification의 `.op.raw` 및 lazy-loading 선택 오류만 고쳐 재실행했다. 앱 계산 변경 없음. LTspice 26.0.1 탐지와 missing-LTspice의 crash 없는 실행 차단도 확인했다. 두 최종 smoke 모두 CTRL_BREAK 종료 exit 0 및 서버 정지.
 - 기존 151 + 신규 15 = **166 tests 통과**, 변경/신규 Python 문법 검사 통과. 기존 계산/parser/Summary/provider/tests 및 core/LLM requirements 유지. `tests/verify_portable.py`는 선택적 Playwright/Edge로 실제 exe를 검증하며 `--simulate`가 있을 때만 실제 fixture를 실행한다.
 - README와 두 로그에 실행 정책·실제 결과·내부 bootstrap 버전/console/clean VM 미검증 한계를 기록했다. Whitespace 검사 통과, staged 파일 0개, build/dist/venv/simulation_output 공개 제외, 새 개인 절대경로/secret 패턴 미발견. Screenshot 교체·installer·API smoke·release upload·Git commit/push 없음.
+
+---
+
+## Prompt 014B — Windows Installer
+
+### Request
+
+Prompt 014A의 portable onedir를 그대로 설치하는 Inno Setup 6 installer를 만든다. 설치 경로, 시작 메뉴/선택적 desktop shortcut, silent 시 실행 생략, Windows uninstall과 사용자 데이터 보존을 제공한다. 실제 build/install/설치된 앱 launch/uninstall/reinstall 및 기존 166개 회귀를 확인한다. 앱 로직·portable architecture 변경, LTspice/key 포함, signing/SmartScreen 우회, Release upload와 Git commit/push는 제외한다.
+
+### Result / Validation
+
+- `.iss`, 설치 안내문, `scripts/build_installer.ps1`, preflight unit test와 실제 installer verification script를 추가했다. Portable 전체를 설치하며 AppVersion 0.1.0, 전체 사용자 Program Files 및 현재 사용자 모드, optional desktop task, postinstall/skipifsilent launch, 기본 uninstaller를 구성했다. Runtime/analysis/기존 tests/requirements는 그대로다.
+- 공식 서명 검증한 Inno Setup **6.7.3**을 repo 밖에 준비했다. Compiler metadata 0.0.0.0 문제를 preprocessor `Ver` 검사로 해결했다. 최종 build **exit 0**, `installer_output/CircuitSimulationAssistant-Setup.exe`, **87,196,921 bytes**. Inno/LTspice/private inputs/API key를 package에 추가하지 않았다.
+- 현재 사용자 기본 위치에서 실제 설치/실행/제거/재설치/재제거 통과. 매 install의 2,294개 파일 hash 동일, 시작 메뉴 shortcut과 desktop 선택 off/on, silent no-launch, registry 등록/제거 확인. 실행 중 제거는 안내 후 exit 1로 차단하고 강제 종료하지 않았다. Uninstaller 자체 삭제 지연 때문에 검증 도구에 bounded wait를 추가한 뒤 전체 주기를 통과했다.
+- 설치된 exe의 localhost/browser-open 요청/초기 UI/LTspice 탐지/AC review/승인 gate 및 정상 종료 확인. 원래 portable exe도 재검증했다. 기존 user simulation 데이터·LTspice·portable·repository hash 보존. Simulation/API는 반복 실행하지 않았다.
+- 기존 166 + 신규 build preflight 4 = **170 tests 모두 통과(310.821초, exit 0)**. README와 개발 로그에 실제 결과·현재 사용자 검증 범위·관리자/대화형/clean VM 미검증 한계를 구분했다. Setup은 unsigned이며 SmartScreen 가능성을 명시했다.
+- 기존 source/test/requirements 및 사용자 app.py 상태를 보존했다. Public additions의 secret/개인 경로 패턴 미발견, whitespace 검사 통과, installer/build/dist/venv/log 공개 제외 및 staged 파일 0개. Git commit/push, Release upload, signing/우회 없음.

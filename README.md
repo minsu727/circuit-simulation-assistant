@@ -139,8 +139,27 @@ dist/CircuitSimulationAssistant/
 - LTspice는 사용자별/Program Files의 일반 설치 위치와 PATH에서 탐지합니다. 비표준 설치는 `LTSPICE_EXECUTABLE` 환경 변수에 exe 전체 경로를 지정하고 재시작합니다. 잘못된 명시 경로는 다른 binary로 자동 대체하지 않습니다.
 - 입력 복사본·결과·launcher 로그는 `%LOCALAPPDATA%/CircuitSimulationAssistant/`의 `simulation_input/`, `simulation_output/`, `logs/`에 저장합니다. 실행 폴더나 원본 회로를 덮어쓰지 않습니다. Developer run의 프로젝트 내부 저장 방식은 유지합니다.
 - 이 core portable build에는 OpenAI SDK와 LTspice를 포함하지 않습니다. Mock은 유지하며 실제 OpenAI provider는 기존 optional `requirements-llm.txt`를 설치한 개발 환경에서 사용합니다. API key를 배포 파일에 넣지 않습니다.
-- PyInstaller 6.22.3 onedir / Streamlit 1.63.0 bootstrap을 사용합니다. Bootstrap은 내부 API이므로 버전 변경 시 재검증해야 합니다. Installer, signing, 자동 업데이트는 포함하지 않습니다.
+- PyInstaller 6.22.3 onedir / Streamlit 1.63.0 bootstrap을 사용합니다. Bootstrap은 내부 API이므로 버전 변경 시 재검증해야 합니다. Portable 폴더에는 signing·자동 업데이트를 포함하지 않으며, installer는 아래 절차로 별도 빌드합니다.
 - 빌드 후 선택적 Playwright/Edge 검증은 `python tests/verify_portable.py`로 수행합니다. `--simulate`는 공개 저항 분압 fixture를 실제 LTspice로 실행하고, `--open-browser`는 기본 browser 자동 열기를 확인합니다. `--missing-ltspice`는 누락 안내와 review를 검증합니다. 검증 로그는 Git에서 제외됩니다.
+
+## Windows Installer
+
+개발자는 먼저 위 portable 폴더를 만들고, 외부 빌드 도구인 [Inno Setup 6](https://jrsoftware.org/isdl.php)를 설치한 뒤 실행합니다. 실제 검증 버전은 **6.7.3**입니다. Inno Setup은 Python requirements나 최종 앱에 포함하지 않습니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1
+```
+
+결과: `installer_output/CircuitSimulationAssistant-Setup.exe`. GitHub Release에는 아직 업로드하지 않았습니다. Compiler는 PATH와 일반 설치 위치에서 찾으며 비표준 위치는 `-ISCC` 인자 또는 `ISCC_EXE` 환경 변수로 지정합니다. Portable 출력이 없으면 먼저 빌드하라는 안내와 함께 중단합니다.
+
+- Setup에서 설치 범위와 경로를 선택합니다. 전체 사용자 기본 경로는 Program Files이며 관리자 권한이 필요합니다. 현재 사용자 모드도 제공하며 기본 경로는 사용자 Programs 폴더입니다.
+- 시작 메뉴 바로가기를 만들고, 바탕화면 바로가기는 선택한 경우에만 만듭니다. 마지막 화면에 앱 실행 옵션을 제공하며 silent 설치에서는 실행하지 않습니다.
+- **LTspice는 별도로 설치해야 합니다.** Installer가 다운로드하거나 라이선스 동의를 대신 처리하지 않습니다. Python runtime은 기존 portable 폴더와 함께 설치되므로 사용자의 별도 Python 설치는 필요 없습니다.
+- 제거는 Windows 설치된 앱 목록에서 합니다. 먼저 launcher를 `Ctrl+C`로 종료하세요. 실행 중인 앱 파일이 잠겨 있으면 종료 안내 후 제거를 중단하며 강제 종료하지 않습니다. 기존 LocalAppData의 회로 복사본·결과·로그와 LTspice는 보존합니다.
+- 실제 검증은 현재 사용자 모드의 설치/설치된 앱 UI·LTspice 탐지/제거/재설치, 바로가기 선택, 실행 중 제거 차단으로 수행했습니다. 관리자 Program Files 설치, 대화형 완료 화면의 실행 체크박스, 별도 clean Windows VM은 아직 직접 검증하지 않았습니다. 실제 AC 실행 근거는 Prompt 014A이며 installer 단계에서는 반복하지 않았습니다.
+- Installer is currently unsigned and Windows may show a SmartScreen warning. 코드 서명과 경고 우회는 수행하지 않았습니다.
+
+재현 가능한 설치 검증은 `python tests/verify_installer.py`를 사용합니다(선택적 Playwright/Edge 필요). 기존 설치·바로가기가 있으면 중단하며, 테스트에서 새로 설치한 앱만 제거합니다. 생성된 installer·검증 로그는 Git에서 제외됩니다.
 
 ## Project Structure
 

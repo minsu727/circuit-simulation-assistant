@@ -958,3 +958,40 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - `git diff --check` 통과, staged files 0개, build/dist/venv/simulation_output tracked 파일 0개. Audit helper·build/test/geometry 로그는 공개 제외 영역에 둔다. README에 build/run/종료, LTspice 설정, 데이터 위치와 optional SDK 정책을 최소 추가했으며 기존 screenshot과 validation 수치는 바꾸지 않았다.
 - Windows x64/현재 pinned 환경 검증이며 bootstrap은 내부 API라 Streamlit 변경 시 재검증이 필요하다. 최초 font cache 생성으로 첫 화면 로딩이 느릴 수 있다. 포트 확인과 실제 bind 사이의 짧은 race에서는 재실행이 필요할 수 있다. 기존 외부 model/include 제약, 현재 분석 범위는 그대로다. 진행 중 LTspice task의 cancel/resume 기능은 추가하지 않았다.
 - Console launcher 유지, installer/MSI/signing/updater 및 SmartScreen 우회 없음. Actual OpenAI smoke, GitHub Release upload, commit/push도 하지 않았다. 다음 Prompt 014B에서 검증된 onedir 폴더를 installer로 묶는 작업을 검토할 수 있다.
+
+---
+
+## 2026-09-30 — Prompt 014B — Windows Installer
+
+### 구성 / 기존 구현 보존
+
+- Prompt 014A의 `dist/CircuitSimulationAssistant/`를 그대로 설치하는 Inno Setup 6 installer를 추가했다. `installer/CircuitSimulationAssistant.iss`, 설치 안내문, `scripts/build_installer.ps1`이 새 구성이다. AppVersion은 0.1.0, 출력은 `installer_output/CircuitSimulationAssistant-Setup.exe`다. 기존 launcher/runtime/analysis/parser/Summary/provider 및 Python requirements는 수정하지 않았다.
+- 시작 시 app.py가 modified로 표시됐으나 Git의 텍스트 diff는 없었고 portable app.py와 정규화된 텍스트가 같았다(줄바꿈 차이). 원본 파일을 덮어쓰거나 portable을 재빌드하지 않고 시작 시 byte hash로 보존했다. 기존 screenshot과 validation claim도 유지했다.
+- `.iss`는 onedir의 exe와 `_internal` 전체를 재귀 설치한다. 기본 전체 사용자 경로는 `{autopf}`의 Program Files이며 관리자 권한이 필요하다. Inno의 install-mode 선택으로 현재 사용자 설치도 제공한다. 경로 선택 페이지, 시작 메뉴 바로가기, 기본 미선택 desktop task, 마지막 화면의 launch 옵션을 구성했다. `skipifsilent`와 `runasoriginaluser`로 silent 설치 시 자동 실행하지 않으며 관리자 설치 후 원래 사용자 실행을 요청한다.
+- 설치 안내문은 LTspice 별도 설치와 기존 Python runtime 포함 정책을 알린다. LTspice 탐지 코드를 installer에 복제하거나 자동 다운로드하지 않는다. OpenAI SDK/API key, private ASC와 결과를 넣지 않는다. LocalAppData의 기존 simulation_input/output/log 정책을 유지하고 기본 uninstaller만 사용한다. `UninstallDelete`나 사용자 데이터 삭제 코드는 없다.
+- 실행 중인 설치 exe에 쓰기 handle을 열 수 있는지 확인하되 실제 쓰기는 하지 않는다. Windows가 실행 중 파일 접근을 거부하면 설치/제거를 중단하고 launcher 종료/권한 확인을 안내한다. Restart Manager 강제 종료나 shell process kill은 사용하지 않고 launcher 자체도 변경하지 않았다.
+
+### 도구 / 빌드 / 오류 해결
+
+- PATH와 일반 설치 위치에서 ISCC가 발견되지 않아 공식 Inno Setup **6.7.3** 배포 파일을 임시 폴더에 내려받았다. Authenticode Valid / publisher Pyrsys B.V.를 확인한 후 저장소 밖 현재 사용자 도구 폴더에 portable 모드로 준비했다. Inno 자체는 repo/최종 package/Python requirements에 포함하지 않았다.
+- `powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1`은 portable 필수 파일 확인 → 비공개 파일/연결된 resource 혼입 차단 → 명시 ISCC/환경 변수/PATH/일반 위치 탐지 → compile → 출력 확인 순서다. 누락 시 설치/빌드 방법을 안내하고 exit 1, 실제 compiler 실패 시 해당 exit code를 전달한다. 빌드 스크립트에는 외부 다운로드나 임의 shell 명령이 없다.
+- 초기 ISCC file-version metadata가 `0.0.0.0`여서 wrapper가 유효 compiler를 거부했다. Windows metadata에 의존하지 않고 Inno의 공식 preprocessor `Ver`로 major 6을 확인하도록 수정했다. 이후 **ISCC build exit 0**, Setup.exe **87,196,921 bytes(약 83.2 MiB)** 생성.
+- 첫 uninstall 검증은 초기 process 종료 직후 폴더를 검사해 실패했다. 실제 Inno 로그는 자체 삭제 helper의 재시도 후 Removed all=Yes / exit 0이었다. 검증 도구에 최대 10초의 bounded completion polling을 추가하고 전체 주기를 다시 검증했다. 설치/제거 기능이나 app 계산 코드를 억지로 바꾸지 않았다.
+
+### 실제 설치 / 실행 / 제거 / 재설치
+
+- `tests/verify_installer.py`는 기존 설치/registry/shortcut이 있으면 중단한다. 현재 세션에 administrator token이 없어 **현재 사용자 모드의 기본 사용자 Programs 위치**에서 실제 silent 설치를 수행했다. 관리자 Program Files 위치의 실제 설치를 통과했다고 주장하지 않는다.
+- 첫 install exit 0, 설치된 payload **2,294개 파일 모두 portable과 SHA-256 일치**. Windows uninstall registry의 이름/버전/설치 위치를 확인했다. 시작 메뉴 shortcut 대상은 설치된 exe였으며 desktop task 미선택 시 desktop shortcut이 없었다. Silent 설치가 앱을 자동 시작하지 않음도 확인했다.
+- 설치 경로의 exe를 별도 CWD와 개발 Python 경로를 제거한 환경에서 실행했다. localhost readiness, 실제 Edge 초기 UI/upload, AC 조건 review와 승인 전 disabled, **LTspice detected**, source fixture 보존 통과. 기본 browser 열기 요청이 OS에 수락된 것도 launcher 로그로 확인했다. CTRL_BREAK 종료 exit 0 및 서버 정지 확인. 대화형 설치 완료 화면의 체크박스 클릭까지 실제 검증한 것은 아니다.
+- 앱이 실행 중일 때 실제 uninstaller는 종료 안내를 남기고 **exit 1로 차단**, 앱 process와 설치 파일을 유지했다. 해당 테스트에서 띄운 launcher만 정상 종료한 후 제거했다. 첫 uninstall **exit 0**, 설치 폴더·start-menu group·uninstall registry 제거 확인.
+- 재설치 **exit 0**, 다시 2,294개 파일 hash 일치. 이번에는 desktop task를 선택해 시작 메뉴 및 desktop shortcut의 실제 대상을 확인했다. 두 번째 silent install도 자동 실행하지 않았다. 재제거 **exit 0**, 폴더·두 shortcut·registry 모두 제거됐다. 최종 상태에는 테스트 앱 설치가 남지 않는다.
+- Portable 전체 hash, tracked repository 파일 hash, 외부 LTspice exe hash, 기존 LocalAppData simulation_input/output의 파일 목록·hash가 모두 보존됐다. 사용자 simulation 결과/원본·LTspice 파일을 삭제하지 않았다. Actual AC simulation은 014A에서 검증됐으므로 이번에는 반복하지 않았으며 API 호출도 없다.
+- 설치·제거 후 원래 `dist` exe도 `tests/verify_portable.py`로 별도 실행했다. 초기 UI/localhost/LTspice 탐지/review/승인 gate/종료 통과, simulation 없음. Portable architecture와 bundle을 바꾸지 않았다.
+
+### Tests / 공개 점검 / 한계
+
+- 먼저 기존 **166 tests 통과(74.448초)**. `tests/test_installer_build.py`의 실제 PowerShell preflight 4개도 추가했다: portable 누락, 잘못된 명시 ISCC의 fallback 금지, compiler 미설치 안내, private 파일 혼입 차단. Inno 동작을 Python mock으로 재구현하지 않는다. 최종 전체 **170 tests, 310.821초, OK / exit 0**. 설치 UI/파일 검증은 별도의 opt-in 실제 installer script로 수행했다.
+- README에 installer build/run/제거, external Inno tool, LTspice 별도 설치, current-user/전체-user 범위와 실제 검증 한계를 추가했다. 공식 Release가 없으므로 다운로드 링크를 만들지 않았다. `installer_output/`와 임시 Inno 기본 Output 폴더를 ignore한다. Source `.iss`는 유지한다.
+- 시작 시 기존 tracked 파일 81개의 hash를 기록했다. 요청된 README·두 로그·ignore 설정 외 기존 77개 파일은 byte-level 보존했다. 앱/tests/requirements/portable build 설정에 의도치 않은 수정 없음. Public additions의 credential/개인 절대경로/email 패턴 검사, `git diff --check`, generated output·venv·simulation_output tracked/staged 없음 확인. 일회성 audit/helper/log는 공개 제외 영역에만 둔다.
+- 생성된 Setup의 Authenticode 상태는 **NotSigned**다. Windows SmartScreen warning 가능성을 README에 명시했으며 코드 서명·SmartScreen 우회를 하지 않았다. 전체 사용자 관리자 설치, 대화형 wizard/post-install launch 선택, 별도 clean Windows VM 및 향후 in-place upgrade는 아직 별도 검증 대상이다. 사용자 파일이 설치 폴더에 추가돼 있으면 이를 강제로 삭제하지 않는다.
+- GitHub Release upload, updater/MSI/CI/CD, icon 제작, Git staging/commit/push는 수행하지 않았다.

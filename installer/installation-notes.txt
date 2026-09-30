@@ -1,0 +1,16 @@
+Circuit Simulation Assistant 0.1.0
+
+LTspice is required for simulation and must be installed separately.
+This installer does not download or install LTspice.
+
+The application includes its Python runtime. No separate Python installation
+is required. The core package omits the optional OpenAI SDK and API keys.
+
+Keep the launcher console open while using the app in your browser.
+Close the app with Ctrl+C in the launcher before installing or uninstalling.
+Closing a browser tab alone does not stop the server.
+
+Simulation copies, results and logs remain in:
+%LOCALAPPDATA%\CircuitSimulationAssistant
+Uninstall removes installed application files and shortcuts, not user data,
+LTspice installations or personal schematics.

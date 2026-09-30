@@ -45,3 +45,7 @@ Desktop.ini
 # Portable packaging output (the maintained .spec is source configuration)
 /build/
 /dist/
+
+# Generated Inno Setup package; installer/*.iss remains source configuration
+/installer_output/
+/installer/Output/
