@@ -567,3 +567,20 @@ v0.1.0 Setup-only 사용자의 clean Windows 배포를 검증한다. 실제 VM�
 - 실제 AC fixture **10 Hz–1 MHz, -6.020599913279624 dB**, RAW/LOG·graph·Summary·원본 보존 통과. 첫 attempt의 15초 종료 timeout/termination fallback을 기록하고 opt-in 45초 대기 및 정상 종료 판정을 추가했다. 최종 재검증은 CTRL_BREAK / exit 0. 앱 코드는 수정하지 않았다.
 - 기존 170개 먼저 통과, 최종 **174 tests, 197.240초, OK / exit 0**. 신규 4개는 deterministic helper 검증이다. 실제 이번 simulation은 AC 범위이며 다른 분석의 새 실제 integration 완료로 과장하지 않는다.
 - Defender 보호가 비활성화된 host이므로 AV 안전성은 검증하지 못했다. SmartScreen/firewall dialog/관리자 설치/clean Windows는 unchecked checklist로 남겼다. Simulation 로컬 로그의 사용자 데이터 경로는 공유 전 redaction 대상이며 공개에 포함하지 않는다. README/requirements/기능 코드/패키징 설계 유지, API·Git commit/push·Release upload 없음.
+
+---
+
+## Prompt 015B — GitHub Release v0.1.0 Preparation
+
+### Request
+
+검증된 v0.1.0 installer를 유지하고 release notes/body, README 안내, checksum/provenance와 tag/publication 수동 절차를 local working tree에서 준비한다. 최종 release-prep commit에 tag하는 계획만 기록하며 commit/push/tag/Release 생성·binary upload는 수행하지 않는다. Clean VM/API/보안 검증 한계를 유지하고 기능·tests·screenshots는 변경하지 않는다.
+
+### Result / Validation
+
+- Clean `main` HEAD **`73d952a4fb226895958db89b0c04275a79ad6e07`**에서 시작했다. Artifact source **`d85a76490b5d3fe8b38ad766634a1afd7bf52163`**와 향후 tag target인 최종 release-prep commit을 구분했다. Installer **0.1.0**, tag **v0.1.0**, title **Circuit Simulation Assistant v0.1.0** 일치.
+- Setup 재계산 결과 **87,193,866 bytes**, SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`**, output UTC **2026-09-30T13:03:34.1785807Z**, Prompt 015A와 동일. Artifact-only helper exit 0; 재빌드/전체 tests/앱 실행/simulation 없음. **174 tests passed**는 이전 실제 검증 기록으로 인용했다.
+- `docs/releases/`의 상세 notes, GitHub 복붙용 body, 수동 배포 README를 준비했다. 프로젝트 README에는 짧은 release 준비 안내와 Python/clean-VM 구분을 추가했다. Checklist는 수행된 준비와 향후 사용자 commit/tag/upload를 구분했다.
+- LTspice 별도 설치, unsigned/SmartScreen 가능성, clean Windows/API smoke 미검증, Windows 중심·복잡 회로의 수동 선택 한계를 기록했다. Generic releases page 조회는 cache miss여서 실제 원격 Release 유무 확인으로 주장하지 않았고 직접 download URL을 만들지 않았다.
+- 기능 source/tests/requirements/packaging/screenshot은 유지하고 문서만 변경했다. Hash/version/provenance·문서 링크·Git whitespace/생성물 제외를 점검했다. Binary staging, commit/push/tag 생성, GitHub Release/draft/asset upload 및 API 호출 없음.
+- 최종 문서 7개·상대 참조 38개 통과, 기존 tracked 85개 bytes 및 로그 prefix/README screenshot 영역 보존. `git diff --check` 통과, privacy 패턴 미발견, staged/generated tracked 0개, HEAD/local tag 무변경. 실제 Setup ProductVersion 0.1.0 확인. 로컬 audit 결과만 ignored output에 저장했다.

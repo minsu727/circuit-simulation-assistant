@@ -96,6 +96,12 @@ Natural-language Request
 - [스크린샷 안내](docs/screenshots/README.md) · [GitHub Issue 후보](docs/github-issues.md)
 - [공개 전 보안·개인정보 점검](docs/publication-review.md)
 
+## Windows Release
+
+**v0.1.0 공개 준비 중입니다.** 배포 예정 GitHub Release asset은 `CircuitSimulationAssistant-Setup.exe`입니다. [Release notes](docs/releases/v0.1.0.md)와 [검증 체크리스트](docs/release-checklist.md)에 기능·검증 범위·checksum을 기록했습니다. 이 준비 작업에서는 tag 생성이나 Release 업로드를 수행하지 않습니다.
+
+Simulation에는 **LTspice를 별도로 설치**해야 합니다. Installer는 Python runtime을 포함하므로 일반적인 사용에서 별도 Python 설치는 예상하지 않지만, **Python 없는 clean Windows VM 검증은 아직 수행하지 않았습니다**. Unsigned installer; Windows may display a SmartScreen warning.
+
 ## Getting Started
 
 검증 환경: Windows, Python 3.13.5, LTspice 26.0.1. LTspice는 별도 설치하며 PyLTSpice가 실행 파일을 찾을 수 있어야 합니다. 설치된 환경의 core 실행 의존성(직접 의존성과 일부 하위 의존성 고정)을 [requirements.txt](requirements.txt)에 기록했습니다. 새 환경에서의 설치 검증은 아직 하지 않았습니다.
@@ -154,9 +160,9 @@ powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1
 
 - Setup에서 설치 범위와 경로를 선택합니다. 전체 사용자 기본 경로는 Program Files이며 관리자 권한이 필요합니다. 현재 사용자 모드도 제공하며 기본 경로는 사용자 Programs 폴더입니다.
 - 시작 메뉴 바로가기를 만들고, 바탕화면 바로가기는 선택한 경우에만 만듭니다. 마지막 화면에 앱 실행 옵션을 제공하며 silent 설치에서는 실행하지 않습니다.
-- **LTspice는 별도로 설치해야 합니다.** Installer가 다운로드하거나 라이선스 동의를 대신 처리하지 않습니다. Python runtime은 기존 portable 폴더와 함께 설치되므로 사용자의 별도 Python 설치는 필요 없습니다.
+- **LTspice는 별도로 설치해야 합니다.** Installer가 다운로드하거나 라이선스 동의를 대신 처리하지 않습니다. Python runtime을 함께 설치하므로 일반적인 사용에서 별도 Python 설치는 예상하지 않습니다. Python 없는 clean Windows VM은 아직 검증하지 않았습니다.
 - 제거는 Windows 설치된 앱 목록에서 합니다. 먼저 launcher를 `Ctrl+C`로 종료하세요. 실행 중인 앱 파일이 잠겨 있으면 종료 안내 후 제거를 중단하며 강제 종료하지 않습니다. 기존 LocalAppData의 회로 복사본·결과·로그와 LTspice는 보존합니다.
-- 실제 검증은 현재 사용자 모드의 설치/설치된 앱 UI·LTspice 탐지/제거/재설치, 바로가기 선택, 실행 중 제거 차단으로 수행했습니다. 관리자 Program Files 설치, 대화형 완료 화면의 실행 체크박스, 별도 clean Windows VM은 아직 직접 검증하지 않았습니다. 실제 AC 실행 근거는 Prompt 014A이며 installer 단계에서는 반복하지 않았습니다.
+- Prompt 015A에서 **174 tests passed** 및 개발 PC의 현재 사용자 모드 설치/설치된 앱 UI·LTspice 탐지/실제 AC/제거/재설치를 확인했습니다. 기본·공백 포함 custom 경로, 바로가기 선택, 실행 중 제거 차단도 검증했습니다. 관리자 Program Files 설치, 대화형 완료 화면의 실행 체크박스, 별도 clean Windows VM은 미검증입니다. [상세 검증 범위](docs/release-checklist.md)를 확인하세요.
 - Installer is currently unsigned and Windows may show a SmartScreen warning. 코드 서명과 경고 우회는 수행하지 않았습니다.
 
 재현 가능한 설치 검증은 `python tests/verify_installer.py`를 사용합니다(선택적 Playwright/Edge 필요). 기존 설치·바로가기가 있으면 중단하며, 테스트에서 새로 설치한 앱만 제거합니다. 생성된 installer·검증 로그는 Git에서 제외됩니다.

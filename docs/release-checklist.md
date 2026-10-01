@@ -207,7 +207,22 @@ An absence of blocking in one environment is not an antivirus safety guarantee.
 - [ ] Complete the outstanding clean-machine cases before claiming clean Windows validation.
 - [x] Review diff and secret/privacy scan; `git diff --check` passes. Seven public text files reviewed; no credential/personal-path patterns found.
 - [x] Keep generated Setup, dist/build, logs and installer_output out of Git; no VM image was created. Staged files: 0.
-- [ ] Attach the tested artifact's hash to future release notes after manual review.
+- [x] Prompt 015B: recompute the existing installer hash and size; exact match with Prompt 015A, no rebuild.
+- [x] Prepare [v0.1.0 notes](releases/v0.1.0.md), [GitHub release body](releases/v0.1.0-github-release.md) and [manual publication plan](releases/README.md), including checksum and limitations.
+- [x] Keep version/title/tag consistent: AppVersion `0.1.0`, title `Circuit Simulation Assistant v0.1.0`, planned tag `v0.1.0`.
+- [ ] User review and commit the release-prep documents; record that final commit SHA.
+- [ ] Create/push `v0.1.0` on that final release-prep commit, after verifying no existing tag conflict.
+- [ ] User creates the GitHub Release and uploads the checksum-matched Setup asset.
+- [ ] Verify the published download hash and update README with the actual release URL/status.
+
+Prompt 015B started on clean `main` at
+`73d952a4fb226895958db89b0c04275a79ad6e07`. The artifact source remains
+`d85a76490b5d3fe8b38ad766634a1afd7bf52163`; changes between those commits affect
+only validation scripts/tests/docs, not the application or build recipes. The
+tag target will be the **future final release-prep commit**, not either of these
+existing commits. Its SHA cannot be known before the user commits. No application
+tests, simulation or build were rerun during this documentation-only preparation.
+All clean-machine/security cases above remain unchecked.
 
 This task does not commit, push, upload a GitHub Release, sign binaries or change
 SmartScreen/firewall/security settings.
