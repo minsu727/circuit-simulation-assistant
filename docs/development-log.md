@@ -1048,3 +1048,31 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - GitHub generic releases page의 read-only 조회는 cache miss로 완료되지 않았다. 원격 Release 유무를 새로 확인했다고 주장하지 않으며, README에는 local release notes 링크만 추가했다. 가짜 asset URL·새 screenshot은 만들지 않았다.
 - 이번 검증은 artifact 존재/크기/hash/timestamp, 버전·source provenance, Markdown/상대 링크·privacy·Git 제외 및 변경 범위 검사다. 기존 **174 tests passed는 Prompt 015A 기록**이며 이번에 tests/simulation/설치·실행을 반복하지 않았다. Setup은 ignored 상태로 유지하고 staging/commit/tag/push, GitHub draft/Release 생성·asset upload, API 호출은 수행하지 않았다.
 - 최종 공개 문서 **7개**, Markdown parse 및 상대 참조 **38개** 확인. 기존 tracked **85개 byte-level 동일**, 기존 로그 prefix·README screenshot 영역 보존. 개인 절대경로/credential/email 패턴 미발견, `git diff --check` 통과(LF→CRLF 안내만 존재), staged 0개·generated tracked 0개·HEAD 동일·local v0.1.0 tag 없음 확인. Artifact의 실제 ProductVersion도 0.1.0이다. 검증 helper/HTML/JSON은 ignored `installer_output/release-prep/`에만 남겼으며 새 dependency를 설치하지 않았다.
+
+---
+
+## 2026-10-01 — Prompt 016 — Post-Release README Finalization
+
+- 시작 working tree는 clean, HEAD와 local annotated `v0.1.0`의 target은 **`75f6db47f722b20241190275ce01611ac00f2d1c`**다. `git ls-remote`로 remote tag object **`79dcb5c314845da674a4e1879e5abdbfa550c981`**와 peeled target의 일치를 확인했다. 사용자가 수행한 tag/commit 완료를 기록했으며 이번 작업은 tag를 만들거나 이동하지 않았다.
+- 사용자는 Release 게시·Setup 업로드 완료를 전달했으나 공개 조회 결과가 일치하지 않았다. 2026-10-01 **04:06 UTC** 재확인에서 repository API HTTP 200, public releases list HTTP 200/0개, release-by-tag API HTTP 404, 예상 Setup download HTTP 404였다. **`https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.0`**는 HTTP 200이지만 expanded assets에는 자동 source ZIP/TAR만 있었다. 따라서 페이지 존재를 installer를 포함한 공개 Release의 증거로 사용하지 않았다. Actual URL/Draft 여부를 사용자에게 질문했으며 private draft/upload 유무는 단정하지 않는다.
+- README에서 Windows Installer와 Developer Setup을 분리하고 Portable/Installer Build를 developer 항목으로 표시했다. 확인된 tag 페이지·상세 notes/history를 연결하고 일반 사용자 설치 흐름을 준비했다. **직접 다운로드 링크와 게시 완료 문구는 추가하지 않았다.** 공개 Setup이 확인되면 전환할 수 있도록 현재 확인 상태를 명시했다. Source archives가 installer가 아님도 안내했다.
+- `docs/releases/README.md`를 tag/publication 확인 이력과 향후 release 절차로 정리했다. `v0.1.0.md`에 실제 tag target과 local/remote checksum 검증의 차이를 기록했다. 공개 Release body를 읽을 수 없어 `v0.1.0-github-release.md`는 원본을 보존했으며 웹 내용과 동기화했다고 주장하지 않는다. Checklist의 commit/tag creation/push만 checked, publication/asset/downloaded hash 및 clean VM 항목은 unchecked 유지했다.
+- 로컬 Setup **87,193,866 bytes**, SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`**는 기존과 동일하다. 원격 binary가 없어 **remote checksum 일치는 미검증**이다. App/source/tests/requirements/packaging/installer/screenshot은 변경하지 않았으며 build·tests·simulation도 실행하지 않았다. 174 tests는 기존 기록이다.
+- 공개 API/페이지/asset/원격 tag는 읽기 전용으로 확인했다. GitHub Release 수정·생성·업로드, tag 변경, Git staging/commit/push는 수행하지 않았다. 남은 완료 조건은 실제 공개 Release/Setup URL 확인과 다운로드 hash 대조, 공개 body 확인 후 local 동기화다. 이번 작업을 게시 후 다운로드 안내의 완전한 완료로 보고하지 않는다.
+- 최종 문서 7개 검토/6개 변경, 상대 링크·anchor **43개** 통과. 기존 tracked **86개 byte-level 보존**, 이전 로그 prefix·README screenshot 영역 유지. `git diff --check` 통과(LF→CRLF 안내만 존재), staged/generated tracked 0개, HEAD/tag object/target 무변경 및 로컬 Setup hash 동일 확인. 로컬 공개 조회 evidence와 audit는 ignored `installer_output/post-release/`에만 남겼다.
+
+### Prompt 016 재개 — 인증 후 실제 Release 게시 및 문서 마무리
+
+- 기존 Prompt 016 변경사항을 보존하고 이어서 작업했다. 위의 04:06 UTC 기록은 게시 전 관찰이며, 아래 결과가 최종 게시 상태다. 사용자는 GitHub Release 게시·asset 업로드와 README/docs만의 commit/push를 명시적으로 승인했다.
+- GitHub CLI **2.102.0**, `minsu727` keyring 인증과 repository **ADMIN** 권한을 확인했다. 제한된 실행 환경에서는 인증 오류가 보였으나 정상 사용자 실행 환경에서 인증에 성공했다. Credential을 새로 만들거나 우회하지 않았다.
+- 인증된 조회에서도 기존 Release가 없음을 확인한 후, 기존 notes 파일을 그대로 사용해 `gh release create`의 `--verify-tag --latest`로 게시했다. **2026-10-01 04:49:34 UTC**, title **Circuit Simulation Assistant v0.1.0**, published/latest, draft=false/prerelease=false. 기존 local/remote tag target **`75f6db47f722b20241190275ce01611ac00f2d1c`**는 유지했다.
+- [Release 페이지](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.0)와 [직접 installer 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.0/CircuitSimulationAssistant-Setup.exe) 모두 **HTTP 200**. API의 asset 업로드 상태와 latest-release ID를 확인하고, 별도의 비인증 다운로드 파일을 실제로 받아 비교했다. 로컬/원격 다운로드 모두 **87,193,866 bytes**, SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`**로 정확히 일치한다. 다운로드한 installer는 실행하지 않았다.
+- README에 실제 다운로드/Release 링크를 넣고 기존 Windows Installer → Developer Setup → developer build 구분을 유지했다. Release history/notes/checklist는 게시·asset·다운로드 checksum 완료로 갱신했다. `v0.1.0-github-release.md`는 수정하지 않고 게시된 body와 텍스트 일치를 확인했다. 준비 당시의 조건부 설치 문구도 사용자 요청대로 그대로 보존한 source임을 history에 설명했다.
+- LTspice 별도 설치, unsigned/SmartScreen 가능성, Windows 중심, clean Windows VM/Python 없는 VM/실제 LTspice 미설치→설치 전환·SmartScreen/Defender·actual OpenAI API smoke 미검증을 유지했다. 기존 **174 tests passed는 Prompt 015A 기록**이며 이번에 앱 실행·tests·simulation·build를 반복하지 않았다.
+- 검증 자료와 다운로드 복사본은 ignored `installer_output/release-publish/`에만 저장했다. Application/source/tests/requirements/packaging/screenshot과 installer bytes를 보존하고, 문서만 검증 후 `docs: finalize v0.1.0 release`로 commit하여 `origin main`에 push하는 승인 범위로 마무리한다. Binary와 audit 파일은 Git에 포함하지 않는다.
+
+### Prompt 016 최종 보완 — 게시된 Release 본문 동기화
+
+- 사용자의 추가 승인에 따라 `v0.1.0-github-release.md`의 게시 전 설치 문구를 현재 다운로드 가능한 installer 안내와 실제 Release/asset 링크로 바꿨다. 앞선 '본문 원본 보존' 기록은 최초 게시 시점의 상태다. `gh release edit v0.1.0 --notes-file ...`로 원격 본문만 갱신하고 API로 다시 읽어 로컬 source와 일치함을 확인했다. Validation 수치·limitations, Release/asset identity, tag와 installer bytes는 변경하지 않았다.
+- 본문 수정 후 Release page와 direct installer endpoint를 다시 조회해 모두 **HTTP 200**, published/latest와 draft=false/prerelease=false를 확인했다. 앞서 실제 다운로드한 **87,193,866 bytes**의 SHA-256도 재검사해 기록된 로컬/remote asset digest와 일치함을 확인했다.
+- 최종 **문서 7개 변경**, devlog index 포함 **8개 문서의 상대 링크/anchor 60개** 검증 통과. 기존 tracked **85개 byte-level 동일**, 기존 로그 prefix와 README screenshots 보존. Source/tests/requirements/packaging/binary 무변경, clean-machine/security checklist 원문 보존, 개인정보/secret 패턴 미발견. `git diff --check` 통과(Windows LF→CRLF 안내만 존재), generated tracked 0개. 최종 commit은 이 README/docs 7개만 대상으로 하며 tag는 이동하지 않는다.

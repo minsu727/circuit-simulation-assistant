@@ -98,11 +98,25 @@ Natural-language Request
 
 ## Windows Release
 
-**v0.1.0 공개 준비 중입니다.** 배포 예정 GitHub Release asset은 `CircuitSimulationAssistant-Setup.exe`입니다. [Release notes](docs/releases/v0.1.0.md)와 [검증 체크리스트](docs/release-checklist.md)에 기능·검증 범위·checksum을 기록했습니다. 이 준비 작업에서는 tag 생성이나 Release 업로드를 수행하지 않습니다.
+**Current release: v0.1.0** — 일반 Windows 사용자는 [Windows installer 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.0/CircuitSimulationAssistant-Setup.exe)를 이용하세요. [GitHub Release 페이지](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.0)에서도 같은 파일을 받을 수 있습니다. 자동 생성 Source code ZIP/TAR는 Windows installer가 아닙니다.
+
+[상세 Release notes](docs/releases/v0.1.0.md)에 SHA-256과 검증 범위·한계를 기록했습니다. 배포 확인 상태는 [release history](docs/releases/README.md)를 참고하세요.
 
 Simulation에는 **LTspice를 별도로 설치**해야 합니다. Installer는 Python runtime을 포함하므로 일반적인 사용에서 별도 Python 설치는 예상하지 않지만, **Python 없는 clean Windows VM 검증은 아직 수행하지 않았습니다**. Unsigned installer; Windows may display a SmartScreen warning.
 
 ## Getting Started
+
+### Windows Installer
+
+일반 Windows 사용자는 source clone 대신 installer를 사용하는 경로를 권장합니다. 다운로드 게시 상태는 [Windows Release 안내](#windows-release)를 확인하세요.
+
+다음 순서로 사용합니다.
+
+1. 공개된 Release에서 `CircuitSimulationAssistant-Setup.exe`를 내려받아 설치합니다.
+2. Simulation을 사용하려면 LTspice를 별도로 설치합니다.
+3. Circuit Simulation Assistant를 실행하고 `.asc` 업로드 → 요청 입력 → Review / Approve / Run 순서로 사용합니다.
+
+### Developer Setup
 
 검증 환경: Windows, Python 3.13.5, LTspice 26.0.1. LTspice는 별도 설치하며 PyLTSpice가 실행 파일을 찾을 수 있어야 합니다. 설치된 환경의 core 실행 의존성(직접 의존성과 일부 하위 의존성 고정)을 [requirements.txt](requirements.txt)에 기록했습니다. 새 환경에서의 설치 검증은 아직 하지 않았습니다.
 
@@ -123,9 +137,9 @@ OpenAI provider를 사용할 때만 core 설치에 다음을 추가합니다. �
 
 실제 provider 사용 시에는 `LLM_PROVIDER=openai`와 `OPENAI_API_KEY`를 환경변수 또는 로컬 `.streamlit/secrets.toml`로 설정합니다. 실제 키는 저장소에 넣지 않습니다. 앞서 설정한 mock provider는 자동으로 변경되지 않습니다.
 
-## Windows Portable Build
+## Windows Portable Build (Developer / Advanced)
 
-개발 환경 실행은 기존처럼 `streamlit run app.py`를 사용합니다. Windows x64 portable build는 Python runtime을 포함한 **폴더 전체**를 복사해 실행하며, **LTspice는 별도로 설치해야 합니다**. GitHub Release binary는 아직 업로드하지 않았습니다.
+이 절은 개발자·고급 사용자가 portable 폴더를 직접 빌드하는 방법입니다. Windows x64 portable build는 Python runtime을 포함한 **폴더 전체**를 복사해 실행하며, **LTspice는 별도로 설치해야 합니다**. 일반 사용자용 installer 게시 상태는 [Windows Release](#windows-release)를 확인하세요.
 
 빌드 개발 환경에 기존 core requirements와 build-only 도구를 설치한 뒤 실행합니다:
 
@@ -148,7 +162,7 @@ dist/CircuitSimulationAssistant/
 - PyInstaller 6.22.3 onedir / Streamlit 1.63.0 bootstrap을 사용합니다. Bootstrap은 내부 API이므로 버전 변경 시 재검증해야 합니다. Portable 폴더에는 signing·자동 업데이트를 포함하지 않으며, installer는 아래 절차로 별도 빌드합니다.
 - 빌드 후 선택적 Playwright/Edge 검증은 `python tests/verify_portable.py`로 수행합니다. `--simulate`는 공개 저항 분압 fixture를 실제 LTspice로 실행하고, `--open-browser`는 기본 browser 자동 열기를 확인합니다. `--missing-ltspice`는 누락 안내와 review를 검증합니다. 검증 로그는 Git에서 제외됩니다.
 
-## Windows Installer
+## Windows Installer Build (Developer)
 
 개발자는 먼저 위 portable 폴더를 만들고, 외부 빌드 도구인 [Inno Setup 6](https://jrsoftware.org/isdl.php)를 설치한 뒤 실행합니다. 실제 검증 버전은 **6.7.3**입니다. Inno Setup은 Python requirements나 최종 앱에 포함하지 않습니다.
 
@@ -156,7 +170,7 @@ dist/CircuitSimulationAssistant/
 powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1
 ```
 
-결과: `installer_output/CircuitSimulationAssistant-Setup.exe`. GitHub Release에는 아직 업로드하지 않았습니다. Compiler는 PATH와 일반 설치 위치에서 찾으며 비표준 위치는 `-ISCC` 인자 또는 `ISCC_EXE` 환경 변수로 지정합니다. Portable 출력이 없으면 먼저 빌드하라는 안내와 함께 중단합니다.
+결과: `installer_output/CircuitSimulationAssistant-Setup.exe`. 이 명령은 로컬 빌드만 수행하며 Release 게시와는 별개입니다. Compiler는 PATH와 일반 설치 위치에서 찾으며 비표준 위치는 `-ISCC` 인자 또는 `ISCC_EXE` 환경 변수로 지정합니다. Portable 출력이 없으면 먼저 빌드하라는 안내와 함께 중단합니다.
 
 - Setup에서 설치 범위와 경로를 선택합니다. 전체 사용자 기본 경로는 Program Files이며 관리자 권한이 필요합니다. 현재 사용자 모드도 제공하며 기본 경로는 사용자 Programs 폴더입니다.
 - 시작 메뉴 바로가기를 만들고, 바탕화면 바로가기는 선택한 경우에만 만듭니다. 마지막 화면에 앱 실행 옵션을 제공하며 silent 설치에서는 실행하지 않습니다.
@@ -185,6 +199,7 @@ docs/                          Original logs, devlog, publication guidance
 
 ## Current Limitations / Future Work
 
+- Windows 중심 배포이며 LTspice 별도 설치가 필요합니다. Installer는 unsigned이고 clean Windows VM은 미검증입니다. [상세 release limitations](docs/releases/v0.1.0.md#known-limitations)를 참고하세요.
 - Actual API smoke test not yet performed; 실제 응답 품질은 검증하지 않았습니다.
 - 한 번에 **하나의 R/C** sweep만 지원하며 nested sweep / cancel-resume는 지원하지 않습니다.
 - AC bandwidth는 low-pass 우선, Transient step 측정은 waveform 적용 조건이 있습니다.

@@ -584,3 +584,37 @@ v0.1.0 Setup-only 사용자의 clean Windows 배포를 검증한다. 실제 VM�
 - LTspice 별도 설치, unsigned/SmartScreen 가능성, clean Windows/API smoke 미검증, Windows 중심·복잡 회로의 수동 선택 한계를 기록했다. Generic releases page 조회는 cache miss여서 실제 원격 Release 유무 확인으로 주장하지 않았고 직접 download URL을 만들지 않았다.
 - 기능 source/tests/requirements/packaging/screenshot은 유지하고 문서만 변경했다. Hash/version/provenance·문서 링크·Git whitespace/생성물 제외를 점검했다. Binary staging, commit/push/tag 생성, GitHub Release/draft/asset upload 및 API 호출 없음.
 - 최종 문서 7개·상대 참조 38개 통과, 기존 tracked 85개 bytes 및 로그 prefix/README screenshot 영역 보존. `git diff --check` 통과, privacy 패턴 미발견, staged/generated tracked 0개, HEAD/local tag 무변경. 실제 Setup ProductVersion 0.1.0 확인. 로컬 audit 결과만 ignored output에 저장했다.
+
+---
+
+## Prompt 016 — Post-Release README Finalization
+
+### Request
+
+실제 게시된 v0.1.0 Release/Setup을 확인한 뒤 README 다운로드 안내와 사용자/개발자 실행 흐름, release 이력·body·checklist를 정리한다. 확인되지 않은 asset URL이나 게시 완료를 만들지 않는다. Source/tests/packaging/binary/screenshot/tag를 유지하고 remote 변경·commit/push 없이 문서만 수정한다.
+
+### Result / Verification limitation
+
+- Clean HEAD/local tag 및 read-only remote tag 확인: **`75f6db47f722b20241190275ce01611ac00f2d1c`**. 태그 페이지 HTTP 200과 remote push는 확인됐다.
+- **04:06 UTC** 공개 재조회는 releases list 0개, release-by-tag/Setup URL 404이며 tag assets는 source ZIP/TAR뿐이었다. 사용자에게 실제 URL/Draft 여부를 질문했다. Public installer를 확인하지 못했으므로 다운로드 링크·Release 게시 완료 체크를 보류했다. Private draft/upload 존재 여부는 추측하지 않는다.
+- README의 installer/developer 흐름 및 developer build 구분, 실제 tag target, release 확인 이력과 future process를 정리했다. Checklist의 commit/tag creation/push만 완료 처리했다. 공개 body를 가져오지 못했으므로 `v0.1.0-github-release.md`는 수정하지 않았다.
+- 로컬 SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`** 일치; remote binary checksum은 미검증. 기존 174 tests 기록을 유지하고 tests/build/simulation을 반복하지 않았다. 코드·기존 screenshot·installer·tag 보존, remote Release 변경/업로드 및 Git commit/push 없음.
+- 최종 문서 6개만 변경, 상대 링크/anchor 43개 통과, 기존 tracked 86개 bytes·로그 prefix·screenshot 영역 보존. Git whitespace 검사 통과, staged/generated tracked 0개, HEAD와 tag 무변경. 직접 다운로드 및 게시 body 동기화는 실제 public asset/Release 확인이 필요한 남은 작업이다.
+
+### Resumed Request — publication and docs commit/push authorized
+
+GitHub CLI 로그인 완료 후 기존 Prompt 016 변경을 보존한 채 실제 Release/asset 존재 여부를 확인한다. 미게시 상태이면 기존 tag/notes와 checksum-matched installer로 latest published Release를 만들고 실제 다운로드를 검증한다. README/docs만 commit/push하며 source/tests/build/tag/binary는 변경하지 않는다.
+
+### Final publication result
+
+- `gh` **2.102.0**, `minsu727` 인증 및 repository ADMIN 권한 확인. 기존 v0.1.0 Release 부재 확인 후 사용자 승인 범위에서 새로 게시했다. 기존 notes를 그대로 사용하고 `--verify-tag --latest`로 태그 재생성을 방지했다.
+- **2026-10-01 04:49:34 UTC**, [v0.1.0 Release](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.0): published/latest, draft=false/prerelease=false. `CircuitSimulationAssistant-Setup.exe` 업로드 완료. Local/remote tag target `75f6db47f722b20241190275ce01611ac00f2d1c` 유지.
+- Release 페이지와 [직접 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.0/CircuitSimulationAssistant-Setup.exe) HTTP 200. 실제 비인증 다운로드를 수행했고 로컬과 원격 파일 모두 **87,193,866 bytes**, SHA-256 **`fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe`** 일치. 단순 API digest 조회만으로 검증을 주장하지 않았다. 다운로드 파일 실행은 하지 않았다.
+- 기존 README/docs 6개를 이어서 마무리하고 게시된 body와 원본 notes의 일치를 확인했다. Installer/developer 사용 경로, 실제 링크, publication checklist를 갱신했다. LTspice 별도 설치·unsigned·SmartScreen 가능성·clean VM/API smoke 미검증은 유지한다.
+- Source/tests/requirements/packaging/screenshots/binary는 보존, tests/simulation/rebuild 없음. 기존 174 tests는 과거 검증 기록이다. 문서 검증 후 README/docs만 `docs: finalize v0.1.0 release`로 commit하고 `origin main`에 push하도록 승인받았다. Generated artifact/audit는 ignored 상태를 유지한다.
+
+### Final follow-up — published Release body synchronization
+
+- 사용자가 Release 본문의 게시 전 문구 수정과 문서 commit/push를 추가 승인했다. `v0.1.0-github-release.md`에 현재 installer 다운로드와 실제 Release/asset URL을 반영하고 `gh release edit --notes-file`로 게시된 본문을 동기화했다. API로 다시 읽은 body와 로컬 source 일치, 기존 validation/limitations 보존을 확인했다.
+- Release page/direct installer endpoint HTTP 200 재확인. Published/latest, draft=false/prerelease=false 및 기존 asset/tag 유지. 실제 다운로드한 파일의 크기 **87,193,866 bytes**와 SHA-256을 다시 검사해 기존 hash와 일치했다.
+- 최종 README/docs **7개만 변경**, devlog index 포함 상대 링크/anchor **60개** 통과, tracked **85개 bytes 보존**, `git diff --check` 통과. Source/tests/requirements/binary/screenshot 변경 및 generated artifact staging 없이 승인된 문서 commit/push로 마무리한다. Clean VM/SmartScreen/Defender/actual OpenAI API smoke는 계속 미검증이다.
