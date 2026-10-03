@@ -5,7 +5,7 @@ installation/shortcut identity. Default mode does not run LTspice; optional
 --release-checks runs one real AC fixture and isolated missing-dependency checks.
 No API calls. Reports/logs stay in ignored installer_output. Never removes a
 pre-existing installation. This developer-host check does not certify a clean VM.
-Run: python tests/verify_installer.py [--release-checks] [--install-dir PATH]
+Run: python tests/verify_installer.py [--icon-checks] [--release-checks] [--install-dir PATH]
 """
 import ctypes
 import argparse
@@ -14,7 +14,6 @@ import json
 import os
 from pathlib import Path
 import re
-import signal
 import subprocess
 import sys
 import tempfile
@@ -23,6 +22,8 @@ import urllib.request
 import winreg
 
 import psutil
+
+from shutdown_checks import assert_graceful, stop_launcher
 
 PROJECT = Path(__file__).resolve().parents[1]
 NAME = 'Circuit Simulation Assistant'
@@ -48,7 +49,7 @@ def known_folder(csidl):
 def registration():
     try:
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, UNINSTALL_KEY, 0, winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as key:
-            return {name: winreg.QueryValueEx(key, name)[0] for name in ('DisplayName', 'DisplayVersion', 'InstallLocation', 'UninstallString')}
+            return {name: winreg.QueryValueEx(key, name)[0] for name in ('DisplayName', 'DisplayVersion', 'InstallLocation', 'UninstallString', 'DisplayIcon')}
     except FileNotFoundError:
         return None
 
@@ -73,18 +74,29 @@ def shortcut_target(path):
     return Path(result.stdout.strip())
 
 
-def stop_owned_process(proc):
-    if proc.poll() is None:
-        try:
-            proc.send_signal(signal.CTRL_BREAK_EVENT)
-            proc.wait(timeout=15)
-        except (OSError, subprocess.TimeoutExpired):
-            proc.terminate()
-            proc.wait(timeout=10)
+def shortcut_icon(path):
+    env = os.environ.copy()
+    env['CSA_VERIFY_SHORTCUT'] = str(path)
+    command = '$s = (New-Object -ComObject WScript.Shell).CreateShortcut($env:CSA_VERIFY_SHORTCUT); Write-Output $s.IconLocation'
+    result = subprocess.run(['powershell', '-NoProfile', '-Command', command], env=env,
+                            capture_output=True, text=True, check=True)
+    return result.stdout.strip()
+
+
+def assert_icon_location(location, executable):
+    filename, index = location.rsplit(',', 1) if ',' in location else (location, '0')
+    assert Path(filename.strip('"')).resolve() == executable.resolve(), 'Icon points to a different file'
+    assert int(index.strip()) == 0, 'Icon must use the default executable group'
+
+
+def stop_owned_process(proc, timeout=15):
+    return stop_launcher(proc, timeout=timeout)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--icon-checks', action='store_true',
+                        help='Verify official PE icons, shortcut IconLocation and uninstall DisplayIcon (requires build pefile).')
     parser.add_argument('--release-checks', action='store_true',
                         help='Also run missing-dependency/actual AC UI and PowerShell runtime checks on this host (not a clean VM).')
     parser.add_argument('--install-dir', type=Path,
@@ -115,6 +127,12 @@ def main():
     repo_before = {p: hash_file(PROJECT / p) for p in tracked if (PROJECT / p).is_file()}
     report = {'installer_mode': 'current user; custom location' if args.install_dir else 'current user; default user Program Files location',
               'simulation_run': args.release_checks, 'clean_vm_verified': False}
+    if args.icon_checks:
+        from verify_icons import verify_executable_icon, verify_shell_icon
+        report['setup_icon'] = verify_executable_icon(setup)
+        report['portable_icon'] = verify_executable_icon(portable / APP_EXE)
+        for label, source in [('portable', portable / APP_EXE), ('setup', setup)]:
+            report[label + '_shell_icon'] = verify_shell_icon(source, output / 'icon-validation' / (label + '.png'))
     generated_data = {name: {} for name in data_before}
     owns_install = False
     with tempfile.TemporaryDirectory(prefix='csa-installer-check-') as cwd:
@@ -128,7 +146,8 @@ def main():
             code = subprocess.run(install_args, cwd=cwd, creationflags=subprocess.CREATE_NO_WINDOW, timeout=180).returncode
             assert code == 0, ('Setup failed', code)
             assert executable.is_file() and uninstaller.is_file()
-            assert registration()['DisplayVersion'] == '0.1.0'
+            expected_version = re.search(r'^AppVersion=(.+)$', (PROJECT / 'installer/CircuitSimulationAssistant.iss').read_text(), re.MULTILINE).group(1).strip()
+            assert registration()['DisplayVersion'] == expected_version
             assert Path(registration()['InstallLocation']).resolve() == target.resolve()
             assert all(hash_file(target / name) == digest for name, digest in baseline.items())
             assert menu_link.is_file() and shortcut_target(menu_link).resolve() == executable.resolve()
@@ -141,6 +160,24 @@ def main():
             report[cycle + '_desktop_shortcut'] = desktop
             report[cycle + '_start_menu_shortcut'] = True
             report[cycle + '_silent_no_launch'] = True
+            if args.icon_checks:
+                from verify_icons import verify_executable_icon, verify_shell_icon
+                report[cycle + '_installed_icon'] = verify_executable_icon(executable)
+                report[cycle + '_uninstaller_icon'] = verify_executable_icon(uninstaller)
+                assert_icon_location(shortcut_icon(menu_link), executable)
+                if desktop:
+                    assert_icon_location(shortcut_icon(desktop_link), executable)
+                assert_icon_location(registration()['DisplayIcon'], executable)
+                report[cycle + '_version'] = expected_version
+                report[cycle + '_start_menu_icon'] = True
+                report[cycle + '_desktop_icon'] = desktop
+                report[cycle + '_uninstall_display_icon'] = True
+                sources = [('installed', executable), ('start-menu', menu_link), ('uninstaller', uninstaller)]
+                if desktop:
+                    sources.append(('desktop', desktop_link))
+                for label, source in sources:
+                    report[cycle + '_' + label + '_shell_icon'] = verify_shell_icon(
+                        source, output / 'icon-validation' / (cycle + '-' + label + '.png'))
 
         def uninstall(cycle):
             code = subprocess.run([str(uninstaller), '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART',
@@ -162,10 +199,13 @@ def main():
             # Reuse the proven executable UI check against the installed path.
             with (output / 'installed-ui.log').open('wb') as log:
                 smoke = subprocess.run([sys.executable, '-X', 'utf8', str(PROJECT / 'tests/verify_portable.py'),
-                                        '--exe', str(executable), '--open-browser'], cwd=cwd,
+                                        '--exe', str(executable), '--open-browser',
+                                        *(['--shutdown-timeout', '45'] if args.icon_checks else [])], cwd=cwd,
                                        stdout=log, stderr=subprocess.STDOUT, timeout=180)
             assert smoke.returncode == 0, 'Installed UI smoke failed; inspect installed-ui.log'
             report['installed_app'] = json.loads((PROJECT / 'simulation_output/prompt_014a_smoke.json').read_text())
+            if args.icon_checks:
+                assert report['installed_app']['shutdown'] == 'CTRL_BREAK' and report['installed_app']['exe_exit_code'] == 0, 'Installed icon smoke did not shut down normally'
 
             if args.release_checks:
                 for label, option in [('missing', '--missing-ltspice'), ('simulation', '--simulate')]:
@@ -210,7 +250,8 @@ def main():
                     assert 'Close Circuit Simulation Assistant' in (output / 'running-uninstall.log').read_text(errors='replace')
                     report['running_uninstall_blocked_exit'] = code
                 finally:
-                    stop_owned_process(proc)
+                    report['running_guard_shutdown'] = stop_owned_process(proc, timeout=45 if args.icon_checks else 15)
+                assert_graceful(report['running_guard_shutdown'])
                 assert proc.returncode == 0
                 try:
                     urllib.request.urlopen(url + '/_stcore/health', timeout=1)

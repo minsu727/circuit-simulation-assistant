@@ -12,7 +12,7 @@
 [Setup]
 AppId={{B6C44674-7140-4DA4-94A0-DF276A147F8B}
 AppName={#AppName}
-AppVersion=0.1.0
+AppVersion=0.1.1
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableDirPage=no
@@ -27,6 +27,7 @@ OutputBaseFilename=CircuitSimulationAssistant-Setup
 Compression=lzma2/normal
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\assets\app_icon.ico
 UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
 InfoBeforeFile=installation-notes.txt
@@ -44,8 +45,8 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; Flags: unchecked
 Source: "{#PortableDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"; IconFilename: "{app}\{#AppExe}"; IconIndex: 0
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; WorkingDir: "{app}"; IconFilename: "{app}\{#AppExe}"; IconIndex: 0; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "Launch Circuit Simulation Assistant"; WorkingDir: "{app}"; Flags: postinstall nowait skipifsilent runasoriginaluser

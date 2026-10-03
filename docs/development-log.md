@@ -1076,3 +1076,49 @@ Prompt 007B의 archived RAW 7개(R1 AC 4개, C1 Transient 3개)를 기존 분석
 - 사용자의 추가 승인에 따라 `v0.1.0-github-release.md`의 게시 전 설치 문구를 현재 다운로드 가능한 installer 안내와 실제 Release/asset 링크로 바꿨다. 앞선 '본문 원본 보존' 기록은 최초 게시 시점의 상태다. `gh release edit v0.1.0 --notes-file ...`로 원격 본문만 갱신하고 API로 다시 읽어 로컬 source와 일치함을 확인했다. Validation 수치·limitations, Release/asset identity, tag와 installer bytes는 변경하지 않았다.
 - 본문 수정 후 Release page와 direct installer endpoint를 다시 조회해 모두 **HTTP 200**, published/latest와 draft=false/prerelease=false를 확인했다. 앞서 실제 다운로드한 **87,193,866 bytes**의 SHA-256도 재검사해 기록된 로컬/remote asset digest와 일치함을 확인했다.
 - 최종 **문서 7개 변경**, devlog index 포함 **8개 문서의 상대 링크/anchor 60개** 검증 통과. 기존 tracked **85개 byte-level 동일**, 기존 로그 prefix와 README screenshots 보존. Source/tests/requirements/packaging/binary 무변경, clean-machine/security checklist 원문 보존, 개인정보/secret 패턴 미발견. `git diff --check` 통과(Windows LF→CRLF 안내만 존재), generated tracked 0개. 최종 commit은 이 README/docs 7개만 대상으로 하며 tag는 이동하지 않는다.
+
+
+## 2026-10-03 — Prompt 017 — Application Icon & v0.1.1 Packaging
+
+- 기존 working tree와 2026-10-01 완료한 icon/build/install 검증을 보존해 남은 검증만 마무리했다. `assets/app_icon.ico`를 공식 Windows icon, `assets/app_icon.png`를 원본 branding asset으로 유지했고 두 파일 bytes는 변경하지 않았다. ICO는 16/24/32/48/64/128/256 px다.
+- PyInstaller EXE icon은 SPECPATH 기반 `root / assets / app_icon.ico`, Inno SetupIconFile은 script-relative `..\assets\app_icon.ico`다. Start Menu/Desktop은 설치된 EXE/index 0을 명시하고 기존 UninstallDisplayIcon도 그 EXE를 사용한다. AppVersion과 installation-notes 제목만 0.1.1로 바꿨다. 안내문의 이전 version을 발견해 바로잡은 최종 installer build까지 이미 exit 0이었다. 이번 재개에서는 portable/installer를 재빌드하지 않았다.
+- EXE/Setup/installed EXE/uninstaller의 기본 그룹 7개 icon payload 일치, Shell 32px 렌더링 및 실제 shortcut IconLocation/registry DisplayIcon 검증 evidence를 확인했다. 첫 shortcut 비교는 정상 Windows arrow badge를 오차로 보았으므로 공식 ICO reference shortcut에도 동일 overlay를 적용하도록 verifier만 수정했다. 원본 이미지·앱·icon cache는 바꾸지 않았다. Native Explorer/Installed Apps의 수동 관찰로 과장하지 않는다.
+- 기존 install/uninstall/reinstall·Desktop off/on·실행 중 uninstall 차단·설치 payload 2,294개 일치 결과를 보존했다. v0.1.0 Program Files 설치는 유지하고, 남은 installed shutdown 검증을 위해 별도 current-user 임시 설치 1회만 사용했다.
+- **45초 정상 종료 검증은 실패**했다. 앞선 15초 attempt도 terminate/exit 1이었으며 성공으로 기록하지 않는다. 중단된 45초 attempt는 UI locator 5초 timeout으로 최종 종료 보고서를 남기지 못했다. Verifier의 필드 대기만 30초로 늘린 focused rerun은 localhost/UI/LTspice 탐지/approval gate를 통과했지만 45초 종료 대기를 초과해 **forced_termination=true, shutdown=terminate, app exit 1**이었다. 엄격한 종료 확인 driver도 exit 1이며, 하위 smoke script의 exit 0은 정상 종료 증거가 아니다.
+- Fallback 후 **localhost 종료, test-app orphan 0개**, 임시 설치 제거 exit 0을 확인했다. 테스트 폴더·HKCU registration·Start Menu 잔존 없음. 기존 all-users v0.1.0 파일/registry/공용 shortcut은 전후 동일하다. Console ConnectionResetError는 관찰됐으나 종료 지연 원인이라고 단정하지 않는다. 기능 코드 금지 범위를 지켜 runtime/launcher를 수정하지 않았고 graceful shutdown 원인 조사는 TODO로 남긴다.
+- 최종 전체 suite **177 tests, exit 0, failures 0, 159.815초**(기존 174 + icon 자산/손상 입력 3개). Tests/verification helper만 보완했고 simulation/parser/analysis/UI/approval/API/requirements에는 변경이 없다. 실제 simulation은 branding-only 변경이므로 반복하지 않았다.
+- Prompt 017 당시 후보 (아래 017B 재빌드로 교체됨) `installer_output/CircuitSimulationAssistant-Setup.exe`: **87,430,955 bytes**, SHA-256 **`65ca4eefa6991360f9c2a959ea72b2a8864b13211f5211fbb212d2d38de2099c`**, ProductVersion **0.1.1**, unsigned. 기존 v0.1.0 public Release identity/body/status, asset id/size/digest와 원격 tag를 읽기 전용 대조해 유지됨을 확인했다. v0.1.0 docs/checksum도 변경하지 않았다.
+- [v0.1.1 준비 기록](releases/v0.1.1.md)에 완료/실패/한계와 checksum을 분리했다. `verify_icons.py`, `verify_icon_shell.ps1`, `verify_installer.py --icon-checks`는 재현용 영구 test asset이며 임시 driver/log/rendering은 ignored `installer_output/icon-validation/`에만 둔다. Clean VM/SmartScreen/Defender/actual OpenAI API smoke 및 기존 설치 in-place upgrade는 미검증이다. Commit/push/tag/Release 생성·업로드는 수행하지 않았다.
+
+
+## 2026-10-03 — Prompt 017B — Installed App Graceful Shutdown Investigation
+
+### Root cause / retained failure history
+
+- 기존 Prompt 017의 15초/45초 forced termination은 실제 실패 기록으로 유지한다. 이전 정상 종료(Portable 약 0.90초, installed 약 1.10초)만으로 간헐적 문제의 해결을 주장하지 않았다. 기존 frozen portable도 FIN 후 RST 조건에서 **45.028초 / forced=true / exit 1**로 실패했다. 따라서 설치 경로·아이콘·shortcut이 원인이 아니다.
+- Source 진단에서 첫 reset cleanup 오류 직후 **45.010초 / forced=true / exit 1**을 재현했다. 종료 신호는 `Stopping...`까지 도달했다. 3초/15초 task dump에서 `uvicorn-server → shutdown → _wait_tasks_to_complete → asyncio.Server.wait_closed()`에 머물렀다. Uvicorn connections/tasks는 **0/0**, listener는 이미 닫혀 있었지만 asyncio server `_clients`에 closing `_ProactorSocketTransport` 하나가 남았다. 해당 socket은 닫히지 않았고 `_called_connection_lost=False`였다.
+- Python **3.13.5**의 Windows Proactor `_call_connection_lost`에서 `socket.shutdown()`이 **WinError 10054**를 발생시키면 뒤의 socket close / server `_detach` / 완료 flag가 건너뛰어진다. 남은 transport가 server close 완료를 막는 **production runtime defect**다. 스레드/브라우저 launch thread나 별도 Streamlit child 종료 문제가 아니다. 연결/GC timing에 따라 정상 종료하기도 한다. 단순 reset stress의 일부 정상 결과와 실패 결과를 모두 보존했다.
+- 검증 스크립트에도 강제 cleanup 후 exit 0을 반환하던 판정 문제가 있었다. Production hang을 false negative로 처리하지 않았으며 runtime 수정과 verifier 판정 보완을 각각 수행했다.
+
+### Minimal changes
+
+- `launcher.py`: Windows에서 pinned Streamlit bootstrap이 loop를 소유하는 구간만 `WindowsSelectorEventLoopPolicy`를 사용하고 finally에서 기존 policy를 복원한다. 기존 signal handler·lifespan cleanup·browser thread·승인 flow를 유지한다. Production에 강제 process kill이나 연장 timeout을 추가하지 않았다.
+- `tests/shutdown_checks.py`: launch/parent/child PID, listener, UTC 요청 시각, 실제 종료 시간, exit code, timeout과 forced fallback을 기록한다. `tests/verify_portable.py`는 report를 보존하고 forced/nonzero/orphan을 실패로 판정하며 TCP listener 종료를 확인한다. `--reset-connections`는 health 연결의 FIN→RST cleanup 경합을 재현한다. `tests/verify_installer.py`도 같은 strict 종료 판정을 사용한다.
+- 신규 verification unit tests 4개와 launcher loop scope/exception 복원 tests 2개. 기존 Prompt 017 공식 PNG/ICO, spec/iss/shortcut/uninstall 아이콘 설정과 **0.1.1** 버전은 유지했다. Simulation/parser/analysis/UI/API/requirements 변경 없음.
+
+### Final validation — 2026-10-03
+
+- 전체 suite: **183 tests / 166.511 s / exit 0 / failures 0**. 첫 실행의 기존 release-helper tests 2개 실패는 실행 환경의 PSModulePath 때문에 Windows PowerShell 5.1이 `Get-FileHash`를 찾지 못한 것이었다. Child 검증 환경에 표준 Windows PowerShell module 경로를 추가한 뒤 전체 suite를 재실행해 통과했다. 해당 release helper와 기존 tests는 수정하지 않았다.
+- 재빌드한 portable/installed는 각각 **3회**, 매회 실제 Edge UI/upload/review/승인 gate/LTspice detection 및 **100 FIN/RST 연결** 후 CTRL_BREAK로 자연 종료했다. Portable **0.596, 0.667, 0.343 s**, installed **0.508, 0.552, 0.557 s**. 모두 **exit 0 / forced=false / TCP listener 종료 / orphan app 0**. 같은 EXE hash로 cached 검증 결과를 확인했으며 불필요하게 같은 종료 실험을 반복하지 않았다.
+- 실제 Start Menu/Desktop `.lnk`를 Windows Shell로 실행하고 UI를 확인한 뒤, 별도 helper가 오직 소유한 console에 attach하여 Ctrl+C를 전달했다. **start-menu: 0.819 s, desktop: 0.622 s**, 각각 exit 0, fallback 없음, listener 종료와 orphan app 0. Console의 `conhost.exe`는 Windows console host이며 Streamlit server child가 아니다. Console process 목록을 확인하고 unowned process가 있으면 signal 전송을 거부한다.
+- 임시 shortcut helper의 첫 실행은 execution policy, 두 번째는 Windows PowerShell 5.1의 `New-Object uint[]` 표현 때문에 실패했다. 그 시도는 강제 test cleanup으로 기록했다. Helper에 process-scope Bypass와 `System.UInt32[]`를 적용한 뒤 실제 Ctrl+C 검증을 통과했다. 이 둘을 runtime 실패나 정상 종료로 혼동하지 않는다. Temporary helper는 공개 제외 영역에만 남는다.
+- 새 installer install/uninstall **exit 0**, installed portable payload **2,338개** hash 일치. 이전 manifest와 대조하면 추가 44개는 Windows API-set/UCRT runtime DLL이며 requirements나 새 분석/API 기능을 추가한 결과가 아니다. 실행 중 uninstall은 정상적으로 차단하며 앱을 종료하지 않았고, Ctrl+C 종료 후 uninstall이 완료됐다. 이전 두 cycle의 Desktop off/on·reinstall assertions와 새 focused shortcut/install 확인을 보존했다. 최종 임시 설치/registry/shortcuts 제거, 기존 all-users v0.1.0 파일·registry·common shortcuts hash 보존.
+- 공식 ICO의 7개 size payload를 portable/Setup/installed/uninstaller PE resource와 대조했다. 실제 Shell rendering·Start Menu/Desktop IconLocation·UninstallDisplayIcon도 일치한다. 정상 shortcut arrow decoration을 포함해 비교했다. Icon source bytes를 변경하지 않았다.
+- `scripts/build_windows.ps1`, `scripts/build_installer.ps1` **exit 0**. 최종 candidate: **88,025,226 bytes**, SHA-256 **`3b75f217fc874f28d0f27663817dac9a9828edcbe4410604cd203f3e2d458c0a`**, ProductVersion **0.1.1**, unsigned. 이전 **87,430,955 bytes / 65ca…** 후보는 역사적 기록일 뿐 현재 최종값이 아니다. [v0.1.1 준비 문서](releases/v0.1.1.md)는 새 최종 artifact만 사용한다.
+- v0.1.0 local/remote tag, public Release body/identity/status, asset id/size/digest와 기존 release docs/checksum을 읽기 전용 대조했다. 기존 public asset은 교체하지 않았다. `git diff --check` 통과, generated output/log/helper는 ignored, staged 0. Commit/push/tag/Release 생성·업로드 없음.
+
+### Evidence / limitations
+
+- Local evidence는 ignored `installer_output/shutdown-investigation/`: 이전 실패 task dump, source/frozen reset 보고서, 최종 6개 smoke reports, shortcut/console signal reports, PE/Shell icon 결과, build/unit logs, artifact 및 preservation audit. 영구 공개 검증 도구는 `tests/shutdown_checks.py`와 관련 tests/verifiers다. 일회성 진단/shortcut orchestration은 이동하거나 공개하지 않았다.
+- 실제 LTspice simulation은 반복하지 않았다. 변경은 launcher lifecycle이며 parser/calculation/UI 코드는 byte-level 보존하고 전체 unit/AppTest 및 packaged UI/승인 gate/탐지를 검증했다. 이번 검증을 새 수치 simulation 검증으로 과장하지 않는다.
+- Windows 11 developer-host 자동 검증이다. Clean VM, SmartScreen/Defender, 실제 OpenAI API smoke 및 기존 all-users 설치의 in-place upgrade는 미검증이다. Windows Selector의 socket 제한/async subprocess·pipe 미지원은 현재 socket 기반 localhost server에는 적합하지만, 향후 Python/Streamlit 또는 async process 기능 변경 시 재검토한다. v0.1.1 검토/게시와 clean-machine 검증이 다음 TODO다.

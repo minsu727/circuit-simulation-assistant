@@ -1,5 +1,6 @@
 """Launcher/discovery tests without real browser, server or simulator launches."""
 import io
+import asyncio
 import os
 from pathlib import Path
 import socket
@@ -14,6 +15,24 @@ import runtime_paths as paths
 
 
 class PortableTests(unittest.TestCase):
+    @unittest.skipUnless(os.name == 'nt', 'Windows launcher loop')
+    def test_server_loop_policy_is_scoped_and_restored_on_error(self):
+        previous = asyncio.get_event_loop_policy()
+        with self.assertRaisesRegex(RuntimeError, 'startup failure'):
+            with launcher.server_event_loop():
+                loop = asyncio.new_event_loop()
+                try:
+                    self.assertIsInstance(loop, asyncio.SelectorEventLoop)
+                finally:
+                    loop.close()
+                raise RuntimeError('startup failure')
+        self.assertIs(asyncio.get_event_loop_policy(), previous)
+
+    def test_non_windows_policy_is_unchanged(self):
+        previous = asyncio.get_event_loop_policy()
+        with patch('launcher.os.name', 'posix'), launcher.server_event_loop():
+            self.assertIs(asyncio.get_event_loop_policy(), previous)
+
     def test_port_falls_back_when_preferred_is_busy(self):
         with socket.socket() as busy:
             busy.bind(('127.0.0.1', 0))

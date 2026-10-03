@@ -1,6 +1,8 @@
 """Console portable launcher; Streamlit shares this process's lifetime."""
 import argparse
+import asyncio
 import _thread
+from contextlib import contextmanager
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -14,6 +16,27 @@ import webbrowser
 from runtime_paths import locate_app_resource, locate_ltspice, user_data_root
 
 LOG = logging.getLogger('portable_launcher')
+
+
+@contextmanager
+def server_event_loop():
+    """Avoid Python 3.13 Windows Proactor's reset/close cleanup deadlock.
+
+    A socket shutdown() raising WinError 10054 can skip server._detach(),
+    leaving Uvicorn in Server.wait_closed() indefinitely. The local HTTP/WS
+    server needs sockets, not asyncio subprocess pipes. Use the supported
+    Selector policy only while the pinned Streamlit bootstrap owns its loop.
+    Keep Streamlit's signal handlers and normal lifespan cleanup unchanged.
+    """
+    if os.name != 'nt':
+        yield
+        return
+    previous = asyncio.get_event_loop_policy()
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    try:
+        yield
+    finally:
+        asyncio.set_event_loop_policy(previous)
 
 
 def select_port(preferred=8501):
@@ -103,7 +126,8 @@ def main(argv=None):
         LOG.info('Starting portable server; LTspice detected: %s', locate_ltspice() is not None)
         worker = threading.Thread(target=open_when_ready, args=(url, stopped, args.no_browser), daemon=True)
         worker.start()
-        bootstrap.run(str(script), False, [], options)
+        with server_event_loop():
+            bootstrap.run(str(script), False, [], options)
         return 0
     except KeyboardInterrupt:
         return 0

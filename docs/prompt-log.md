@@ -618,3 +618,33 @@ GitHub CLI 로그인 완료 후 기존 Prompt 016 변경을 보존한 채 실제
 - 사용자가 Release 본문의 게시 전 문구 수정과 문서 commit/push를 추가 승인했다. `v0.1.0-github-release.md`에 현재 installer 다운로드와 실제 Release/asset URL을 반영하고 `gh release edit --notes-file`로 게시된 본문을 동기화했다. API로 다시 읽은 body와 로컬 source 일치, 기존 validation/limitations 보존을 확인했다.
 - Release page/direct installer endpoint HTTP 200 재확인. Published/latest, draft=false/prerelease=false 및 기존 asset/tag 유지. 실제 다운로드한 파일의 크기 **87,193,866 bytes**와 SHA-256을 다시 검사해 기존 hash와 일치했다.
 - 최종 README/docs **7개만 변경**, devlog index 포함 상대 링크/anchor **60개** 통과, tracked **85개 bytes 보존**, `git diff --check` 통과. Source/tests/requirements/binary/screenshot 변경 및 generated artifact staging 없이 승인된 문서 commit/push로 마무리한다. Clean VM/SmartScreen/Defender/actual OpenAI API smoke는 계속 미검증이다.
+
+
+## Prompt 017 — Application Icon & v0.1.1 Packaging
+
+### Request / resumed scope
+
+기능/승인/API와 v0.1.0 공개 상태를 보존하고 제공된 ICO를 EXE/Setup/installed/shortcut/uninstall 아이콘으로 사용한다. 사용량 제한 후 기존 구현·빌드·설치 검증은 반복하지 않고 45초 종료 판정, 최종 전체 tests, artifact checksum과 기록만 마무리한다. Commit/push/tag/Release 작업은 하지 않는다.
+
+### Final result — 2026-10-03
+
+- PNG/ICO 원본 보존, SPECPATH 기반 PyInstaller icon과 script-relative Inno SetupIconFile 적용. Shortcut EXE/index 0 및 UninstallDisplayIcon 검증. AppVersion/설치 안내문만 0.1.1로 갱신했다. 기존 portable/final installer build exit 0; 재개 시 rebuild 없음.
+- 기존 embedded icon 7개 size·installed/Start Menu/Desktop/uninstall 검증을 재사용하고 portable/Setup payload를 읽기 전용으로 재확인했다. 정상 Windows shortcut arrow를 포함한 reference 비교로 최초 오판을 수정했다.
+- **45초 정상 종료는 실패**: UI/localhost/LTspice/approval gate 통과 후 terminate fallback, app exit 1. 기존 15초 실패도 보존했다. 중간 45초 attempt의 UI locator 5초 실패를 verifier wait 30초로 보완했지만 최종 shutdown latency는 여전히 미해결이다. 앱 코드는 바꾸지 않았다. Fallback 후 server 정지·orphan app 0개, 임시 설치 제거 exit 0, 기존 all-users v0.1.0 보존 확인.
+- 최종 전체 **177 tests, exit 0, failures 0, 159.815 s**. Unit suite 성공과 실제 설치 앱의 graceful-shutdown 실패를 구분한다. 실제 simulation은 branding-only 범위로 생략했다.
+- 당시 Installer (017B 재빌드 전; 현재 최종값 아님) **87,430,955 bytes**, SHA-256 **`65ca4eefa6991360f9c2a959ea72b2a8864b13211f5211fbb212d2d38de2099c`**. [v0.1.1 candidate](releases/v0.1.1.md)에 기록. v0.1.0 원격 tag/Release/asset/digest와 release docs 유지, generated binaries/logs/audit는 Git 제외. Clean VM/SmartScreen/Defender/API smoke 및 shutdown 원인 조사 TODO 유지. Commit/push/tag/Release 생성·업로드 없음.
+
+
+## Prompt 017B — Installed App Graceful Shutdown Investigation
+
+### Request / resumed scope
+
+기존 Prompt 017 icon/v0.1.1 변경과 재현 evidence를 보존하고, portable/installed의 간헐적 종료 hang을 task/socket 수준에서 조사한다. Verification false negative와 production defect를 구분하고 최소 수정으로 45초 내 exit 0·fallback 없음·listener 종료·orphan 0을 확인한다. Runtime 수정 시 rebuild/최종 checksum을 갱신하며 v0.1.0과 기능/승인/API는 유지한다. Commit/push/tag/Release 금지.
+
+### Final result — 2026-10-03
+
+- Proactor socket cleanup의 WinError 10054가 close/`_detach`를 건너뛰어 Uvicorn `Server.wait_closed()`에 transport 하나를 남기는 **runtime defect**를 증명했다. 기존 frozen portable 45.028초 forced exit 1 및 source 45.010초 task/socket dump를 보존했다. 설치 경로·아이콘·shortcut 원인이 아니다.
+- Windows bootstrap 구간에만 Selector policy를 적용하고 기존 policy/종료 handler를 보존했다. Verifier는 forced cleanup을 성공으로 처리하지 않고 PID/시간/exit/listener/orphan과 reset regression을 기록한다. 신규 unit tests 6개, 전체 **183 tests / 166.511 s / exit 0**. PSModulePath 실행 환경 문제로 실패했던 release-helper 2개도 환경 보완 후 통과; 해당 source는 그대로다.
+- Portable/installed FIN→RST 100회+UI 종료 각 3회: **0.596, 0.667, 0.343 s / 0.508, 0.552, 0.557 s**, 모두 exit 0, fallback 없음, listener 종료/orphan 0. Actual Start Menu/Desktop Ctrl+C: **start-menu: 0.819 s, desktop: 0.622 s**, 같은 성공 기준 통과. 임시 signal helper의 execution-policy/type 실패는 정상 종료로 기록하지 않았으며 수정 후 통과했다.
+- Rebuild 두 단계 exit 0. 새 final installer **88,025,226 bytes / SHA-256 `3b75f217fc874f28d0f27663817dac9a9828edcbe4410604cd203f3e2d458c0a`**. 설치/제거, 실행 중 uninstall 차단, 2,338 payload hash, PE/Shell/shortcut/uninstall icon regression 통과. 이전 Prompt 017 size/checksum은 현행 후보에서 제외했다.
+- [v0.1.1 기록](releases/v0.1.1.md)을 새 artifact/종료 결과로 갱신했다. 기존 v0.1.0 tag/Release/asset/docs/checksum과 all-users 설치 보존, generated binaries/log/helpers Git 제외, `git diff --check` 통과. Simulation/parser/analysis/UI/requirements 및 실제 API는 변경/재실행하지 않았다. Commit/push/tag/Release 작업 없음. Clean VM/보안제품/API smoke 및 별도 v0.1.1 게시가 TODO다.

@@ -1,4 +1,4 @@
-Circuit Simulation Assistant 0.1.0
+Circuit Simulation Assistant 0.1.1
 
 LTspice is required for simulation and must be installed separately.
 This installer does not download or install LTspice.

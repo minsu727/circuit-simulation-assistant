@@ -10,14 +10,32 @@ import json
 import os
 from pathlib import Path
 import re
-import signal
+import socket
+import struct
 import subprocess
 import sys
 import tempfile
 import time
 import urllib.request
 
+from shutdown_checks import app_pids, assert_graceful, stop_launcher
+
 PROJECT = Path(__file__).resolve().parents[1]
+
+
+def reset_clients(url, transcript, attempts=100):
+    """Reproduce FIN then RST during server close, without simulator/API traffic."""
+    port = int(url.rsplit(':', 1)[1])
+    for index in range(attempts):
+        with socket.create_connection(('127.0.0.1', port), timeout=3) as client:
+            client.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('HH', 1, 0))
+            client.sendall(b'GET /_stcore/health HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: keep-alive\r\n\r\n')
+            client.recv(1)
+            client.shutdown(socket.SHUT_WR)
+        time.sleep(.02)
+        if b'ConnectionResetError' in transcript.read_bytes():
+            return index + 1
+    return attempts
 
 
 def main():
@@ -27,6 +45,7 @@ def main():
     parser.add_argument('--simulate', action='store_true')
     parser.add_argument('--open-browser', action='store_true')
     parser.add_argument('--missing-ltspice', action='store_true')
+    parser.add_argument('--reset-connections', action='store_true', help='Exercise the Windows FIN/RST shutdown regression.')
     parser.add_argument('--shutdown-timeout', type=int, choices=(15, 45), default=15,
                         help='Grace period for the owned launcher; report forced fallback honestly.')
     args = parser.parse_args()
@@ -37,7 +56,8 @@ def main():
     fixture = PROJECT / 'tests/fixtures/dc_divider.asc'
     before = hashlib.sha256(fixture.read_bytes()).hexdigest()
     data = fixture.read_bytes().replace(b'SYMATTR Value 0', b'SYMATTR Value 0\nSYMATTR Value2 AC 1')
-    report = {'simulation_run': args.simulate, 'missing_ltspice_case': args.missing_ltspice}
+    report = {'simulation_run': args.simulate, 'missing_ltspice_case': args.missing_ltspice,
+              'shutdown_timeout_seconds': args.shutdown_timeout}
     runtime_data = Path(os.environ['LOCALAPPDATA']) / 'CircuitSimulationAssistant'
     prior_runs = set((runtime_data / 'simulation_output').glob('*'))
     with tempfile.TemporaryDirectory(prefix='portable-cwd-') as cwd:
@@ -88,8 +108,8 @@ def main():
                         page.get_by_role('button', name='Analyze Request', exact=True).click()
                         run = page.get_by_role('button', name='Run Simulation', exact=True)
                         expect(run).to_be_disabled()
-                        expect(page.get_by_label('Start Frequency', exact=True)).to_have_value('10 Hz')
-                        expect(page.get_by_label('Stop Frequency', exact=True)).to_have_value('1 MHz')
+                        expect(page.get_by_label('Start Frequency', exact=True)).to_have_value('10 Hz', timeout=30000)
+                        expect(page.get_by_label('Stop Frequency', exact=True)).to_have_value('1 MHz', timeout=30000)
                         report['review_and_approval_gate'] = True
                         if args.missing_ltspice:
                             checkbox = page.get_by_role('checkbox', name='I reviewed', exact=False)
@@ -143,19 +163,17 @@ def main():
                         browser.close()
                 assert hashlib.sha256(fixture.read_bytes()).hexdigest() == before
                 report['source_fixture_preserved'] = True
+                if args.reset_connections:
+                    report['reset_client_count'] = reset_clients(url, transcript)
             finally:
-                if proc.poll() is None:
-                    try:
-                        proc.send_signal(signal.CTRL_BREAK_EVENT)
-                        proc.wait(timeout=args.shutdown_timeout)
-                        report['shutdown'] = 'CTRL_BREAK'
-                    except (OSError, subprocess.TimeoutExpired):
-                        proc.terminate()
-                        proc.wait(timeout=10)
-                        report['shutdown'] = 'terminate'
-                report['exe_exit_code'] = proc.returncode
+                report.update(stop_launcher(proc, timeout=args.shutdown_timeout))
+                report['orphan_app_pids'] = app_pids(args.exe)
+                # Retain shutdown evidence even if a preceding UI assertion failed.
+                name = 'missing' if args.missing_ltspice else 'smoke'
+                (output / f'prompt_014a_{name}.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
             try:
-                urllib.request.urlopen(url + '/_stcore/health', timeout=1)
+                with socket.create_connection(('127.0.0.1', int(url.rsplit(':', 1)[1])), timeout=1):
+                    pass
             except OSError:
                 report['server_stopped'] = True
             else:
@@ -163,6 +181,10 @@ def main():
     name = 'missing' if args.missing_ltspice else 'smoke'
     (output / f'prompt_014a_{name}.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(json.dumps(report, indent=2))
+    assert_graceful(report)
+    assert not report['orphan_app_pids'], 'App process remained after launcher exit'
+    if args.reset_connections:
+        assert b'ConnectionResetError' not in transcript.read_bytes(), 'Transport cleanup failed after client reset'
 
 
 if __name__ == '__main__':
