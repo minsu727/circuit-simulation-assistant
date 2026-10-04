@@ -1,8 +1,8 @@
 # Circuit Simulation Assistant
 
-Natural-language-driven LTspice simulation and deterministic circuit analysis.
+Turns natural-language simulation requests into reviewed LTspice runs, deterministic numerical analysis, and optional AI interpretation.
 
-사용자가 작성한 LTspice schematic의 시뮬레이션과 결과 분석을 돕는 Windows / Streamlit 프로젝트입니다. 자연어 요청은 rule-based parser로 구조화하고, 사용자의 검토·수정·승인 후 LTspice로 실행합니다. RAW 결과의 정량적 측정·비교는 Python의 deterministic analysis가 담당합니다.
+아날로그·혼합신호 회로를 학습하거나 실험하는 사용자를 위한 Windows / Streamlit 도구입니다. 사용자가 작성한 `.asc` 회로와 자연어 요청을 입력하면 조건을 구조화하고, **사용자의 검토·수정·명시적 승인 후** 실행용 복사본을 LTspice로 시뮬레이션합니다. Gain·bandwidth·Vpp 등의 정량값은 **Python / NumPy가 계산**하며, 선택 AI 해석은 이미 계산된 Analysis Summary를 설명하는 별도 단계입니다.
 
 **Latest release: [v0.1.1](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.1)** · [Windows installer 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.1/CircuitSimulationAssistant-Setup.exe). 설치 요구사항과 미검증 범위는 [Windows Release](#windows-release)를 확인하세요.
 
@@ -26,14 +26,16 @@ Natural-language Request
 
 ## Screenshots
 
+Trace 이름과 승인 조건을 확인한 뒤 AC 결과를 측정하고, 소자 값별 비교와 Transient / DC 응답으로 이어지는 흐름입니다.
+
 <p align="center">
   <a href="docs/screenshots/01_trace_suggestion.png"><img src="docs/screenshots/01_trace_suggestion.png" alt="Trace suggestion for V(out), required-signal warning, and disabled execution approval" width="800"></a><br>
-  <em>Trace suggestion and required-signal checks before approval.</em>
+  <em>Review trace suggestions and required signals before approving execution.</em>
 </p>
 
 <p align="center">
   <a href="docs/screenshots/02_ac_response.png"><img src="docs/screenshots/02_ac_response.png" alt="AC voltage gain versus frequency with the minus 3 dB level and bandwidth marker" width="800"></a><br>
-  <em>AC gain and -3 dB bandwidth analysis.</em>
+  <em>Inspect deterministic AC gain and the interpolated -3 dB bandwidth.</em>
 </p>
 
 <details>
@@ -41,34 +43,79 @@ Natural-language Request
 
 <p align="center">
   <a href="docs/screenshots/03_parameter_sweep_results.png"><img src="docs/screenshots/03_parameter_sweep_results.png" alt="R1 parameter sweep comparison table with gain, bandwidth, and measurement status" width="800"></a><br>
-  <em>R1 sweep comparisons, including unavailable bandwidth at 5kΩ.</em>
+  <em>Compare gain and bandwidth across R1 values, retaining unavailable bandwidth at 5kΩ.</em>
 </p>
 
 <p align="center">
   <a href="docs/screenshots/04_transient_waveform.png"><img src="docs/screenshots/04_transient_waveform.png" alt="Transient voltage waveforms for V(vout) and V(vin)" width="800"></a><br>
-  <em>Transient voltage waveforms for V(vout) and V(vin).</em>
+  <em>Inspect output and reference voltage waveforms in the time domain.</em>
 </p>
 
 <p align="center">
   <a href="docs/screenshots/05_dc_sweep.png"><img src="docs/screenshots/05_dc_sweep.png" alt="DC sweep of V(vout) against V2 with the selected sweep point marked" width="800"></a><br>
-  <em>V(vout) across a V2 sweep, with the selected sweep point marked.</em>
+  <em>Inspect V(vout) across a V2 sweep and locate the selected operating point.</em>
 </p>
 
 </details>
 
-## Features
+## Architecture
 
-- **AC:** Target / Reference complex transfer function, low-frequency gain, -3 dB bandwidth, frequency graph.
-- **Transient:** Input / Output Vpp, voltage gain, output swing; 적용 가능한 step에서 rise / fall time, overshoot, settling time.
-- **DC Sweep:** 단일 voltage/current source sweep, min/max, requested-point interpolation, difference / matching error.
-- **R/C Parameter Sweep:** 한 소자의 값 목록 또는 start/stop/step 지정, AC/Transient/DC 반복 실행, 비교 표·측정값 그래프·overlay, 실패 지점 기록 후 다음 지점 실행.
+입력 parsing·실행 승인·수치 분석·해석을 분리합니다. LTspice가 회로를 계산하고, Python 분석기가 RAW에서 측정값을 얻습니다. LLM에는 RAW waveform 대신 local path를 제외한 구조화 Summary만 전달합니다.
+
+```mermaid
+flowchart TD
+    User["User"] --> Circuit["LTspice schematic (.asc)"]
+    User --> Request["Natural-language request"]
+    Request --> Parser["Rule-based request parser"]
+    Circuit --> Review["Review / edit conditions<br/>Explicit user approval"]
+    Parser --> Review
+    Review --> Run["PyLTSpice + LTspice<br/>Execution on a copied schematic"]
+    Run --> RawLog["RAW / LOG"]
+
+    subgraph Deterministic["Deterministic analysis path"]
+        RawLog -->|RAW data| Analyze["Python / NumPy analysis"]
+        Analyze --> Results["Numerical metrics<br/>Graphs / comparisons"]
+        Analyze --> Summary["Analysis Summary<br/>Measured / derived facts, warnings"]
+        RawLog -->|Evidence references| Summary
+    end
+
+    subgraph AI["Optional AI path"]
+        Summary --> Prompt["Summary-only prompt<br/>Local paths removed"]
+        Prompt --> Interpret["Separate user action<br/>OpenAI / mock interpretation"]
+    end
+```
+
+Gain·-3 dB bandwidth·Vpp·DC matching error의 계산 근거는 LTspice / Python입니다. AI 응답의 형식·수치 일관성 검사는 해석의 물리적 정확성을 보증하지 않습니다. [Summary 설계](docs/devlog/07-analysis-summary.md)와 [AI 경계](docs/devlog/08-ai-interpretation-architecture.md)에 구현과 한계를 기록했습니다.
+
+## Supported Analysis
+
+| Workflow | 구현된 측정 / 기능 |
+| --- | --- |
+| AC | Target / Reference complex transfer function, low-frequency gain, -3 dB level / bandwidth, frequency graph. Bandwidth는 low-pass 응답을 우선 가정 |
+| Transient | Input / Output Vpp, voltage gain, output swing, waveform graph. 적용 가능한 step에서 rise / fall time, overshoot, settling time |
+| DC Sweep | 단일 voltage/current source sweep, min/max, requested-point interpolation, difference / matching error, sweep graph |
+| R/C Parameter Sweep | 한 소자의 값 목록 또는 start/stop/step, AC / Transient / DC 반복 실행, 비교 표·측정값 그래프·AC overlay. 실패 지점 기록 후 다음 지점 실행 |
+
 - **Analysis Summary:** 측정 사실·파생 사실·경고·비교 결과·증거를 JSON-compatible 구조로 분리.
 - **AI Interpretation:** LLM-ready prompt 미리보기·내보내기, OpenAI/mock provider, 수치 일관성 검사. 수치·단위 일치 검사는 물리적 원인이나 해석의 정확성을 증명하지 않습니다.
 - **Review UX:** 사용자 승인, 원본 ASC 보존, trace 추천 후 재승인, 같은 회로·분석의 이전 성공 조건 재사용, 전체 RAW/LOG Evidence.
 
+## Engineering Decisions
+
+- **원본 회로 보존:** `simulation_input/`의 실행용 복사본에만 directive와 sweep 값을 반영해 사용자 schematic을 보호합니다.
+- **명시적 승인:** parsing 결과를 사용자가 검토·수정한 뒤 승인해야 실행할 수 있습니다. Trace 추천도 사용자 선택 없이 다른 signal로 대체하지 않습니다.
+- **측정과 해석 분리:** RAW 분석과 파생 수치는 Python으로 결정하고, LLM은 Summary 해석만 담당하도록 입력·출력 경계를 둡니다.
+- **분석별 모듈과 실행 경로 재사용:** AC / Transient / DC parser·분석기를 분리하고 Parameter Sweep에서 기존 실행·계산 경로를 재사용해 수치 알고리즘의 중복을 줄입니다.
+- **증거를 포함한 Summary:** 값·단위·상태·경고와 RAW / LOG / graph / directive 참조를 함께 보존해 누락된 측정과 실패 point를 성공값과 구분합니다.
+- **Windows runtime 검증:** portable·installer·shortcut·종료 동작을 각각 확인했습니다. 간헐적 종료 hang은 설치 경로 문제와 분리해 조사하고, 강제 종료를 정상 종료로 판정하지 않도록 검증 기준을 보완했습니다.
+
 ## Validation
 
-2026-09-17 Prompt 009A의 **121 tests passed**(기존 104 + UX 17) 및 실제 AC / Transient / DC / Parameter Sweep integration 4종 통과 기록을 보존합니다. 이번 공개 준비에서는 코드를 변경하거나 simulation을 재실행하지 않았습니다.
+- **183 automated tests:** v0.1.1의 unit/AppTest suite와 Prompt 019 fresh-clone 환경에서 통과했습니다. Core와 선택 LLM 의존성을 함께 준비하는 [Full Test Environment](#full-test-environment)를 제공합니다.
+- **실제 LTspice 실행:** AC / Transient / DC / Parameter Sweep integration의 RAW / LOG 생성, Python 측정, 승인 차단·원본 보존·실패 처리를 검증했습니다. 재현 조건과 공개 fixture 범위는 [Validation](docs/validation.md)에 설명합니다.
+- **Windows 배포:** v0.1.1 installer가 게시됐으며 개발 PC에서 portable / installed UI, 설치·제거, icon·shortcut과 반복 graceful shutdown 검증이 통과했습니다. [Release 검증 기록](docs/releases/v0.1.1.md#final-verification)은 developer-host 증거이며 clean Windows VM 검증이 아닙니다.
+
+아래는 2026-09-17 Prompt 009A의 **121 tests passed**(기존 104 + UX 17) 및 실제 integration 4종 통과 당시의 측정 사례입니다. 현재 test 수나 이번 README 편집에서 새로 실행한 simulation 결과로 취급하지 않습니다.
 
 | 실제 검증 사례 | 결과 |
 | --- | --- |
@@ -83,11 +130,17 @@ Natural-language Request
 
 실제 integration 재현에 필요한 로컬 MOSFET 회로 설정, 공개 fixture 범위와 증거 위치는 [검증 안내](docs/validation.md)를 확인하세요. 개발 기록의 `simulation_output/` 경로는 로컬 증거 참조이며 공개 저장소에는 결과 파일을 포함하지 않습니다.
 
-## AI-Assisted Development
+## Engineering Debugging
 
-**Problem Definition → SPEC → scoped Codex prompt → implementation → test → real-user validation → refinement** 순서로 진행했습니다. 각 단계에서 범위와 승인 경계를 정하고, 실패 원인을 조사해 실제 LTspice 실행까지 검증했습니다.
+**Windows graceful shutdown:** portable와 installed build 모두에서 간헐적으로 종료가 멈췄습니다. Connection reset 후 Windows Proactor socket cleanup이 완료되지 않아 남은 transport가 서버 종료 완료를 막는 경로로 원인을 좁혔습니다. Launcher의 Streamlit bootstrap 구간에만 Selector event-loop policy를 적용하고, 종료 후 기존 policy를 복원하도록 수정했습니다.
 
-정량적인 회로 계산은 LTspice / Python이 담당합니다. AI interpretation은 검증된 Summary를 입력으로 받으며, 측정 사실·파생 사실·추론·불확실성을 구분하도록 설계했습니다.
+수정 뒤 reset 연결과 UI 흐름을 포함한 portable / installed 종료를 각각 3회, Start Menu / Desktop shortcut 종료를 추가 확인했습니다. 모두 **exit 0, forced fallback 없음, localhost listener 종료, orphan app 0**이었습니다. 앞선 15초·45초 강제 종료 실패도 [조사·검증 기록](docs/releases/v0.1.1.md#shutdown-defect-and-failed-history)에 유지했습니다. 이번 문서 편집에서는 해당 실험을 반복하지 않았습니다.
+
+## How AI Was Used
+
+Codex는 구현, debugging, test 작성, Windows packaging과 문서 정리를 지원했습니다. 사람이 문제 정의·SPEC·작업 범위·설계 결정·검증 기준을 정하고, **spec-driven implementation → tests → 실제 LTspice 검증 → 사용자 테스트 → 수정** 순서로 결과를 확인했습니다.
+
+앱의 선택 AI Interpretation과 개발 도구로서의 Codex는 역할이 다릅니다. 정량적인 회로 결과는 LLM 출력에서 채택하지 않고 LTspice RAW와 deterministic Python 계산으로 확인합니다. 사용자의 simulation 검토·승인은 계속 실행 workflow의 필수 단계이며, AI 해석에는 별도의 명시적 실행이 필요합니다. 실제 OpenAI API smoke test와 실제 해석 품질 검증은 아직 수행하지 않았습니다.
 
 ## Development Log
 
@@ -202,14 +255,19 @@ powershell -ExecutionPolicy Bypass -File scripts/build_installer.ps1
 
 ```text
 app.py                         Streamlit review / approval / results
+launcher.py                    Packaged localhost startup / graceful shutdown
+runtime_paths.py               Resource / writable-data paths; LTspice discovery
 *_analysis.py                  Analysis-specific parsing and directives
 *_result_analysis.py           RAW measurements and graphs
 simulation_runner.py           Approved execution on circuit copies
 parameter_sweep*.py            R/C sweep parsing, execution, comparison
 analysis_summary.py            Deterministic structured facts and evidence
-ai_interpretation.py            LLM-ready prompt builder
+ai_interpretation.py            Summary-only LLM prompt builder
 llm_client.py                  Optional OpenAI / mock interpretation
-ui_helpers.py                  Display formatting and review defaults
+ui_helpers.py / ui_presentation.py  Review defaults / result presentation
+assets/                        Official PNG / ICO branding resources
+CircuitSimulationAssistant.spec  PyInstaller portable recipe
+installer/ / scripts/          Windows installer / build and validation tools
 tests/                         Unit, AppTest, integration; small ASC fixtures
 docs/                          Original logs, devlog, publication guidance
 ```
