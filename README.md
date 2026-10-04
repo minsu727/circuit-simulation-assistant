@@ -218,7 +218,7 @@ OpenAI provider를 사용할 경우 core 설치에 다음을 추가합니다. �
 .\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p "test_*.py"
 ```
 
-기대 baseline은 **183 tests**입니다. 이 suite는 실제 OpenAI API를 호출하지 않으며 API key도 필요 없습니다. 실제 LTspice simulation 및 Playwright/Edge browser 검증은 별도 절차이고, 외부 도구·회로 요구사항은 [검증 안내](docs/validation.md)를 참고하세요. Build-only 의존성은 계속 `requirements-build.txt`로 분리합니다.
+기대 baseline은 **184 tests**입니다. 이 suite는 실제 OpenAI API를 호출하지 않으며 API key도 필요 없습니다. 실제 LTspice simulation 및 Playwright/Edge browser 검증은 별도 절차이고, 외부 도구·회로 요구사항은 [검증 안내](docs/validation.md)를 참고하세요. Build-only 의존성은 계속 `requirements-build.txt`로 분리합니다.
 
 ## Windows Portable Build (Developer / Advanced)
 

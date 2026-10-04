@@ -53,9 +53,13 @@ class PortableTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             (root / 'app.py').touch()
+            data = root / 'data/CircuitSimulationAssistant'
+            data.mkdir(parents=True)
             with patch.object(sys, 'frozen', True, create=True), patch.object(sys, '_MEIPASS', folder, create=True), patch.dict(os.environ, {'LOCALAPPDATA': str(root / 'data')}):
-                self.assertEqual(paths.locate_app_resource(), root / 'app.py')
-                self.assertEqual(paths.simulation_data_root(), root / 'data/CircuitSimulationAssistant')
+                # Windows TEMP may use an 8.3 alias; compare actual objects.
+                self.assertTrue(paths.locate_app_resource().samefile(root / 'app.py'))
+                self.assertTrue(paths.simulation_data_root().samefile(data))
+                self.assertFalse(paths.simulation_data_root().samefile(paths.resource_root()))
 
     def test_resource_traversal_or_missing_is_rejected(self):
         for name in ('../app.py', 'absent-resource.txt'):
@@ -68,7 +72,7 @@ class PortableTests(unittest.TestCase):
             exe.parent.mkdir(parents=True)
             exe.touch()
             with patch.dict(os.environ, {'LOCALAPPDATA': folder, 'LTSPICE_EXECUTABLE': ''}), patch('runtime_paths.shutil.which', return_value=None):
-                self.assertEqual(paths.locate_ltspice(), exe)
+                self.assertTrue(paths.locate_ltspice().samefile(exe))
 
     def test_ltspice_program_files(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -76,7 +80,7 @@ class PortableTests(unittest.TestCase):
             exe.parent.mkdir(parents=True)
             exe.touch()
             with patch.dict(os.environ, {'LOCALAPPDATA': str(Path(folder)/'local'), 'ProgramFiles': folder, 'LTSPICE_EXECUTABLE': ''}), patch('runtime_paths.shutil.which', return_value=None):
-                self.assertEqual(paths.locate_ltspice(), exe)
+                self.assertTrue(paths.locate_ltspice().samefile(exe))
 
     def test_explicit_invalid_path_does_not_fall_back(self):
         with patch.dict(os.environ, {'LTSPICE_EXECUTABLE': 'missing.exe; arbitrary-command'}), patch('runtime_paths.shutil.which') as lookup:
@@ -89,7 +93,12 @@ class PortableTests(unittest.TestCase):
             exe.touch()
             with patch.dict(os.environ, {'LTSPICE_EXECUTABLE': str(exe)}), patch('PyLTSpice.LTspice.create_from') as create:
                 paths.configure_ltspice()
-                create.assert_called_once_with(exe)
+                create.assert_called_once()
+                self.assertEqual(create.call_args.kwargs, {})
+                self.assertEqual(len(create.call_args.args), 1)
+                actual = create.call_args.args[0]
+                self.assertIsInstance(actual, Path)
+                self.assertTrue(actual.samefile(exe))
 
     def test_missing_ltspice_is_specific_error(self):
         with patch('runtime_paths.locate_ltspice', return_value=None):

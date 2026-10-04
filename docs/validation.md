@@ -34,6 +34,17 @@ CI는 실제 LTspice, installer build/install, clean Windows VM, SmartScreen/Def
 
 Prompt 024(2026-10-04) 로컬 Windows / Python 3.13.5 검증에서 `requirements-test.txt` 설치와 `pip check`가 통과했고, workflow와 같은 mock/UTF-8 환경의 **183 tests가 63.856초에 통과(exit 0, skip 없음)**했습니다. YAML 구조와 README/validation 상대 링크·헤딩 47개도 통과했습니다. 실제 simulation/API 호출이나 원격 Actions 실행은 없었습니다. 원격 통과는 commit/push 이후 실제 Actions 기록으로 별도 확인해야 합니다.
 
+### Prompt 024B — Windows CI portability
+
+첫 실제 [Actions run 37199913216](https://github.com/minsu727/circuit-simulation-assistant/actions/runs/37199913216)은 Windows / Python 3.13.15에서 **183 tests, failures 6, errors 1, exit 1**이었습니다. 로컬 통과를 원격 통과로 취급하지 않습니다. 테스트 의존성과 harness만 다음처럼 수정했습니다.
+
+- **ASC symbol 의존성:** 실제 `AscEditor`가 설치된 `voltage.asy`를 찾던 테스트에 직접 작성한 [최소 symbol fixture](../tests/fixtures/editor_symbols/README.md)를 제공합니다. 임시 ASC 옆에 복사하고 test 범위에서 외부 library 검색과 cache를 비웁니다. 실제 component 편집·저장·원본 보존 assertion을 유지하며 skip하지 않습니다. LTspice resource를 복제하거나 simulator를 실행하지 않습니다.
+- **8.3/long path:** 같은 파일의 경로 표기만 달랐습니다. 네 테스트를 `Path.samefile()` 기반 파일/디렉터리 identity 비교로 바꿨고, 전달 인자는 여전히 단일 `Path`인지 검사합니다. 공백·`&` 포함 실행 파일과 resource/data 분리 검증은 유지합니다.
+- **Release helper 환경:** runner는 `pwsh`에서 Python을 시작하고 테스트는 Windows PowerShell 5.1을 child로 실행합니다. [Microsoft의 PSModulePath 설명](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.6)에 따라 child 환경에서 상속된 `PSModulePath`만 제거해 기본 모듈 경로를 구성하게 했습니다. 최초 CI 로그에는 child 모듈 경로/세부 예외가 없어 그 값을 직접 확인할 수 없었습니다. 로컬 진단에서는 PS7 전용 shared-module manifest로 `Get-FileHash` 미검색과 helper의 `CommandNotFoundException` / exit 1을 재현했고, 환경 수정 후 hash 검증 / exit 0을 확인했습니다. 새 회귀 테스트는 이 실패·회복을 모두 검사하며 stdout/stderr 실패 진단도 보완했습니다. Production helper는 변경하지 않았습니다.
+- **경고 출력:** AppTest/bare-mode의 `missing ScriptRunContext`와 mock browser-failure/readiness-timeout 테스트의 로그는 예상 경로의 출력입니다. 전역 억제하거나 실패를 skip하지 않습니다.
+
+2026-10-04 로컬 Windows / Python 3.13.5에서 실제 8.3 임시 경로의 targeted **30 tests 통과**, 최종 전체 **184 tests 통과(기존 183 + 모듈 경로 회귀 1), skip 0, failures/errors 0, 63.573초, exit 0**를 확인했습니다. Workflow·requirements·production·packaging은 그대로입니다. Push 후 Windows CI의 기대 결과는 **184 passed, 0 skipped**이나, 수정 후 원격 결과는 아직 확인하지 않았습니다. 실제 simulation/API/installer 실행은 이번 검증에 포함하지 않습니다.
+
 ## Local-only circuit configuration
 
 기존 `test_ltspice.py`는 외부 개인 회로의 절대 경로를 포함하는 초기 smoke script입니다. 로컬 파일은 변경하지 않고 공개에서는 명시적으로 제외했습니다. 앱은 이 파일을 import하지 않습니다. MOSFET integration 스크립트들은 AST로 이 파일의 `ASC_FILE` 값을 읽습니다.

@@ -1,5 +1,6 @@
 import io
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -55,10 +56,18 @@ class SweepExecutionTests(unittest.TestCase):
 
     def test_official_component_edit_preserves_source(self):
         original = upload().getvalue()
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(AscEditor, 'symbol_cache', {}), \
+                patch.object(AscEditor, 'simulator_lib_paths', []), \
+                patch.object(AscEditor, 'custom_lib_paths', []):
             source, copy = Path(directory)/'original.asc', Path(directory)/'copy.asc'
             source.write_bytes(original)
+            # Own minimal symbols, not the developer's installed LTspice library.
+            for name in ('voltage.asy', 'res.asy'):
+                shutil.copyfile(PROJECT/'tests/fixtures/editor_symbols'/name, Path(directory)/name)
             editor = AscEditor(source)
+            for name in ('voltage.asy', 'res.asy'):
+                self.assertTrue(Path(editor.symbol_cache[name]).samefile(Path(directory)/name))
             edit_component_value(editor, 'r1', '2k')
             editor.save_netlist(copy)
             self.assertEqual(AscEditor(copy).get_component_value('R1'), '2k')
