@@ -1,5 +1,7 @@
 # Circuit Simulation Assistant
 
+[![Automated tests](https://github.com/minsu727/circuit-simulation-assistant/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/minsu727/circuit-simulation-assistant/actions/workflows/test.yml)
+
 Turns natural-language simulation requests into reviewed LTspice runs, deterministic numerical analysis, and optional AI interpretation.
 
 아날로그·혼합신호 회로를 학습하거나 실험하는 사용자를 위한 Windows / Streamlit 도구입니다. 사용자가 작성한 `.asc` 회로와 자연어 요청을 입력하면 조건을 구조화하고, **사용자의 검토·수정·명시적 승인 후** 실행용 복사본을 LTspice로 시뮬레이션합니다. Gain·bandwidth·Vpp 등의 정량값은 **Python / NumPy가 계산**하며, 선택 AI 해석은 이미 계산된 Analysis Summary를 설명하는 별도 단계입니다.
@@ -121,6 +123,7 @@ Gain·-3 dB bandwidth·Vpp·DC matching error의 계산 근거는 LTspice / Pyth
 
 ## Validation
 
+- **Automated CI:** [workflow](.github/workflows/test.yml)는 main push / pull request에서 GitHub-hosted Windows / Python 3.13으로 전체 unit/AppTest suite를 실행하도록 구성했습니다. 실제 LTspice 실행, clean Windows VM 설치 검증, SmartScreen/Defender 및 실제 OpenAI API 검증은 포함하지 않습니다. 원격 통과 여부는 위 badge와 Actions 실행 기록으로 확인하세요. [CI 범위](docs/validation.md#automated-ci)를 참고하세요.
 - **183 automated tests:** v0.1.1의 unit/AppTest suite와 Prompt 019 fresh-clone 환경에서 통과했습니다. Core와 선택 LLM 의존성을 함께 준비하는 [Full Test Environment](#full-test-environment)를 제공합니다.
 - **실제 LTspice 실행:** AC / Transient / DC / Parameter Sweep integration의 RAW / LOG 생성, Python 측정, 승인 차단·원본 보존·실패 처리를 검증했습니다. 재현 조건과 공개 fixture 범위는 [Validation](docs/validation.md)에 설명합니다.
 - **Windows 배포:** v0.1.1 installer가 게시됐으며 개발 PC에서 portable / installed UI, 설치·제거, icon·shortcut과 반복 graceful shutdown 검증이 통과했습니다. [Release 검증 기록](docs/releases/v0.1.1.md#final-verification)은 developer-host 증거이며 clean Windows VM 검증이 아닙니다.

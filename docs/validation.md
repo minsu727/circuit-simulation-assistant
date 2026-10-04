@@ -17,6 +17,23 @@ Prompt 019(2026-10-04)의 Windows / Python 3.13.5 fresh-clone 감사에서 core 
 
 이 suite는 실제 LTspice 실행이나 API key를 요구하지 않습니다. Windows PowerShell helper 검사는 Windows에서 실행하며, 실제 simulation 및 선택 browser 검증의 외부 도구 요구사항은 아래와 별도 build 안내를 참고하세요.
 
+## Automated CI
+
+[Automated tests workflow](../.github/workflows/test.yml)는 `main` push, `main` 대상 pull request와 수동 실행을 지원합니다. `windows-latest` / Python 3.13에서 `requirements-test.txt`를 설치하고 위와 같은 `python -X utf8 -m unittest discover -s tests -p "test_*.py"`를 실행합니다. Core / optional LLM 의존성 분리는 유지하며, 추가 test skip이나 별도 축소 suite는 없습니다.
+
+Suite 점검 결과:
+
+- Parser·analysis·Summary·UI helper는 synthetic/fixture 데이터와 Streamlit AppTest로 확인합니다. RAW reader와 simulator 실행은 필요한 테스트에서 mock하며, 실제 integration용 `verify_*.py`는 unittest discovery 대상이 아닙니다.
+- Launcher 탐지는 임시 디렉터리의 가짜 실행 파일과 mock을 사용합니다. Shutdown helper는 mock process로 확인하므로 실제 설치·종료 검증을 대신하지 않습니다.
+- Installer build 테스트는 임시 payload에서 compiler 호출 전 거부 경로를 검사합니다. Release helper는 임시 파일의 hash/preflight와 Windows 기본 OS-version registry 읽기를 사용하지만 기존 앱 설치 registry나 사용자별 설치 상태에 의존하지 않습니다. 이 Windows helper 테스트에는 표준 Windows PowerShell 5.1과 `SYSTEMROOT`가 필요합니다.
+- OpenAI SDK 검사는 fake client / `httpx.MockTransport`를 사용합니다. Workflow 기본 provider는 `mock`, API key는 빈 값이며 secret은 사용하지 않습니다. 실제 OpenAI API 호출은 없습니다.
+
+권한은 `contents: read`, checkout credential 저장은 비활성화합니다. 세 requirements 파일을 기준으로 setup-python pip cache를 사용하고, 동일 branch/ref의 이전 실행은 취소합니다. Job timeout은 로컬 약 1분 suite와 의존성 설치 시간을 고려해 15분입니다.
+
+CI는 실제 LTspice, installer build/install, clean Windows VM, SmartScreen/Defender, 실제 OpenAI API 품질을 검증하지 않습니다.
+
+Prompt 024(2026-10-04) 로컬 Windows / Python 3.13.5 검증에서 `requirements-test.txt` 설치와 `pip check`가 통과했고, workflow와 같은 mock/UTF-8 환경의 **183 tests가 63.856초에 통과(exit 0, skip 없음)**했습니다. YAML 구조와 README/validation 상대 링크·헤딩 47개도 통과했습니다. 실제 simulation/API 호출이나 원격 Actions 실행은 없었습니다. 원격 통과는 commit/push 이후 실제 Actions 기록으로 별도 확인해야 합니다.
+
 ## Local-only circuit configuration
 
 기존 `test_ltspice.py`는 외부 개인 회로의 절대 경로를 포함하는 초기 smoke script입니다. 로컬 파일은 변경하지 않고 공개에서는 명시적으로 제외했습니다. 앱은 이 파일을 import하지 않습니다. MOSFET integration 스크립트들은 AST로 이 파일의 `ASC_FILE` 값을 읽습니다.
