@@ -24,6 +24,16 @@ Natural-language Request
   → AI Interpretation Layer (optional, explicit user action)
 ```
 
+## Quick Demo — Public Example Circuit
+
+Clone/download this repository, then [run the app](#getting-started) and upload [common_source_amplifier.asc](examples/common_source_amplifier/common_source_amplifier.asc). This small common-source NMOS circuit was created for the repository using generic elements; no private coursework schematic is needed. LTspice must be installed separately.
+
+```text
+V(vout)을 10 Hz부터 1 MHz까지 AC simulation하고 gain과 -3 dB bandwidth를 구해줘.
+```
+
+Review Target `V(vout)`, select/enter Reference `V(vin)`, and confirm Decade / 100 points / 10 Hz–1 MHz. Approve, then **Run Simulation** to see the real LTspice result. Representative values are **12.943 dB** gain and **8.256 kHz** bandwidth. See the [example guide](examples/common_source_amplifier/README.md) for Transient settings, measured references and model limitations. The example is available in the repository; it is not bundled into the published v0.1.1 installer.
+
 ## Screenshots
 
 Trace 이름과 승인 조건을 확인한 뒤 AC 결과를 측정하고, 소자 값별 비교와 Transient / DC 응답으로 이어지는 흐름입니다.
