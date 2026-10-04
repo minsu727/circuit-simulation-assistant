@@ -2,10 +2,31 @@
 
 ## Published releases
 
+### v0.1.1 — latest
+
+**[Circuit Simulation Assistant v0.1.1](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.1)**
+is the latest published release, neither a draft nor a prerelease.
+
+**[Download the v0.1.1 Windows installer](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.1/CircuitSimulationAssistant-Setup.exe)**.
+LTspice must be installed separately. The installer is unsigned; Windows may
+show a SmartScreen warning. Clean Windows VM validation and actual OpenAI API
+smoke testing remain unperformed.
+
+| Item | Published artifact |
+| --- | --- |
+| Tag / release source | `v0.1.1` / `442b9bc8e7d40e1b3e6bbc82638e6c5042efff5e` |
+| Asset | `CircuitSimulationAssistant-Setup.exe` |
+| Size | **88,025,226 bytes** |
+| SHA-256 / remote asset digest | `3b75f217fc874f28d0f27663817dac9a9828edcbe4410604cd203f3e2d458c0a` |
+
+See the [v0.1.1 release notes](v0.1.1.md) for the icon update, graceful-shutdown
+fix, retained failure history, validation results and limitations. The v0.1.0
+tag, Release, installer and checksum below remain preserved.
+
 ### v0.1.0
 
 **[Circuit Simulation Assistant v0.1.0](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.0)**
-was published on **2026-10-01 at 04:49:34 UTC** and is the latest release.
+was published on **2026-10-01 at 04:49:34 UTC** and was the latest release at publication.
 It is neither a draft nor a prerelease.
 
 **[Download the Windows installer](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.0/CircuitSimulationAssistant-Setup.exe)**.
@@ -16,7 +37,7 @@ smoke testing remain unperformed.
 | Item | Verified result |
 | --- | --- |
 | Tag / local and remote target | `v0.1.0` / `75f6db47f722b20241190275ce01611ac00f2d1c`; existing tag preserved |
-| Release status | Published / latest; draft=false, prerelease=false |
+| Release status at publication | Published / latest at that time; draft=false, prerelease=false |
 | Asset | `CircuitSimulationAssistant-Setup.exe`, uploaded |
 | Local and downloaded size | **87,193,866 bytes** each |
 | Local and downloaded SHA-256 | `fed2fff1f23de2ff279fc132d0bb6f2167a89bd26f480062a64dc25780d408fe` |

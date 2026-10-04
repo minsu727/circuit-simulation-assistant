@@ -4,6 +4,8 @@ Natural-language-driven LTspice simulation and deterministic circuit analysis.
 
 사용자가 작성한 LTspice schematic의 시뮬레이션과 결과 분석을 돕는 Windows / Streamlit 프로젝트입니다. 자연어 요청은 rule-based parser로 구조화하고, 사용자의 검토·수정·승인 후 LTspice로 실행합니다. RAW 결과의 정량적 측정·비교는 Python의 deterministic analysis가 담당합니다.
 
+**Latest release: [v0.1.1](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.1)** · [Windows installer 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.1/CircuitSimulationAssistant-Setup.exe). 설치 요구사항과 미검증 범위는 [Windows Release](#windows-release)를 확인하세요.
+
 ## Why I Built It
 
 전자회로 실험에서 directive 문법 확인, waveform 수동 측정, 소자 값 변경에 따른 반복 시뮬레이션, 결과 비교와 보고서 정리에 드는 시간을 줄이고 싶었습니다.
@@ -77,9 +79,7 @@ Natural-language Request
 
 독립 scalar 계산, synthetic response, 승인 차단, 원본 보존, 실패 처리로 검증했습니다. **AC 저주파 소신호 gain과 10 kHz Transient Vpp gain은 서로 다른 지표**입니다. 현재 기록만으로 동일 동작점·조건의 AC–Transient 및 DC–Transient 물리적 교차검증을 완료했다고 주장하지 않습니다. 비교 조건을 맞춘 검증은 [후속 Issue](docs/github-issues.md)로 남겼습니다.
 
-```powershell
-.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p "test_*.py"
-```
+2026-10-04 Prompt 019 fresh-clone 감사에서는 Windows / Python 3.13.5의 새 환경에 core와 선택 LLM 의존성을 설치한 뒤 **183 unit/AppTests passed, exit 0**을 확인했습니다. 실제 OpenAI API 호출이나 simulation 재실행은 없었습니다. 전체 suite 준비와 명령은 [Full Test Environment](#full-test-environment)를 참고하세요.
 
 실제 integration 재현에 필요한 로컬 MOSFET 회로 설정, 공개 fixture 범위와 증거 위치는 [검증 안내](docs/validation.md)를 확인하세요. 개발 기록의 `simulation_output/` 경로는 로컬 증거 참조이며 공개 저장소에는 결과 파일을 포함하지 않습니다.
 
@@ -98,9 +98,9 @@ Natural-language Request
 
 ## Windows Release
 
-**Current release: v0.1.0** — 일반 Windows 사용자는 [Windows installer 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.0/CircuitSimulationAssistant-Setup.exe)를 이용하세요. [GitHub Release 페이지](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.0)에서도 같은 파일을 받을 수 있습니다. 자동 생성 Source code ZIP/TAR는 Windows installer가 아닙니다.
+**Current release: v0.1.1** — 일반 Windows 사용자는 [Windows installer 다운로드](https://github.com/minsu727/circuit-simulation-assistant/releases/download/v0.1.1/CircuitSimulationAssistant-Setup.exe)를 이용하세요. [GitHub Release 페이지](https://github.com/minsu727/circuit-simulation-assistant/releases/tag/v0.1.1)에서도 같은 파일을 받을 수 있습니다. 자동 생성 Source code ZIP/TAR는 Windows installer가 아닙니다.
 
-[상세 Release notes](docs/releases/v0.1.0.md)에 SHA-256과 검증 범위·한계를 기록했습니다. 배포 확인 상태는 [release history](docs/releases/README.md)를 참고하세요.
+[상세 Release notes](docs/releases/v0.1.1.md)에 SHA-256과 검증 범위·한계를 기록했습니다. v0.1.0을 포함한 배포 기록은 [release history](docs/releases/README.md)를 참고하세요.
 
 Simulation에는 **LTspice를 별도로 설치**해야 합니다. Installer는 Python runtime을 포함하므로 일반적인 사용에서 별도 Python 설치는 예상하지 않지만, **Python 없는 clean Windows VM 검증은 아직 수행하지 않았습니다**. Unsigned installer; Windows may display a SmartScreen warning.
 
@@ -118,7 +118,9 @@ Simulation에는 **LTspice를 별도로 설치**해야 합니다. Installer는 P
 
 ### Developer Setup
 
-검증 환경: Windows, Python 3.13.5, LTspice 26.0.1. LTspice는 별도 설치하며 PyLTSpice가 실행 파일을 찾을 수 있어야 합니다. 설치된 환경의 core 실행 의존성(직접 의존성과 일부 하위 의존성 고정)을 [requirements.txt](requirements.txt)에 기록했습니다. 새 환경에서의 설치 검증은 아직 하지 않았습니다.
+검증 환경: Windows, Python 3.13.5, LTspice 26.0.1. LTspice는 별도 설치하며 PyLTSpice가 실행 파일을 찾을 수 있어야 합니다. 설치된 환경의 core 실행 의존성(직접 의존성과 일부 하위 의존성 고정)을 [requirements.txt](requirements.txt)에 기록했습니다. Prompt 019에서 Windows / Python 3.13.5 fresh-clone 환경의 core 설치를 확인했으며, 이는 별도 clean Windows VM 검증을 의미하지 않습니다.
+
+#### Core Application
 
 ```powershell
 py -3.13 -m venv .venv
@@ -129,13 +131,28 @@ $env:LLM_PROVIDER = "mock"
 
 `.asc` 업로드 → 요청 입력 → Analyze Request → 조건 수정·승인 → Run 순서입니다. mock에는 API key가 필요 없습니다. OpenAI provider의 선택 의존성은 [requirements-llm.txt](requirements-llm.txt)에 있으며, 실제 API smoke test는 아직 수행하지 않았습니다. `.env` 자동 로더는 없습니다.
 
-OpenAI provider를 사용할 때만 core 설치에 다음을 추가합니다. 설치 자체는 API를 호출하지 않습니다. 기본 simulation / Summary / mock 사용에는 필요하지 않습니다.
+#### Optional AI Interpretation
+
+OpenAI provider를 사용할 경우 core 설치에 다음을 추가합니다. 설치 자체는 API를 호출하지 않습니다. 기본 simulation / Summary / mock 사용에는 필요하지 않습니다.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-llm.txt
 ```
 
 실제 provider 사용 시에는 `LLM_PROVIDER=openai`와 `OPENAI_API_KEY`를 환경변수 또는 로컬 `.streamlit/secrets.toml`로 설정합니다. 실제 키는 저장소에 넣지 않습니다. 앞서 설정한 mock provider는 자동으로 변경되지 않습니다.
+
+### Full Test Environment
+
+전체 unit/AppTest suite에는 OpenAI SDK와 `httpx`를 사용하는 fake HTTP transport 테스트가 포함됩니다. SDK가 없으면 해당 테스트는 자동 skip되지 않고 import 오류가 발생합니다. [requirements-test.txt](requirements-test.txt)는 core와 선택 LLM requirements를 함께 설치하며, 앱의 core 의존성 자체는 변경하지 않습니다.
+
+프로젝트 root에서 위와 같이 `.venv`를 만든 뒤 실행합니다:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-test.txt
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p "test_*.py"
+```
+
+기대 baseline은 **183 tests**입니다. 이 suite는 실제 OpenAI API를 호출하지 않으며 API key도 필요 없습니다. 실제 LTspice simulation 및 Playwright/Edge browser 검증은 별도 절차이고, 외부 도구·회로 요구사항은 [검증 안내](docs/validation.md)를 참고하세요. Build-only 의존성은 계속 `requirements-build.txt`로 분리합니다.
 
 ## Windows Portable Build (Developer / Advanced)
 
@@ -199,7 +216,7 @@ docs/                          Original logs, devlog, publication guidance
 
 ## Current Limitations / Future Work
 
-- Windows 중심 배포이며 LTspice 별도 설치가 필요합니다. Installer는 unsigned이고 clean Windows VM은 미검증입니다. [상세 release limitations](docs/releases/v0.1.0.md#known-limitations)를 참고하세요.
+- Windows 중심 배포이며 LTspice 별도 설치가 필요합니다. Installer는 unsigned이고 clean Windows VM은 미검증입니다. [상세 release limitations](docs/releases/v0.1.1.md#limitations--next-steps)를 참고하세요.
 - Actual API smoke test not yet performed; 실제 응답 품질은 검증하지 않았습니다.
 - 한 번에 **하나의 R/C** sweep만 지원하며 nested sweep / cancel-resume는 지원하지 않습니다.
 - AC bandwidth는 low-pass 우선, Transient step 측정은 waveform 적용 조건이 있습니다.

@@ -4,7 +4,18 @@
 
 Prompt 009A(2026-09-17)에서 121 unit/AppTest, 실제 AC/Transient/DC/Parameter Sweep integration 4종, 실제 Streamlit startup, Edge desktop/mobile graph layout 검증이 통과했습니다. [원본 기록](development-log.md#2026-09-17--core-ux-polish-after-real-user-testing-prompt-009a)에 실패와 수정·재실행도 남아 있습니다. 공개 준비 단계에서는 기존 Python 코드와 tests를 변경하지 않았고 전체 simulation을 다시 실행하지 않았습니다.
 
-단위 테스트에는 PyLTSpice, Streamlit, NumPy/Matplotlib 등이 필요합니다. `requirements.txt`는 core 실행의 직접 의존성과 일부 하위 의존성 버전을 기록하며 새 환경 설치나 모든 전이 의존성의 재현을 보장하는 lockfile은 아닙니다. spicelib는 PyLTSpice, pandas는 Streamlit, Pillow는 Streamlit/Matplotlib의 실행 의존성입니다. OpenAI 및 Playwright는 core 파일에 포함하지 않습니다. 선택 OpenAI SDK 검사는 SDK 미설치 시 일부 skip될 수 있으므로 기존 전체 검증과 같은 구성을 원하면 `requirements-llm.txt`도 설치합니다. mock/fake transport 검사는 실제 API를 호출하지 않습니다.
+단위 테스트에는 PyLTSpice, Streamlit, NumPy/Matplotlib 등이 필요합니다. `requirements.txt`는 core 실행의 직접 의존성과 일부 하위 의존성 버전을 기록하며 새 환경 설치나 모든 전이 의존성의 재현을 보장하는 lockfile은 아닙니다. spicelib는 PyLTSpice, pandas는 Streamlit, Pillow는 Streamlit/Matplotlib의 실행 의존성입니다. OpenAI 및 Playwright는 core 파일에 포함하지 않습니다. 전체 suite에는 OpenAI SDK와 `httpx`를 직접 import하는 fake transport 테스트가 있어 SDK 미설치 시 자동 skip되지 않고 오류가 발생합니다. [requirements-test.txt](../requirements-test.txt)는 core와 선택 LLM requirements를 함께 설치합니다. mock/fake transport 검사는 실제 API를 호출하지 않습니다.
+
+Prompt 019(2026-10-04)의 Windows / Python 3.13.5 fresh-clone 감사에서 core 설치와 `pip check`가 통과했습니다. Core-only suite는 183개 중 SDK 의존성 오류 1개로 exit 1이었고, 선택 LLM requirements 설치 후 **183 tests passed, exit 0**이었습니다. 이 결과는 실제 simulation/API 재검증이나 별도 clean Windows VM 검증이 아닙니다.
+
+프로젝트 root의 `.venv`에서 전체 unit/AppTest suite를 준비하고 실행합니다:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-test.txt
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p "test_*.py"
+```
+
+이 suite는 실제 LTspice 실행이나 API key를 요구하지 않습니다. Windows PowerShell helper 검사는 Windows에서 실행하며, 실제 simulation 및 선택 browser 검증의 외부 도구 요구사항은 아래와 별도 build 안내를 참고하세요.
 
 ## Local-only circuit configuration
 

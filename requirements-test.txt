@@ -1,0 +1,5 @@
+# Complete unit/AppTest environment; keep core and optional LLM runtime separate.
+# The SDK test uses fake HTTP transport; no API key or actual API call is needed.
+# Optional browser/integration tools and build tools are not part of this suite.
+-r requirements.txt
+-r requirements-llm.txt
