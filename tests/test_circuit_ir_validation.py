@@ -1,4 +1,4 @@
-"""M1E structural report acceptance, with explicit unimplemented M1F boundaries."""
+"""M1E structural acceptance, retained under the completed M1F local profile."""
 from dataclasses import FrozenInstanceError, replace
 import json
 import os
@@ -87,15 +87,15 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(result, ir.validate_document(doc))
         return result
 
-    def test_authored_structural_circuits_remain_incomplete_until_m1f(self):
+    def test_authored_structural_circuits_reach_complete_local_state(self):
         for kind in ("divider", "rc", "simple", "mos"):
             with self.subTest(kind=kind):
-                result = self.checked(circuit(kind), ir.TechnicalState.UNVALIDATED, ())
+                result = self.checked(circuit(kind), ir.TechnicalState.VALID,
+                                      ("CHECK_DEFERRED",) if kind == "mos" else ())
                 self.assertEqual(result.completed_stages,
-                                 ("schema", "ids", "references", "incidence", "pins", "ground", "labels", "result"))
-                self.assertEqual(dict(result.skipped_stages), {
-                    "component_value_source": "not_implemented_m1f", "graph_dc": "not_implemented_m1f",
-                    "ambiguity_confidence_provenance": "not_implemented_m1f"})
+                                 ("schema", "ids", "references", "incidence", "pins", "ground", "labels",
+                                  "component_value_source", "graph_dc", "ambiguity_confidence_provenance", "result"))
+                self.assertEqual(dict(result.skipped_stages), {})
                 self.assertIn("model_catalog_resolution", result.deferred_checks)
                 self.assertEqual(result.blocking_issue_count, 0)
 
@@ -147,14 +147,23 @@ class ValidationTests(unittest.TestCase):
     def test_valid_role_sets_for_each_supported_device(self):
         for component_type in (ir.ComponentType.RESISTOR, ir.ComponentType.CAPACITOR, ir.ComponentType.INDUCTOR):
             doc = circuit("simple")
-            component = replace(doc.components[1], type=component_type)
-            self.checked(replace(doc, components=(doc.components[0], component)), ir.TechnicalState.UNVALIDATED, ())
+            unit = {ir.ComponentType.RESISTOR: "ohm", ir.ComponentType.CAPACITOR: "F", ir.ComponentType.INDUCTOR: "H"}[component_type]
+            component = replace(doc.components[1], type=component_type, value=quantity("1", unit))
+            if component_type is ir.ComponentType.INDUCTOR:
+                # An ideal inductor in parallel with a nonzero DC V source is
+                # a genuine constraint conflict, unrelated to pin-role validity.
+                source = replace(doc.components[0], source=replace(doc.components[0].source, dc=quantity("0")))
+                doc = replace(doc, components=(source, doc.components[1]))
+            # C alone cannot provide a DC reference, but the V source does.
+            self.checked(replace(doc, components=(doc.components[0], component)), ir.TechnicalState.VALID,
+                         ("SOURCE_CONSTRAINT_CONFLICT",) if component_type is ir.ComponentType.INDUCTOR else ())
         doc = circuit("simple")
-        self.checked(replace(doc, components=(replace(doc.components[0], type=ir.ComponentType.CURRENT_SOURCE),)
-                             + doc.components[1:]), ir.TechnicalState.UNVALIDATED, ())
+        source = replace(doc.components[0].source, dc=quantity("1", "A"))
+        self.checked(replace(doc, components=(replace(doc.components[0], type=ir.ComponentType.CURRENT_SOURCE, source=source),)
+                             + doc.components[1:]), ir.TechnicalState.VALID, ())
         doc = circuit("mos")
         self.checked(replace(doc, components=doc.components[:-1] + (replace(doc.components[-1], type=ir.ComponentType.PMOS),)),
-                     ir.TechnicalState.UNVALIDATED, ())
+                     ir.TechnicalState.VALID, ("CHECK_DEFERRED",))
 
     def test_missing_required_role_for_each_device_family(self):
         for component_type in (ir.ComponentType.RESISTOR, ir.ComponentType.CAPACITOR, ir.ComponentType.INDUCTOR):
@@ -247,18 +256,18 @@ class ValidationTests(unittest.TestCase):
     def test_unused_and_single_pin_nets_have_no_invented_dangling_rule(self):
         doc = circuit("simple")
         doc = replace(doc, nets=doc.nets + (ir.Net("unused", False),))
-        self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
+        self.checked(doc, ir.TechnicalState.VALID, ())
         doc = replace(doc, nets=doc.nets + (ir.Net("one_pin", False),),
                       connections=tuple(replace(row, net_id="one_pin") if row.pin_id == "R1.p2" else row
                                         for row in doc.connections))
         self.assertEqual(ir.build_graph(doc).graph.pins_for_net("one_pin"), ("R1.p2",))
-        self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
+        self.checked(doc, ir.TechnicalState.VALID, ())
         # A separate incidence island is evaluated by the future graph/DC stage,
         # not silently treated as conductive or rejected with an invented code.
-        doc = replace(doc, connections=tuple(replace(row, net_id="one_pin") if row.pin_id == "R1.p1" else row
+        doc = replace(doc, connections=tuple(replace(row, net_id="unused") if row.pin_id == "R1.p1" else row
                                             for row in doc.connections))
-        result = self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
-        self.assertEqual(dict(result.skipped_stages)["graph_dc"], "not_implemented_m1f")
+        result = self.checked(doc, ir.TechnicalState.INVALID, ("ISOLATED_SUBNETWORK",))
+        self.assertNotIn("FLOATING_DC_NODE", {issue.code for issue in result.issues})
 
     def test_unattached_label_is_ambiguous(self):
         doc = circuit("simple")
@@ -279,19 +288,19 @@ class ValidationTests(unittest.TestCase):
     def test_case_variants_on_same_net_are_not_alias_warning(self):
         doc = circuit("simple")
         other = ir.Label("label_other", " VIN ", "flat", "vin", None)
-        self.checked(replace(doc, labels=doc.labels + (other,)), ir.TechnicalState.UNVALIDATED, ())
+        self.checked(replace(doc, labels=doc.labels + (other,)), ir.TechnicalState.VALID, ())
 
     def test_non_ascii_case_is_not_silently_normalized(self):
         doc = circuit("simple")
         labels = (ir.Label("label_omega", "Ω", "flat", "vin", None),
                   ir.Label("label_omega_lower", "ω", "flat", "vin", None))
-        self.checked(replace(doc, labels=labels), ir.TechnicalState.UNVALIDATED, ("LABEL_ALIAS",))
+        self.checked(replace(doc, labels=labels), ir.TechnicalState.VALID, ("LABEL_ALIAS",))
 
     def test_alias_warning_is_fresh_nonblocking_and_requires_no_merge(self):
         doc = circuit("simple")
         other = ir.Label("label_alias", "input", "flat", "vin", None)
         result = self.checked(replace(doc, labels=doc.labels + (other,)),
-                              ir.TechnicalState.UNVALIDATED, ("LABEL_ALIAS",))
+                              ir.TechnicalState.VALID, ("LABEL_ALIAS",))
         self.assertEqual(result.warning_count, 1)
         self.assertEqual(result.blocking_issue_count, 0)
         self.assertFalse(result.issues[0].blocking)
@@ -306,7 +315,7 @@ class ValidationTests(unittest.TestCase):
     def test_reserved_zero_label_must_attach_to_explicit_ground(self):
         doc = circuit("simple")
         self.checked(replace(doc, labels=(replace(doc.labels[0], text="0", net_id="n0"),)),
-                     ir.TechnicalState.UNVALIDATED, ())
+                     ir.TechnicalState.VALID, ())
         self.checked(replace(doc, labels=(replace(doc.labels[0], text="0"),)),
                      ir.TechnicalState.INVALID, ("LABEL_CONFLICT",))
 
@@ -329,24 +338,24 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(len(result.issues), 2)
         self.assertEqual(result.ambiguous_count, 1)
 
-    def test_source_specific_semantics_are_explicitly_deferred_to_m1f(self):
+    def test_source_specific_semantics_are_checked_in_m1f(self):
         doc = circuit("simple")
         rows = tuple(replace(row, net_id="vin") if row.pin_id.startswith("V1.") else row
                      for row in doc.connections)
-        self.checked(replace(doc, connections=rows), ir.TechnicalState.UNVALIDATED, ())
+        self.checked(replace(doc, connections=rows), ir.TechnicalState.INVALID, ("SOURCE_SAME_NET",))
         doc = replace(doc, components=(replace(doc.components[0], source=None),) + doc.components[1:])
-        self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
+        self.checked(doc, ir.TechnicalState.AMBIGUOUS, ("SOURCE_INVALID",))
 
-    def test_value_semantics_are_explicitly_deferred_to_m1f(self):
+    def test_value_semantics_are_checked_in_m1f(self):
         doc = circuit("simple")
         component = replace(doc.components[1], value=quantity("-1", "ohm"))
-        self.checked(replace(doc, components=(doc.components[0], component)), ir.TechnicalState.UNVALIDATED, ())
+        self.checked(replace(doc, components=(doc.components[0], component)), ir.TechnicalState.INVALID, ("VALUE_INVALID",))
 
-    def test_mos_bulk_incidence_waits_for_specific_m1f_rule(self):
+    def test_mos_bulk_incidence_uses_specific_m1f_rule(self):
         doc = circuit("mos")
         doc = replace(doc, connections=tuple(row for row in doc.connections if row.pin_id != "M1.p4"))
-        result = self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
-        self.assertEqual(dict(result.skipped_stages)["pin[M1.p4].incidence"], "mos_bulk_deferred_to_m1f")
+        result = self.checked(doc, ir.TechnicalState.AMBIGUOUS, ("MOS_BODY_UNRESOLVED", "CHECK_DEFERRED"))
+        self.assertEqual(dict(result.skipped_stages)["region[M1].graph_dc"], "invalid_component_prerequisite")
         self.assertNotIn("PIN_NET_INVALID", {issue.code for issue in result.issues})
 
     def test_mos_role_order_and_visual_orientation_never_determine_roles(self):
@@ -356,7 +365,7 @@ class ValidationTests(unittest.TestCase):
         doc = replace(doc, visual=ir.VisualProvenance("original_pixels", (visual,)),
                       components=tuple(replace(item, visual_ref="symbol_m", pin_ids=item.pin_ids[::-1])
                                        if item.id == "M1" else item for item in doc.components))
-        result = self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
+        result = self.checked(doc, ir.TechnicalState.VALID, ("CHECK_DEFERRED",))
         changed = replace(doc, visual=replace(doc.visual, entities=(replace(visual, orientation=ir.Orientation.R270),)))
         self.assertEqual(result, ir.validate_document(changed))
 
@@ -367,9 +376,9 @@ class ValidationTests(unittest.TestCase):
                               (candidate,), ir.AmbiguityStatus.UNRESOLVED, None, None)
         doc = replace(doc, components=(doc.components[0], replace(doc.components[1], type=ir.ComponentType.UNKNOWN)),
                       ambiguities=(choice,))
-        result = self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
-        self.assertIn("ambiguity_confidence_provenance", dict(result.skipped_stages))
-        self.assertEqual(dict(result.skipped_stages)["component[R1].pins"], "type_unknown_deferred_to_m1f")
+        result = self.checked(doc, ir.TechnicalState.AMBIGUOUS, ("UNSUPPORTED_FEATURE",))
+        self.assertIn("ambiguity_confidence_provenance", result.completed_stages)
+        self.assertEqual(dict(result.skipped_stages)["component[R1].pins"], "type_unknown")
 
     def test_confidence_and_imported_reviewed_state_cannot_mask_current_errors(self):
         doc = circuit("simple")
@@ -384,7 +393,7 @@ class ValidationTests(unittest.TestCase):
                                      ("R1",), "Historical failure", ())
         doc = replace(doc, validation_state=ir.ImportedValidationState(ir.WireValidationStatus.BLOCKED,
                       99, "stale", (finding,)))
-        self.checked(doc, ir.TechnicalState.UNVALIDATED, ())
+        self.checked(doc, ir.TechnicalState.VALID, ())
 
     def test_fresh_report_remains_separate_from_wire_status_and_serialization(self):
         doc = circuit("simple")
@@ -399,7 +408,7 @@ class ValidationTests(unittest.TestCase):
             result.technical_state = ir.TechnicalState.VALID
 
     def test_skip_reasons_and_collections_are_immutable(self):
-        result = ir.validate_document(circuit("simple"))
+        result = ir.validate_document(remove_pin(circuit("simple"), "R1.p2"))
         self.assertIs(type(result.completed_stages), tuple)
         self.assertIs(type(result.skipped_stages), tuple)
         self.assertTrue(all(type(pair) is tuple for pair in result.skipped_stages))
