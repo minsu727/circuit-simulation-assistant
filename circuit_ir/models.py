@@ -596,3 +596,52 @@ class LoadResult:
     def __post_init__(self) -> None:
         _optional_instance(self.document, CircuitDocument, "document")
         _tuple(self.issues, ValidationIssue, "issues")
+
+
+@dataclass(frozen=True, slots=True)
+class ValidationResult:
+    """Fresh report envelope; imported snapshots and approval remain separate.
+
+    skipped_stages contains immutable (stage, reason) pairs. An intermediate
+    M1E report cannot grant full M1 validity while M1F stages remain unimplemented.
+    Counts are derived from issues, never stored as another source of truth.
+    """
+
+    profile: str
+    ruleset_version: str
+    document_revision: int | None
+    technical_state: TechnicalState
+    issues: tuple[ValidationIssue, ...]
+    completed_stages: tuple[str, ...]
+    skipped_stages: tuple[tuple[str, str], ...]
+    deferred_checks: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        _string(self.profile, "profile", minimum=1, maximum=64)
+        _string(self.ruleset_version, "ruleset_version", minimum=1, maximum=64)
+        if self.document_revision is not None:
+            _integer(self.document_revision, "document_revision")
+        _instance(self.technical_state, TechnicalState, "technical_state")
+        _tuple(self.issues, ValidationIssue, "issues")
+        for name in ("completed_stages", "deferred_checks"):
+            _tuple(getattr(self, name), str, name)
+            for value in getattr(self, name):
+                _string(value, name, minimum=1, maximum=128)
+        _tuple(self.skipped_stages, tuple, "skipped_stages")
+        for pair in self.skipped_stages:
+            if len(pair) != 2:
+                raise ValueError("skipped_stages must contain (stage, reason) pairs")
+            _string(pair[0], "skipped stage", minimum=1, maximum=128)
+            _string(pair[1], "skip reason", minimum=1, maximum=256)
+
+    @property
+    def blocking_issue_count(self) -> int:
+        return sum(issue.blocking for issue in self.issues)
+
+    @property
+    def warning_count(self) -> int:
+        return sum(issue.severity is IssueSeverity.WARNING for issue in self.issues)
+
+    @property
+    def ambiguous_count(self) -> int:
+        return sum(issue.severity is IssueSeverity.AMBIGUOUS for issue in self.issues)

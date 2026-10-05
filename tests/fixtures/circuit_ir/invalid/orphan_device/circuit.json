@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.2-draft1",
+  "metadata": {"circuit_id": "m1e_orphan_device", "revision": 0, "origin": "manual", "catalog_version": "phase_a_draft1"},
+  "source_image_reference": null,
+  "components": [
+    {"id": "R1", "type": "resistor", "pin_ids": [], "value": {"literal": "2k", "si_value": "2000", "unit": "ohm", "grammar": "spice"}, "model_ref": null, "parameters": {}, "source": null, "visual_ref": null}
+  ],
+  "pins": [],
+  "nets": [{"id": "nin", "is_ground": false}, {"id": "n0", "is_ground": true}],
+  "connections": [],
+  "labels": [{"id": "label_in", "text": "vin", "scope": "flat", "net_id": "nin", "visual_ref": null}],
+  "visual": {"coordinate_space": "original_pixels", "entities": []},
+  "confidence": {"score": null, "basis": "manual", "calibrated": false},
+  "ambiguities": [],
+  "warnings": [],
+  "validation_state": {"status": "draft", "validated_revision": null, "ruleset_version": null, "findings": []}
+}

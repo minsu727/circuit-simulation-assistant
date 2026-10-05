@@ -201,7 +201,7 @@ class GraphTests(unittest.TestCase):
         self.assertEqual(doc.validation_state.validated_revision, 99)
         for capability in ("technical_state", "approved", "can_execute"):
             self.assertFalse(hasattr(result, capability))
-        self.assertFalse(hasattr(ir, "validate_document"))
+        self.assertTrue(callable(ir.validate_document))
 
     def test_duplicate_definitions_for_every_global_namespace(self):
         doc = referenced_document()

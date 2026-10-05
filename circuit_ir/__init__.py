@@ -34,6 +34,7 @@ from .models import (
     ValueGrammar,
     ValueParseResult,
     ValidationIssue,
+    ValidationResult,
     VisualEntity,
     VisualKind,
     VisualProvenance,
@@ -45,6 +46,7 @@ from .serialization import decode_json, document_to_dict, dump_document
 from .value_parser import parse_quantity
 from .schema import document_from_dict, load_document, validate_schema
 from .graph import CircuitGraph, GraphBuildResult, build_graph
+from .validation import validate_document
 
 __all__ = (
     "ACConfiguration", "Ambiguity", "AmbiguityKind", "AmbiguityStatus",
@@ -59,4 +61,5 @@ __all__ = (
     "parse_quantity", "ValueParseResult", "ValidationIssue",
     "LoadResult", "document_from_dict", "load_document", "validate_schema",
     "CircuitGraph", "GraphBuildResult", "build_graph",
+    "ValidationResult", "validate_document",
 )
