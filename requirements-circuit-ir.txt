@@ -1,0 +1,3 @@
+# Isolated v0.2 Circuit IR loader; core v0.1 runtime remains unchanged.
+# Pin the validator version tested with the bundled Draft 2020-12 contract.
+jsonschema==4.26.0

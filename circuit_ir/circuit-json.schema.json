@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed Circuit JSON 0.2-draft1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "metadata", "source_image_reference", "components", "pins", "nets", "connections", "labels", "visual", "confidence", "ambiguities", "warnings", "validation_state"],
+  "properties": {
+    "schema_version": {"const": "0.2-draft1"},
+    "metadata": {
+      "type": "object", "additionalProperties": false,
+      "required": ["circuit_id", "revision", "origin", "catalog_version"],
+      "properties": {
+        "circuit_id": {"$ref": "#/$defs/id"},
+        "revision": {"type": "integer", "minimum": 0},
+        "origin": {"enum": ["image", "manual"]},
+        "catalog_version": {"type": "string", "minLength": 1, "maxLength": 64}
+      }
+    },
+    "source_image_reference": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["asset_id", "sha256", "width_px", "height_px"],
+          "properties": {
+            "asset_id": {"$ref": "#/$defs/id"},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "width_px": {"type": "integer", "minimum": 1},
+            "height_px": {"type": "integer", "minimum": 1}
+          }
+        }
+      ]
+    },
+    "components": {"type": "array", "items": {"$ref": "#/$defs/component"}},
+    "pins": {"type": "array", "items": {"$ref": "#/$defs/pin"}},
+    "nets": {"type": "array", "items": {"$ref": "#/$defs/net"}},
+    "connections": {"type": "array", "items": {"$ref": "#/$defs/connection"}},
+    "labels": {"type": "array", "items": {"$ref": "#/$defs/label"}},
+    "visual": {
+      "type": "object", "additionalProperties": false,
+      "required": ["coordinate_space", "entities"],
+      "properties": {
+        "coordinate_space": {"const": "original_pixels"},
+        "entities": {"type": "array", "items": {"$ref": "#/$defs/visual_entity"}}
+      }
+    },
+    "confidence": {"$ref": "#/$defs/confidence"},
+    "ambiguities": {"type": "array", "items": {"$ref": "#/$defs/ambiguity"}},
+    "warnings": {"$ref": "#/$defs/ids"},
+    "validation_state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "validated_revision", "ruleset_version", "findings"],
+      "properties": {
+        "status": {"enum": ["draft", "blocked", "ready_for_review", "reviewed"]},
+        "validated_revision": {"type": ["integer", "null"], "minimum": 0},
+        "ruleset_version": {"type": ["string", "null"]},
+        "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}}
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$", "maxLength": 64},
+    "ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "nullable_id": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+    "point": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {"type": "number", "minimum": 0}
+    },
+    "confidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["score", "basis", "calibrated"],
+      "properties": {
+        "score": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "basis": {"enum": ["provider_score", "heuristic", "manual", "unknown"]},
+        "calibrated": {"type": "boolean"}
+      }
+    },
+    "quantity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["literal", "si_value", "unit", "grammar"],
+      "properties": {
+        "literal": {"type": ["string", "null"], "maxLength": 128},
+        "si_value": {
+          "oneOf": [
+            {"type": "string", "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]+)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$", "maxLength": 128},
+            {"type": "null"}
+          ]
+        },
+        "unit": {"enum": ["ohm", "F", "H", "V", "A", "Hz", "s", "deg", "m"]},
+        "grammar": {"enum": ["spice", "si", "manual", "unresolved"]}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dc", "ac", "waveform"],
+      "properties": {
+        "dc": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "ac": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object", "additionalProperties": false,
+              "required": ["magnitude", "phase"],
+              "properties": {"magnitude": {"$ref": "#/$defs/quantity"}, "phase": {"$ref": "#/$defs/quantity"}}
+            }
+          ]
+        },
+        "waveform": {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "parameters"],
+          "properties": {
+            "kind": {"enum": ["none", "sine", "pulse"]},
+            "parameters": {"type": "object", "additionalProperties": {"$ref": "#/$defs/quantity"}}
+          }
+        }
+      }
+    },
+    "component": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "pin_ids", "value", "model_ref", "parameters", "source", "visual_ref"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"enum": ["resistor", "capacitor", "inductor", "voltage_source", "current_source", "nmos", "pmos", "unknown"]},
+        "pin_ids": {"$ref": "#/$defs/ids"},
+        "value": {"oneOf": [{"$ref": "#/$defs/quantity"}, {"type": "null"}]},
+        "model_ref": {"$ref": "#/$defs/nullable_id"},
+        "parameters": {"type": "object", "additionalProperties": false, "properties": {"width": {"$ref": "#/$defs/quantity"}, "length": {"$ref": "#/$defs/quantity"}}},
+        "source": {"oneOf": [{"$ref": "#/$defs/source"}, {"type": "null"}]},
+        "visual_ref": {"$ref": "#/$defs/nullable_id"}
+      }
+    },
+    "pin": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "component_id", "role", "visual_ref"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "component_id": {"$ref": "#/$defs/id"},
+        "role": {"enum": ["a", "b", "positive", "negative", "drain", "gate", "source", "bulk", "unknown"]},
+        "visual_ref": {"$ref": "#/$defs/nullable_id"}
+      }
+    },
+    "net": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "is_ground"],
+      "properties": {"id": {"$ref": "#/$defs/id"}, "is_ground": {"type": "boolean"}}
+    },
+    "connection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["pin_id", "net_id", "visual_refs", "confidence"],
+      "properties": {
+        "pin_id": {"$ref": "#/$defs/id"}, "net_id": {"$ref": "#/$defs/id"},
+        "visual_refs": {"$ref": "#/$defs/ids"}, "confidence": {"$ref": "#/$defs/confidence"}
+      }
+    },
+    "label": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "text", "scope", "net_id", "visual_ref"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "text": {"type": "string", "minLength": 1, "maxLength": 64},
+        "scope": {"const": "flat"}, "net_id": {"$ref": "#/$defs/nullable_id"}, "visual_ref": {"$ref": "#/$defs/nullable_id"}
+      }
+    },
+    "visual_entity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "bbox", "position", "orientation", "points", "text", "method", "confidence"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["symbol", "pin", "wire", "junction", "ground", "label", "text", "unknown"]},
+        "bbox": {"oneOf": [{"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number", "minimum": 0}}, {"type": "null"}]},
+        "position": {"oneOf": [{"$ref": "#/$defs/point"}, {"type": "null"}]},
+        "orientation": {"enum": ["r0", "r90", "r180", "r270", "r0_mirror", "r90_mirror", "r180_mirror", "r270_mirror", "unknown"]},
+        "points": {"type": "array", "items": {"$ref": "#/$defs/point"}},
+        "text": {"type": ["string", "null"], "maxLength": 256},
+        "method": {"type": "string", "minLength": 1, "maxLength": 64},
+        "confidence": {"$ref": "#/$defs/confidence"}
+      }
+    },
+    "ambiguity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "target_refs", "candidates", "state", "selected_candidate_id", "resolution_note"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["symbol_type", "value", "crossing", "wire_gap", "label_attachment", "pin_mapping", "body_connection"]},
+        "target_refs": {"$ref": "#/$defs/ids"},
+        "candidates": {
+          "type": "array", "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "description"],
+            "properties": {"id": {"$ref": "#/$defs/id"}, "description": {"type": "string", "minLength": 1, "maxLength": 256}}
+          }
+        },
+        "state": {"enum": ["unresolved", "resolved"]},
+        "selected_candidate_id": {"$ref": "#/$defs/nullable_id"},
+        "resolution_note": {"type": ["string", "null"], "maxLength": 256}
+      }
+    },
+    "finding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "code", "severity", "target_refs", "message", "visual_refs"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "code": {"$ref": "#/$defs/id"},
+        "severity": {"enum": ["ERROR", "WARNING", "AMBIGUOUS", "CONFIRMED"]},
+        "target_refs": {"$ref": "#/$defs/ids"}, "message": {"type": "string", "minLength": 1, "maxLength": 512},
+        "visual_refs": {"$ref": "#/$defs/ids"}
+      }
+    }
+  }
+}

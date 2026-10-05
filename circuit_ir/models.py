@@ -584,3 +584,15 @@ class ValueParseResult:
     def __post_init__(self) -> None:
         _optional_instance(self.quantity, Quantity, "quantity")
         _tuple(self.issues, ValidationIssue, "issues")
+
+
+@dataclass(frozen=True, slots=True)
+class LoadResult:
+    """Shape-loading result, not electrical validation or human approval."""
+
+    document: CircuitDocument | None
+    issues: tuple[ValidationIssue, ...]
+
+    def __post_init__(self) -> None:
+        _optional_instance(self.document, CircuitDocument, "document")
+        _tuple(self.issues, ValidationIssue, "issues")

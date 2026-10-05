@@ -1,4 +1,4 @@
-"""Circuit IR records and primitive JSON helpers; importing performs no I/O."""
+"""Circuit IR records and JSON helpers; importing performs no I/O."""
 from .models import (
     ACConfiguration,
     Ambiguity,
@@ -16,6 +16,7 @@ from .models import (
     ImportedValidationState,
     IssueSeverity,
     Label,
+    LoadResult,
     Metadata,
     Net,
     NetRole,
@@ -42,6 +43,7 @@ from .models import (
 )
 from .serialization import decode_json, document_to_dict, dump_document
 from .value_parser import parse_quantity
+from .schema import document_from_dict, load_document, validate_schema
 
 __all__ = (
     "ACConfiguration", "Ambiguity", "AmbiguityKind", "AmbiguityStatus",
@@ -54,4 +56,5 @@ __all__ = (
     "Waveform", "WaveformKind", "WireValidationStatus",
     "decode_json", "document_to_dict", "dump_document",
     "parse_quantity", "ValueParseResult", "ValidationIssue",
+    "LoadResult", "document_from_dict", "load_document", "validate_schema",
 )

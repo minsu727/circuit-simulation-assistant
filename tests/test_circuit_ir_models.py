@@ -432,9 +432,9 @@ with patch("builtins.open", side_effect=AssertionError("file I/O")), \\
     import circuit_ir
 added = set(sys.modules) - before
 for prefix in ("app", "launcher", "simulation_runner", "streamlit", "numpy", "PyLTSpice",
-               "openai", "jsonschema", "circuit_ir.schema", "circuit_ir.graph"):
+               "openai", "jsonschema", "circuit_ir.graph"):
     assert not any(name == prefix or name.startswith(prefix + ".") for name in added), prefix
-assert not hasattr(circuit_ir, "load_document")
+assert callable(circuit_ir.load_document)
 assert not hasattr(circuit_ir, "validate_document")
 assert callable(circuit_ir.parse_quantity)
 '''

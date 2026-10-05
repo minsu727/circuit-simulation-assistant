@@ -3,3 +3,4 @@
 # Optional browser/integration tools and build tools are not part of this suite.
 -r requirements.txt
 -r requirements-llm.txt
+-r requirements-circuit-ir.txt
