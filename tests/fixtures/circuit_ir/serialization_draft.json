@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.2-draft1",
+  "metadata": {"circuit_id": "serialization_demo", "revision": 0, "origin": "manual", "catalog_version": "phase_a_draft1"},
+  "source_image_reference": null,
+  "components": [
+    {"id": "R1", "type": "resistor", "pin_ids": ["R1.a", "R1.b"], "value": {"literal": "2k", "si_value": "2000", "unit": "ohm", "grammar": "spice"}, "model_ref": null, "parameters": {}, "source": null, "visual_ref": null}
+  ],
+  "pins": [
+    {"id": "R1.a", "component_id": "R1", "role": "a", "visual_ref": null},
+    {"id": "R1.b", "component_id": "R1", "role": "b", "visual_ref": null}
+  ],
+  "nets": [{"id": "nin", "is_ground": false}, {"id": "n0", "is_ground": true}],
+  "connections": [
+    {"pin_id": "R1.a", "net_id": "nin", "visual_refs": [], "confidence": {"score": null, "basis": "manual", "calibrated": false}},
+    {"pin_id": "R1.b", "net_id": "n0", "visual_refs": [], "confidence": {"score": null, "basis": "manual", "calibrated": false}}
+  ],
+  "labels": [{"id": "label_in", "text": "vin", "scope": "flat", "net_id": "nin", "visual_ref": null}],
+  "visual": {"coordinate_space": "original_pixels", "entities": []},
+  "confidence": {"score": null, "basis": "manual", "calibrated": false},
+  "ambiguities": [],
+  "warnings": [],
+  "validation_state": {"status": "draft", "validated_revision": null, "ruleset_version": null, "findings": []}
+}

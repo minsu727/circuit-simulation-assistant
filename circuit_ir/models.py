@@ -541,3 +541,46 @@ class CircuitDocument:
         _instance(self.confidence, Confidence, "confidence")
         _ids(self.warnings, "warnings")
         _instance(self.validation_state, ImportedValidationState, "validation_state")
+
+
+@dataclass(frozen=True, slots=True)
+class ValidationIssue:
+    """Runtime diagnosis record only; no validation pipeline or approval behavior."""
+
+    issue_id: str
+    severity: IssueSeverity
+    code: str
+    message: str
+    target_refs: tuple[str, ...]
+    entity_type: str | None
+    entity_id: str | None
+    field: str | None
+    suggested_action: str | None
+    provenance: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        _id(self.issue_id, "issue_id")
+        _instance(self.severity, IssueSeverity, "severity")
+        _id(self.code, "code")
+        _string(self.message, "message", minimum=1, maximum=512)
+        _ids(self.target_refs, "target_refs")
+        _optional_id(self.entity_id, "entity_id")
+        for name in ("entity_type", "field", "suggested_action"):
+            value = getattr(self, name)
+            if value is not None:
+                _string(value, name)
+        _ids(self.provenance, "provenance")
+
+    @property
+    def blocking(self) -> bool:
+        return self.severity in (IssueSeverity.ERROR, IssueSeverity.AMBIGUOUS)
+
+
+@dataclass(frozen=True, slots=True)
+class ValueParseResult:
+    quantity: Quantity | None
+    issues: tuple[ValidationIssue, ...]
+
+    def __post_init__(self) -> None:
+        _optional_instance(self.quantity, Quantity, "quantity")
+        _tuple(self.issues, ValidationIssue, "issues")

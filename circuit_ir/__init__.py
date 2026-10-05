@@ -1,4 +1,4 @@
-"""Core Circuit IR records only; importing this package performs no I/O."""
+"""Circuit IR records and primitive JSON helpers; importing performs no I/O."""
 from .models import (
     ACConfiguration,
     Ambiguity,
@@ -31,6 +31,8 @@ from .models import (
     TechnicalState,
     Unit,
     ValueGrammar,
+    ValueParseResult,
+    ValidationIssue,
     VisualEntity,
     VisualKind,
     VisualProvenance,
@@ -38,6 +40,8 @@ from .models import (
     WaveformKind,
     WireValidationStatus,
 )
+from .serialization import decode_json, document_to_dict, dump_document
+from .value_parser import parse_quantity
 
 __all__ = (
     "ACConfiguration", "Ambiguity", "AmbiguityKind", "AmbiguityStatus",
@@ -48,4 +52,6 @@ __all__ = (
     "SCHEMA_VERSION", "SourceConfiguration", "SourceImageReference", "TechnicalState",
     "Unit", "ValueGrammar", "VisualEntity", "VisualKind", "VisualProvenance",
     "Waveform", "WaveformKind", "WireValidationStatus",
+    "decode_json", "document_to_dict", "dump_document",
+    "parse_quantity", "ValueParseResult", "ValidationIssue",
 )

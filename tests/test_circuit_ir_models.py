@@ -436,7 +436,7 @@ for prefix in ("app", "launcher", "simulation_runner", "streamlit", "numpy", "Py
     assert not any(name == prefix or name.startswith(prefix + ".") for name in added), prefix
 assert not hasattr(circuit_ir, "load_document")
 assert not hasattr(circuit_ir, "validate_document")
-assert not hasattr(circuit_ir, "parse_quantity")
+assert callable(circuit_ir.parse_quantity)
 '''
         result = subprocess.run([sys.executable, "-B", "-c", script],
                                 cwd=Path(__file__).resolve().parents[1],
