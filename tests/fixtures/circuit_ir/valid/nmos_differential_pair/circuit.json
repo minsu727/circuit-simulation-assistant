@@ -1,0 +1,576 @@
+{
+  "ambiguities": [],
+  "components": [
+    {
+      "id": "V1",
+      "type": "voltage_source",
+      "pin_ids": [
+        "V1.p1",
+        "V1.p2"
+      ],
+      "value": null,
+      "model_ref": null,
+      "parameters": {},
+      "source": {
+        "dc": {
+          "literal": "5",
+          "si_value": "5",
+          "unit": "V",
+          "grammar": "manual"
+        },
+        "ac": null,
+        "waveform": {
+          "kind": "none",
+          "parameters": {}
+        }
+      },
+      "visual_ref": null
+    },
+    {
+      "id": "V2",
+      "type": "voltage_source",
+      "pin_ids": [
+        "V2.p1",
+        "V2.p2"
+      ],
+      "value": null,
+      "model_ref": null,
+      "parameters": {},
+      "source": {
+        "dc": {
+          "literal": "1",
+          "si_value": "1",
+          "unit": "V",
+          "grammar": "manual"
+        },
+        "ac": null,
+        "waveform": {
+          "kind": "none",
+          "parameters": {}
+        }
+      },
+      "visual_ref": null
+    },
+    {
+      "id": "V3",
+      "type": "voltage_source",
+      "pin_ids": [
+        "V3.p1",
+        "V3.p2"
+      ],
+      "value": null,
+      "model_ref": null,
+      "parameters": {},
+      "source": {
+        "dc": {
+          "literal": "1",
+          "si_value": "1",
+          "unit": "V",
+          "grammar": "manual"
+        },
+        "ac": null,
+        "waveform": {
+          "kind": "none",
+          "parameters": {}
+        }
+      },
+      "visual_ref": null
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "pin_ids": [
+        "R1.p1",
+        "R1.p2"
+      ],
+      "value": {
+        "literal": "1000",
+        "si_value": "1000",
+        "unit": "ohm",
+        "grammar": "manual"
+      },
+      "model_ref": null,
+      "parameters": {},
+      "source": null,
+      "visual_ref": null
+    },
+    {
+      "id": "R2",
+      "type": "resistor",
+      "pin_ids": [
+        "R2.p1",
+        "R2.p2"
+      ],
+      "value": {
+        "literal": "1000",
+        "si_value": "1000",
+        "unit": "ohm",
+        "grammar": "manual"
+      },
+      "model_ref": null,
+      "parameters": {},
+      "source": null,
+      "visual_ref": null
+    },
+    {
+      "id": "M1",
+      "type": "nmos",
+      "pin_ids": [
+        "M1.p1",
+        "M1.p2",
+        "M1.p3",
+        "M1.p4"
+      ],
+      "value": null,
+      "model_ref": "repository_demo_nmos",
+      "parameters": {
+        "width": {
+          "literal": "0.00001",
+          "si_value": "0.00001",
+          "unit": "m",
+          "grammar": "manual"
+        },
+        "length": {
+          "literal": "0.000001",
+          "si_value": "0.000001",
+          "unit": "m",
+          "grammar": "manual"
+        }
+      },
+      "source": null,
+      "visual_ref": null
+    },
+    {
+      "id": "M2",
+      "type": "nmos",
+      "pin_ids": [
+        "M2.p1",
+        "M2.p2",
+        "M2.p3",
+        "M2.p4"
+      ],
+      "value": null,
+      "model_ref": "repository_demo_nmos",
+      "parameters": {
+        "width": {
+          "literal": "0.00001",
+          "si_value": "0.00001",
+          "unit": "m",
+          "grammar": "manual"
+        },
+        "length": {
+          "literal": "0.000001",
+          "si_value": "0.000001",
+          "unit": "m",
+          "grammar": "manual"
+        }
+      },
+      "source": null,
+      "visual_ref": null
+    },
+    {
+      "id": "I1",
+      "type": "current_source",
+      "pin_ids": [
+        "I1.p1",
+        "I1.p2"
+      ],
+      "value": null,
+      "model_ref": null,
+      "parameters": {},
+      "source": {
+        "dc": {
+          "literal": "0.001",
+          "si_value": "0.001",
+          "unit": "A",
+          "grammar": "manual"
+        },
+        "ac": null,
+        "waveform": {
+          "kind": "none",
+          "parameters": {}
+        }
+      },
+      "visual_ref": null
+    }
+  ],
+  "confidence": {
+    "basis": "manual",
+    "calibrated": false,
+    "score": null
+  },
+  "connections": [
+    {
+      "pin_id": "V1.p1",
+      "net_id": "vdd",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "V1.p2",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "V2.p1",
+      "net_id": "vin1",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "V2.p2",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "V3.p1",
+      "net_id": "vin2",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "V3.p2",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R1.p1",
+      "net_id": "vdd",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R1.p2",
+      "net_id": "out1",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R2.p1",
+      "net_id": "vdd",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R2.p2",
+      "net_id": "out2",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M1.p1",
+      "net_id": "out1",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M1.p2",
+      "net_id": "vin1",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M1.p3",
+      "net_id": "tail",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M1.p4",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M2.p1",
+      "net_id": "out2",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M2.p2",
+      "net_id": "vin2",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M2.p3",
+      "net_id": "tail",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "M2.p4",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "I1.p1",
+      "net_id": "tail",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "I1.p2",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    }
+  ],
+  "labels": [],
+  "metadata": {
+    "catalog_version": "phase_a_draft1",
+    "circuit_id": "m1g_nmos_differential_pair",
+    "origin": "manual",
+    "revision": 0
+  },
+  "nets": [
+    {
+      "id": "n0",
+      "is_ground": true
+    },
+    {
+      "id": "vdd",
+      "is_ground": false
+    },
+    {
+      "id": "vin1",
+      "is_ground": false
+    },
+    {
+      "id": "vin2",
+      "is_ground": false
+    },
+    {
+      "id": "out1",
+      "is_ground": false
+    },
+    {
+      "id": "out2",
+      "is_ground": false
+    },
+    {
+      "id": "tail",
+      "is_ground": false
+    }
+  ],
+  "pins": [
+    {
+      "id": "V1.p1",
+      "component_id": "V1",
+      "role": "positive",
+      "visual_ref": null
+    },
+    {
+      "id": "V1.p2",
+      "component_id": "V1",
+      "role": "negative",
+      "visual_ref": null
+    },
+    {
+      "id": "V2.p1",
+      "component_id": "V2",
+      "role": "positive",
+      "visual_ref": null
+    },
+    {
+      "id": "V2.p2",
+      "component_id": "V2",
+      "role": "negative",
+      "visual_ref": null
+    },
+    {
+      "id": "V3.p1",
+      "component_id": "V3",
+      "role": "positive",
+      "visual_ref": null
+    },
+    {
+      "id": "V3.p2",
+      "component_id": "V3",
+      "role": "negative",
+      "visual_ref": null
+    },
+    {
+      "id": "R1.p1",
+      "component_id": "R1",
+      "role": "a",
+      "visual_ref": null
+    },
+    {
+      "id": "R1.p2",
+      "component_id": "R1",
+      "role": "b",
+      "visual_ref": null
+    },
+    {
+      "id": "R2.p1",
+      "component_id": "R2",
+      "role": "a",
+      "visual_ref": null
+    },
+    {
+      "id": "R2.p2",
+      "component_id": "R2",
+      "role": "b",
+      "visual_ref": null
+    },
+    {
+      "id": "M1.p1",
+      "component_id": "M1",
+      "role": "drain",
+      "visual_ref": null
+    },
+    {
+      "id": "M1.p2",
+      "component_id": "M1",
+      "role": "gate",
+      "visual_ref": null
+    },
+    {
+      "id": "M1.p3",
+      "component_id": "M1",
+      "role": "source",
+      "visual_ref": null
+    },
+    {
+      "id": "M1.p4",
+      "component_id": "M1",
+      "role": "bulk",
+      "visual_ref": null
+    },
+    {
+      "id": "M2.p1",
+      "component_id": "M2",
+      "role": "drain",
+      "visual_ref": null
+    },
+    {
+      "id": "M2.p2",
+      "component_id": "M2",
+      "role": "gate",
+      "visual_ref": null
+    },
+    {
+      "id": "M2.p3",
+      "component_id": "M2",
+      "role": "source",
+      "visual_ref": null
+    },
+    {
+      "id": "M2.p4",
+      "component_id": "M2",
+      "role": "bulk",
+      "visual_ref": null
+    },
+    {
+      "id": "I1.p1",
+      "component_id": "I1",
+      "role": "positive",
+      "visual_ref": null
+    },
+    {
+      "id": "I1.p2",
+      "component_id": "I1",
+      "role": "negative",
+      "visual_ref": null
+    }
+  ],
+  "schema_version": "0.2-draft1",
+  "source_image_reference": null,
+  "validation_state": {
+    "findings": [],
+    "ruleset_version": null,
+    "status": "draft",
+    "validated_revision": null
+  },
+  "visual": {
+    "coordinate_space": "original_pixels",
+    "entities": []
+  },
+  "warnings": []
+}

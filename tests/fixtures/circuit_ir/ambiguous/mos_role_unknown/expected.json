@@ -1,0 +1,42 @@
+{
+  "profile": "m1-local-v1",
+  "technical_state": "AMBIGUOUS",
+  "issues": [
+    {
+      "code": "PIN_ROLES_INVALID",
+      "severity": "AMBIGUOUS",
+      "target_refs": [
+        "M1",
+        "M1.p1",
+        "M1.p2",
+        "M1.p3",
+        "M1.p4"
+      ]
+    }
+  ],
+  "completed_stages": [
+    "schema",
+    "ids",
+    "references",
+    "incidence",
+    "pins",
+    "ground",
+    "labels",
+    "component_value_source",
+    "graph_dc",
+    "ambiguity_confidence_provenance",
+    "result"
+  ],
+  "skipped_stages": {
+    "region[M1].graph_dc": "invalid_component_prerequisite",
+    "component[M1].missing_incidence": "pin_roles_invalid",
+    "component[M1].component_value_source": "pin_prerequisite_failed"
+  },
+  "deferred_checks": [
+    "full_export_readiness",
+    "human_approval",
+    "image_asset_resolution",
+    "inference_calibration",
+    "model_catalog_resolution"
+  ]
+}

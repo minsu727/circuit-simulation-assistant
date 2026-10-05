@@ -1,0 +1,220 @@
+{
+  "ambiguities": [],
+  "components": [
+    {
+      "id": "V1",
+      "type": "voltage_source",
+      "pin_ids": [
+        "V1.p1",
+        "V1.p2"
+      ],
+      "value": null,
+      "model_ref": null,
+      "parameters": {},
+      "source": {
+        "dc": {
+          "literal": "1",
+          "si_value": "1",
+          "unit": "V",
+          "grammar": "manual"
+        },
+        "ac": null,
+        "waveform": {
+          "kind": "none",
+          "parameters": {}
+        }
+      },
+      "visual_ref": null
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "pin_ids": [
+        "R1.p1",
+        "R1.p2"
+      ],
+      "value": {
+        "literal": "1000",
+        "si_value": "1000",
+        "unit": "ohm",
+        "grammar": "manual"
+      },
+      "model_ref": null,
+      "parameters": {},
+      "source": null,
+      "visual_ref": null
+    },
+    {
+      "id": "R2",
+      "type": "resistor",
+      "pin_ids": [
+        "R2.p1",
+        "R2.p2"
+      ],
+      "value": {
+        "literal": "2000",
+        "si_value": "2000",
+        "unit": "ohm",
+        "grammar": "manual"
+      },
+      "model_ref": null,
+      "parameters": {},
+      "source": null,
+      "visual_ref": null
+    }
+  ],
+  "confidence": {
+    "basis": "manual",
+    "calibrated": false,
+    "score": null
+  },
+  "connections": [
+    {
+      "pin_id": "V1.p1",
+      "net_id": "vin",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "V1.p2",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R1.p1",
+      "net_id": "vin",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R1.p2",
+      "net_id": "vout",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R2.p1",
+      "net_id": "vout",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    },
+    {
+      "pin_id": "R2.p2",
+      "net_id": "n0",
+      "visual_refs": [],
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      }
+    }
+  ],
+  "labels": [
+    {
+      "id": "label_vin",
+      "text": "vin",
+      "scope": "flat",
+      "net_id": "vin",
+      "visual_ref": null
+    },
+    {
+      "id": "label_vout",
+      "text": "vout",
+      "scope": "flat",
+      "net_id": "vout",
+      "visual_ref": null
+    }
+  ],
+  "metadata": {
+    "catalog_version": "phase_a_draft1",
+    "circuit_id": "m1g_resistor_divider",
+    "origin": "manual",
+    "revision": 0
+  },
+  "nets": [
+    {
+      "id": "n0",
+      "is_ground": true
+    },
+    {
+      "id": "vin",
+      "is_ground": false
+    },
+    {
+      "id": "vout",
+      "is_ground": false
+    }
+  ],
+  "pins": [
+    {
+      "id": "V1.p1",
+      "component_id": "V1",
+      "role": "positive",
+      "visual_ref": null
+    },
+    {
+      "id": "V1.p2",
+      "component_id": "V1",
+      "role": "negative",
+      "visual_ref": null
+    },
+    {
+      "id": "R1.p1",
+      "component_id": "R1",
+      "role": "a",
+      "visual_ref": null
+    },
+    {
+      "id": "R1.p2",
+      "component_id": "R1",
+      "role": "b",
+      "visual_ref": null
+    },
+    {
+      "id": "R2.p1",
+      "component_id": "R2",
+      "role": "a",
+      "visual_ref": null
+    },
+    {
+      "id": "R2.p2",
+      "component_id": "R2",
+      "role": "b",
+      "visual_ref": null
+    }
+  ],
+  "schema_version": "0.2-draft1",
+  "source_image_reference": null,
+  "validation_state": {
+    "findings": [],
+    "ruleset_version": null,
+    "status": "draft",
+    "validated_revision": null
+  },
+  "visual": {
+    "coordinate_space": "original_pixels",
+    "entities": []
+  },
+  "warnings": []
+}

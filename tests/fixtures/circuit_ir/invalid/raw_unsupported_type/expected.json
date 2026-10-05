@@ -1,0 +1,11 @@
+{
+  "outcome": "load_rejected",
+  "issues": [
+    {
+      "code": "SCHEMA_INVALID",
+      "severity": "ERROR",
+      "target_refs": [],
+      "field": "/components/1/type"
+    }
+  ]
+}

@@ -1,0 +1,594 @@
+{
+  "catalog_version": "m1-acceptance-v1",
+  "schema_version": "0.2-draft1",
+  "profile": "m1-local-v1",
+  "planned_distribution": {
+    "VALID": 8,
+    "INVALID": 20,
+    "AMBIGUOUS": 10
+  },
+  "cases": [
+    {
+      "case_id": "V01",
+      "category": "valid",
+      "fixture_path": "valid/resistor_divider",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [],
+      "rationale": "Explicit source, divider and labeled nets.",
+      "stage": "graph_dc",
+      "rules": [
+        "ground",
+        "roles",
+        "linear_dc"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V02",
+      "category": "valid",
+      "fixture_path": "valid/rc_low_pass",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [],
+      "rationale": "Capacitor output has a proven R/V reference.",
+      "stage": "graph_dc",
+      "rules": [
+        "linear_dc",
+        "capacitor_open"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V03",
+      "category": "valid",
+      "fixture_path": "valid/rlc_network",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [],
+      "rationale": "R/L conduction differs from capacitor incidence.",
+      "stage": "graph_dc",
+      "rules": [
+        "linear_dc",
+        "capacitor_open"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V04",
+      "category": "valid",
+      "fixture_path": "valid/current_source_load",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [],
+      "rationale": "Current source has a resistive voltage reference.",
+      "stage": "graph_dc",
+      "rules": [
+        "source",
+        "linear_dc"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V05",
+      "category": "valid",
+      "fixture_path": "valid/nmos_common_source",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [
+        "CHECK_DEFERRED"
+      ],
+      "rationale": "Explicit NMOS roles, body and sizing; no catalog lookup.",
+      "stage": "component_value_source",
+      "rules": [
+        "mos",
+        "model_deferral"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V06",
+      "category": "valid",
+      "fixture_path": "valid/pmos_current_source",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [
+        "CHECK_DEFERRED",
+        "DC_REFERENCE_UNPROVEN"
+      ],
+      "rationale": "Explicit PMOS body tie; drain reference is conditional.",
+      "stage": "graph_dc",
+      "rules": [
+        "mos",
+        "nonlinear_dc"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V07",
+      "category": "valid",
+      "fixture_path": "valid/nmos_differential_pair",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [
+        "CHECK_DEFERRED",
+        "DC_REFERENCE_UNPROVEN"
+      ],
+      "rationale": "Two explicit four-terminal devices; tail reference remains conditional.",
+      "stage": "graph_dc",
+      "rules": [
+        "mos",
+        "nonlinear_dc"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "V08",
+      "category": "valid",
+      "fixture_path": "valid/equal_parallel_dc_sources",
+      "expected_technical_state": "VALID",
+      "primary_issue_codes": [
+        "SOURCE_CONSTRAINT_CONFLICT"
+      ],
+      "rationale": "Equal ideal DC constraints are redundant rather than contradictory.",
+      "stage": "graph_dc",
+      "rules": [
+        "source_constraints"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I01",
+      "category": "invalid",
+      "fixture_path": "invalid/duplicate_component_id",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "DUPLICATE_ID"
+      ],
+      "rationale": "Duplicate definitions stop indexing.",
+      "stage": "ids",
+      "rules": [
+        "ids"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I02",
+      "category": "invalid",
+      "fixture_path": "invalid/duplicate_pin_id",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "DUPLICATE_ID"
+      ],
+      "rationale": "Pin identity cannot be overwritten.",
+      "stage": "ids",
+      "rules": [
+        "ids"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I03",
+      "category": "invalid",
+      "fixture_path": "invalid/missing_ground",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "GROUND_MISSING"
+      ],
+      "rationale": "No explicit ground suppresses DC-reference derivatives.",
+      "stage": "ground",
+      "rules": [
+        "ground"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I04",
+      "category": "invalid",
+      "fixture_path": "invalid/conflicting_grounds",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "GROUND_MISSING"
+      ],
+      "rationale": "Two ground identities are contradictory.",
+      "stage": "ground",
+      "rules": [
+        "ground"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I05",
+      "category": "invalid",
+      "fixture_path": "invalid/missing_resistor_role",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "PIN_ROLES_INVALID"
+      ],
+      "rationale": "Consistent removal of the required b terminal.",
+      "stage": "pins",
+      "rules": [
+        "roles"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I06",
+      "category": "invalid",
+      "fixture_path": "invalid/unknown_net_reference",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "BROKEN_REFERENCE"
+      ],
+      "rationale": "Undefined connection endpoint prevents a graph.",
+      "stage": "references",
+      "rules": [
+        "references"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I07",
+      "category": "invalid",
+      "fixture_path": "invalid/duplicate_connection",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "PIN_NET_INVALID"
+      ],
+      "rationale": "Duplicate incidence is not silently deduplicated.",
+      "stage": "incidence",
+      "rules": [
+        "incidence"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I08",
+      "category": "invalid",
+      "fixture_path": "invalid/pin_in_two_nets",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "PIN_NET_INVALID"
+      ],
+      "rationale": "One pin cannot belong to two canonical nets.",
+      "stage": "incidence",
+      "rules": [
+        "incidence"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I09",
+      "category": "invalid",
+      "fixture_path": "invalid/voltage_source_short",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "SOURCE_SAME_NET"
+      ],
+      "rationale": "V terminals share one net.",
+      "stage": "component_value_source",
+      "rules": [
+        "source"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I10",
+      "category": "invalid",
+      "fixture_path": "invalid/current_source_short",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "SOURCE_SAME_NET"
+      ],
+      "rationale": "I terminals share one net.",
+      "stage": "component_value_source",
+      "rules": [
+        "source"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I11",
+      "category": "invalid",
+      "fixture_path": "invalid/orphan_device",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "ORPHAN_DEVICE"
+      ],
+      "rationale": "Zero owned pins yield one orphan root.",
+      "stage": "pins",
+      "rules": [
+        "orphan"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I12",
+      "category": "invalid",
+      "fixture_path": "invalid/conflicting_labels",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "LABEL_CONFLICT"
+      ],
+      "rationale": "Normalized labels on different nets do not merge them.",
+      "stage": "labels",
+      "rules": [
+        "labels"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I13",
+      "category": "invalid",
+      "fixture_path": "invalid/floating_capacitive_node",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "FLOATING_DC_NODE"
+      ],
+      "rationale": "Capacitor incidence alone cannot prove a DC reference.",
+      "stage": "graph_dc",
+      "rules": [
+        "linear_dc"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I14",
+      "category": "invalid",
+      "fixture_path": "invalid/isolated_resistor_island",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "ISOLATED_SUBNETWORK"
+      ],
+      "rationale": "An ungrounded resistor island alongside a grounded circuit suppresses duplicate floating errors.",
+      "stage": "graph_dc",
+      "rules": [
+        "islands"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I15",
+      "category": "invalid",
+      "fixture_path": "invalid/negative_resistor",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "VALUE_INVALID"
+      ],
+      "rationale": "Selected resistance must be positive.",
+      "stage": "component_value_source",
+      "rules": [
+        "quantity"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I16",
+      "category": "invalid",
+      "fixture_path": "invalid/wrong_capacitor_unit",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "VALUE_INVALID"
+      ],
+      "rationale": "Supported but wrong physical dimension is a semantic error.",
+      "stage": "component_value_source",
+      "rules": [
+        "quantity"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I17",
+      "category": "invalid",
+      "fixture_path": "invalid/pulse_timing_conflict",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "SOURCE_INVALID"
+      ],
+      "rationale": "Pulse rise + width + fall exceeds its period.",
+      "stage": "component_value_source",
+      "rules": [
+        "waveform"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I18",
+      "category": "invalid",
+      "fixture_path": "invalid/conflicting_parallel_dc",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "SOURCE_CONSTRAINT_CONFLICT"
+      ],
+      "rationale": "Unequal parallel DC constraints conflict exactly.",
+      "stage": "graph_dc",
+      "rules": [
+        "source_constraints"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "I19",
+      "category": "invalid",
+      "fixture_path": "invalid/raw_unsupported_type",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "SCHEMA_INVALID"
+      ],
+      "rationale": "Closed enum rejects raw diode before constructing a document.",
+      "stage": "schema",
+      "rules": [
+        "schema"
+      ],
+      "boundary": "typed_load"
+    },
+    {
+      "case_id": "I20",
+      "category": "invalid",
+      "fixture_path": "invalid/broken_warning_reference",
+      "expected_technical_state": "INVALID",
+      "primary_issue_codes": [
+        "BROKEN_REFERENCE"
+      ],
+      "rationale": "Warning IDs refer to archival findings, never invented fresh evidence.",
+      "stage": "references",
+      "rules": [
+        "references",
+        "imported_state"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A01",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/mos_role_unknown",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "PIN_ROLES_INVALID"
+      ],
+      "rationale": "Unresolved role is not a known false mapping.",
+      "stage": "pins",
+      "rules": [
+        "roles"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A02",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/mos_body_unconnected",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "MOS_BODY_UNRESOLVED"
+      ],
+      "rationale": "Bulk exists but no body tie is inferred.",
+      "stage": "component_value_source",
+      "rules": [
+        "mos"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A03",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/unknown_type_pending",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "UNSUPPORTED_FEATURE"
+      ],
+      "rationale": "Explicit pending type choice consumes the generic choice root.",
+      "stage": "component_value_source",
+      "rules": [
+        "unsupported",
+        "ambiguity"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A04",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/pin_connection_pending",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "PIN_NET_INVALID"
+      ],
+      "rationale": "Known pin has no explicit incidence.",
+      "stage": "pins",
+      "rules": [
+        "incidence"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A05",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/label_attachment_pending",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "LABEL_UNRESOLVED"
+      ],
+      "rationale": "Unattached label remains unconfirmed.",
+      "stage": "labels",
+      "rules": [
+        "labels"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A06",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/crossing_pending",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "CROSSING_UNRESOLVED"
+      ],
+      "rationale": "Manually authored junction choice cannot create connectivity.",
+      "stage": "ambiguity_confidence_provenance",
+      "rules": [
+        "ambiguity",
+        "visual_separation"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A07",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/source_dc_missing",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "SOURCE_INVALID"
+      ],
+      "rationale": "Missing DC is not silently defaulted to zero.",
+      "stage": "component_value_source",
+      "rules": [
+        "source"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A08",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/value_ocr_alternatives",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "VALUE_INVALID"
+      ],
+      "rationale": "Authored alternatives are unresolved; no OCR or expression evaluation.",
+      "stage": "component_value_source",
+      "rules": [
+        "quantity",
+        "ambiguity"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A09",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/mos_model_missing",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "MODEL_INVALID"
+      ],
+      "rationale": "Missing symbolic model selection is not a catalog lookup error.",
+      "stage": "component_value_source",
+      "rules": [
+        "mos"
+      ],
+      "boundary": "validation"
+    },
+    {
+      "case_id": "A10",
+      "category": "ambiguous",
+      "fixture_path": "ambiguous/critical_confidence_unreviewed",
+      "expected_technical_state": "AMBIGUOUS",
+      "primary_issue_codes": [
+        "CONFIDENCE_REVIEW_REQUIRED"
+      ],
+      "rationale": "Synthetic inferred connection remains unreviewed despite its score.",
+      "stage": "ambiguity_confidence_provenance",
+      "rules": [
+        "confidence"
+      ],
+      "boundary": "validation"
+    }
+  ],
+  "supplemental_fixtures": [
+    {
+      "fixture_path": "valid/simple_source_resistor",
+      "rationale": "Preserved M1F regression fixture; not the planned two-resistor V01 divider."
+    }
+  ]
+}

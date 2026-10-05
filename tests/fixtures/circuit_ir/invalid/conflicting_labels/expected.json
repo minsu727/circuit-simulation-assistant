@@ -1,0 +1,37 @@
+{
+  "profile": "m1-local-v1",
+  "technical_state": "INVALID",
+  "issues": [
+    {
+      "code": "LABEL_CONFLICT",
+      "severity": "ERROR",
+      "target_refs": [
+        "label_in",
+        "label_same",
+        "n0",
+        "vin"
+      ]
+    }
+  ],
+  "completed_stages": [
+    "schema",
+    "ids",
+    "references",
+    "incidence",
+    "pins",
+    "ground",
+    "labels",
+    "component_value_source",
+    "graph_dc",
+    "ambiguity_confidence_provenance",
+    "result"
+  ],
+  "skipped_stages": {},
+  "deferred_checks": [
+    "full_export_readiness",
+    "human_approval",
+    "image_asset_resolution",
+    "inference_calibration",
+    "model_catalog_resolution"
+  ]
+}
