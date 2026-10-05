@@ -44,6 +44,7 @@ from .models import (
 from .serialization import decode_json, document_to_dict, dump_document
 from .value_parser import parse_quantity
 from .schema import document_from_dict, load_document, validate_schema
+from .graph import CircuitGraph, GraphBuildResult, build_graph
 
 __all__ = (
     "ACConfiguration", "Ambiguity", "AmbiguityKind", "AmbiguityStatus",
@@ -57,4 +58,5 @@ __all__ = (
     "decode_json", "document_to_dict", "dump_document",
     "parse_quantity", "ValueParseResult", "ValidationIssue",
     "LoadResult", "document_from_dict", "load_document", "validate_schema",
+    "CircuitGraph", "GraphBuildResult", "build_graph",
 )
