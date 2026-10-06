@@ -1,0 +1,223 @@
+{
+  "base_netlist_sha256": "4e558b40a35a4972342afc1b547b47acb0c1c89f7c132cde8baf8d7555bd66bc",
+  "document_sha256": "50b6f4f4185f5bde1e2724da24e92e152c7a80f2709247bebc0ba54ce8f8e55f",
+  "electrical_projection": {
+    "components": [
+      {
+        "id": "C1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "C1.p1",
+          "C1.p2"
+        ],
+        "source": null,
+        "type": "capacitor",
+        "value": {
+          "si_value": "0.000001",
+          "unit": "F"
+        }
+      },
+      {
+        "id": "L1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "L1.p1",
+          "L1.p2"
+        ],
+        "source": null,
+        "type": "inductor",
+        "value": {
+          "si_value": "0.001",
+          "unit": "H"
+        }
+      },
+      {
+        "id": "R1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "R1.p1",
+          "R1.p2"
+        ],
+        "source": null,
+        "type": "resistor",
+        "value": {
+          "si_value": "100",
+          "unit": "ohm"
+        }
+      },
+      {
+        "id": "V1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "V1.p1",
+          "V1.p2"
+        ],
+        "source": {
+          "ac": null,
+          "dc": {
+            "si_value": "1",
+            "unit": "V"
+          },
+          "waveform": {
+            "kind": "none",
+            "parameters": {}
+          }
+        },
+        "type": "voltage_source",
+        "value": null
+      }
+    ],
+    "connections": [
+      {
+        "net_id": "vout",
+        "pin_id": "C1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "C1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "L1.p1"
+      },
+      {
+        "net_id": "vmid",
+        "pin_id": "L1.p2"
+      },
+      {
+        "net_id": "vmid",
+        "pin_id": "R1.p1"
+      },
+      {
+        "net_id": "vout",
+        "pin_id": "R1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "V1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "V1.p2"
+      }
+    ],
+    "digest_profile": "m2-electrical-digest-v1",
+    "labels": [
+      {
+        "id": "label_in",
+        "net_id": "vin",
+        "scope": "flat",
+        "text": "vin"
+      }
+    ],
+    "metadata": {
+      "catalog_version": "manual_demo"
+    },
+    "nets": [
+      {
+        "id": "n0",
+        "is_ground": true
+      },
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "vmid",
+        "is_ground": false
+      },
+      {
+        "id": "vout",
+        "is_ground": false
+      }
+    ],
+    "pins": [
+      {
+        "component_id": "C1",
+        "id": "C1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "C1",
+        "id": "C1.p2",
+        "role": "b"
+      },
+      {
+        "component_id": "L1",
+        "id": "L1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "L1",
+        "id": "L1.p2",
+        "role": "b"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p2",
+        "role": "b"
+      },
+      {
+        "component_id": "V1",
+        "id": "V1.p1",
+        "role": "positive"
+      },
+      {
+        "component_id": "V1",
+        "id": "V1.p2",
+        "role": "negative"
+      }
+    ],
+    "schema_version": "0.2-draft1"
+  },
+  "electrical_sha256": "8ab851267f0e50c5bd009d7d521d564db684f60b9e235156192999baf59dd9a1",
+  "element_map": [
+    [
+      "C1",
+      "C_0001"
+    ],
+    [
+      "L1",
+      "L_0001"
+    ],
+    [
+      "R1",
+      "R_0001"
+    ],
+    [
+      "V1",
+      "V_0001"
+    ]
+  ],
+  "issues": [],
+  "mapping_sha256": "b25fce34aa0ac1010bbc27dd2a0e2c5125b11e3b90e63f190461234eb8a69dde",
+  "model_map": [],
+  "net_map": [
+    [
+      "n0",
+      "0"
+    ],
+    [
+      "vin",
+      "n_0001"
+    ],
+    [
+      "vmid",
+      "n_0002"
+    ],
+    [
+      "vout",
+      "n_0003"
+    ]
+  ],
+  "status": "SUCCESS"
+}

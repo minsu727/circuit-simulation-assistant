@@ -1,0 +1,171 @@
+{
+  "base_netlist_sha256": "068900e9c71bfb3937fefb6c400232ddb1103a5d65b3a136a27f61c3add6801c",
+  "document_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+  "electrical_projection": {
+    "components": [
+      {
+        "id": "I1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "I1.p1",
+          "I1.p2"
+        ],
+        "source": {
+          "ac": {
+            "magnitude": {
+              "si_value": "2",
+              "unit": "A"
+            },
+            "phase": {
+              "si_value": "0",
+              "unit": "deg"
+            }
+          },
+          "dc": {
+            "si_value": "-1",
+            "unit": "A"
+          },
+          "waveform": {
+            "kind": "pulse",
+            "parameters": {
+              "delay": {
+                "si_value": "0",
+                "unit": "s"
+              },
+              "fall": {
+                "si_value": "0.000001",
+                "unit": "s"
+              },
+              "level1": {
+                "si_value": "-1",
+                "unit": "A"
+              },
+              "level2": {
+                "si_value": "1",
+                "unit": "A"
+              },
+              "period": {
+                "si_value": "0.001",
+                "unit": "s"
+              },
+              "rise": {
+                "si_value": "0.000001",
+                "unit": "s"
+              },
+              "width": {
+                "si_value": "0.000998",
+                "unit": "s"
+              }
+            }
+          }
+        },
+        "type": "current_source",
+        "value": null
+      },
+      {
+        "id": "R1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "R1.p1",
+          "R1.p2"
+        ],
+        "source": null,
+        "type": "resistor",
+        "value": {
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      }
+    ],
+    "connections": [
+      {
+        "net_id": "vin",
+        "pin_id": "I1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "I1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "R1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "R1.p2"
+      }
+    ],
+    "digest_profile": "m2-electrical-digest-v1",
+    "labels": [
+      {
+        "id": "label_in",
+        "net_id": "vin",
+        "scope": "flat",
+        "text": "vin"
+      }
+    ],
+    "metadata": {
+      "catalog_version": "manual_demo"
+    },
+    "nets": [
+      {
+        "id": "n0",
+        "is_ground": true
+      },
+      {
+        "id": "vin",
+        "is_ground": false
+      }
+    ],
+    "pins": [
+      {
+        "component_id": "I1",
+        "id": "I1.p1",
+        "role": "positive"
+      },
+      {
+        "component_id": "I1",
+        "id": "I1.p2",
+        "role": "negative"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p2",
+        "role": "b"
+      }
+    ],
+    "schema_version": "0.2-draft1"
+  },
+  "electrical_sha256": "c46bc01ad0cdfba1be24e784c07426d55a0d3c9534b989ae0f1372c162243e6e",
+  "element_map": [
+    [
+      "I1",
+      "I_0001"
+    ],
+    [
+      "R1",
+      "R_0001"
+    ]
+  ],
+  "issues": [],
+  "mapping_sha256": "9aa6362b823e74323e08fc8c07e772c73b63c2e15426ec8e4f5b29159e3a38f6",
+  "model_map": [],
+  "net_map": [
+    [
+      "n0",
+      "0"
+    ],
+    [
+      "vin",
+      "n_0001"
+    ]
+  ],
+  "status": "SUCCESS"
+}

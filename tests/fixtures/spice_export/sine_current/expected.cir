@@ -1,0 +1,7 @@
+Circuit Simulation Assistant restricted circuit
+* exporter m2-spice-v1
+* source_sha256 cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1
+* electrical_sha256 72fdc8e98f289c3309c91d63a725f8bbb8e301536f252410471cf446627ce279
+I_0001 n_0001 0 SINE(0 0.01 1000 0 0 0) AC 2 0
+R_0001 n_0001 0 1000
+.end

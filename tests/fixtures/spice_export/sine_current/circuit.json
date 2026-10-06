@@ -1,0 +1,191 @@
+{
+  "ambiguities": [],
+  "components": [
+    {
+      "id": "I1",
+      "model_ref": null,
+      "parameters": {},
+      "pin_ids": [
+        "I1.p1",
+        "I1.p2"
+      ],
+      "source": {
+        "ac": {
+          "magnitude": {
+            "grammar": "si",
+            "literal": "2",
+            "si_value": "2",
+            "unit": "A"
+          },
+          "phase": {
+            "grammar": "si",
+            "literal": "0",
+            "si_value": "0",
+            "unit": "deg"
+          }
+        },
+        "dc": {
+          "grammar": "si",
+          "literal": "0",
+          "si_value": "0",
+          "unit": "A"
+        },
+        "waveform": {
+          "kind": "sine",
+          "parameters": {
+            "amplitude": {
+              "grammar": "si",
+              "literal": "0.01",
+              "si_value": "0.01",
+              "unit": "A"
+            },
+            "frequency": {
+              "grammar": "si",
+              "literal": "1000",
+              "si_value": "1000",
+              "unit": "Hz"
+            },
+            "offset": {
+              "grammar": "si",
+              "literal": "0",
+              "si_value": "0",
+              "unit": "A"
+            }
+          }
+        }
+      },
+      "type": "current_source",
+      "value": null,
+      "visual_ref": null
+    },
+    {
+      "id": "R1",
+      "model_ref": null,
+      "parameters": {},
+      "pin_ids": [
+        "R1.p1",
+        "R1.p2"
+      ],
+      "source": null,
+      "type": "resistor",
+      "value": {
+        "grammar": "si",
+        "literal": "1000",
+        "si_value": "1000",
+        "unit": "ohm"
+      },
+      "visual_ref": null
+    }
+  ],
+  "confidence": {
+    "basis": "manual",
+    "calibrated": false,
+    "score": null
+  },
+  "connections": [
+    {
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      },
+      "net_id": "vin",
+      "pin_id": "I1.p1",
+      "visual_refs": []
+    },
+    {
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      },
+      "net_id": "n0",
+      "pin_id": "I1.p2",
+      "visual_refs": []
+    },
+    {
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      },
+      "net_id": "vin",
+      "pin_id": "R1.p1",
+      "visual_refs": []
+    },
+    {
+      "confidence": {
+        "basis": "manual",
+        "calibrated": false,
+        "score": null
+      },
+      "net_id": "n0",
+      "pin_id": "R1.p2",
+      "visual_refs": []
+    }
+  ],
+  "labels": [
+    {
+      "id": "label_in",
+      "net_id": "vin",
+      "scope": "flat",
+      "text": "vin",
+      "visual_ref": null
+    }
+  ],
+  "metadata": {
+    "catalog_version": "manual_demo",
+    "circuit_id": "m2c_sine_current",
+    "origin": "manual",
+    "revision": 0
+  },
+  "nets": [
+    {
+      "id": "n0",
+      "is_ground": true
+    },
+    {
+      "id": "vin",
+      "is_ground": false
+    }
+  ],
+  "pins": [
+    {
+      "component_id": "I1",
+      "id": "I1.p1",
+      "role": "positive",
+      "visual_ref": null
+    },
+    {
+      "component_id": "I1",
+      "id": "I1.p2",
+      "role": "negative",
+      "visual_ref": null
+    },
+    {
+      "component_id": "R1",
+      "id": "R1.p1",
+      "role": "a",
+      "visual_ref": null
+    },
+    {
+      "component_id": "R1",
+      "id": "R1.p2",
+      "role": "b",
+      "visual_ref": null
+    }
+  ],
+  "schema_version": "0.2-draft1",
+  "source_image_reference": null,
+  "validation_state": {
+    "findings": [],
+    "ruleset_version": null,
+    "status": "draft",
+    "validated_revision": null
+  },
+  "visual": {
+    "coordinate_space": "original_pixels",
+    "entities": []
+  },
+  "warnings": []
+}

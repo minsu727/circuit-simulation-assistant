@@ -52,6 +52,10 @@ from .approval import (
     document_digest, electrical_digest, validation_digest, approval_digest,
     make_circuit_approval, verify_circuit_approval,
 )
+from .exporter import (
+    ExportStatus, ExportIssue, ExportProvenance, ExportResult,
+    check_export_eligibility, export_document,
+)
 
 __all__ = (
     "ACConfiguration", "Ambiguity", "AmbiguityKind", "AmbiguityStatus",
@@ -70,4 +74,6 @@ __all__ = (
     "ApprovalScope", "ApprovalEnvelope", "ApprovalError",
     "document_digest", "electrical_digest", "validation_digest", "approval_digest",
     "make_circuit_approval", "verify_circuit_approval",
+    "ExportStatus", "ExportIssue", "ExportProvenance", "ExportResult",
+    "check_export_eligibility", "export_document",
 )

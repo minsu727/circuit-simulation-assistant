@@ -1,0 +1,2 @@
+# Exact-byte M2 goldens must retain LF on Windows with core.autocrlf=true.
+expected.cir text eol=lf

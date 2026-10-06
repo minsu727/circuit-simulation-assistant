@@ -1,0 +1,133 @@
+{
+  "base_netlist_sha256": "9a81fcf076178c04c7164f5962d417fa7884d476300290a033764bc5805b322f",
+  "document_sha256": "ce81a07b5acbeffbb4089f98a1ee3175e946264d1cb8e3170569e3cf281e727f",
+  "electrical_projection": {
+    "components": [
+      {
+        "id": "I1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "I1.p1",
+          "I1.p2"
+        ],
+        "source": {
+          "ac": null,
+          "dc": {
+            "si_value": "-0.001",
+            "unit": "A"
+          },
+          "waveform": {
+            "kind": "none",
+            "parameters": {}
+          }
+        },
+        "type": "current_source",
+        "value": null
+      },
+      {
+        "id": "R1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "R1.p1",
+          "R1.p2"
+        ],
+        "source": null,
+        "type": "resistor",
+        "value": {
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      }
+    ],
+    "connections": [
+      {
+        "net_id": "vin",
+        "pin_id": "I1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "I1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "R1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "R1.p2"
+      }
+    ],
+    "digest_profile": "m2-electrical-digest-v1",
+    "labels": [
+      {
+        "id": "label_in",
+        "net_id": "vin",
+        "scope": "flat",
+        "text": "vin"
+      }
+    ],
+    "metadata": {
+      "catalog_version": "manual_demo"
+    },
+    "nets": [
+      {
+        "id": "n0",
+        "is_ground": true
+      },
+      {
+        "id": "vin",
+        "is_ground": false
+      }
+    ],
+    "pins": [
+      {
+        "component_id": "I1",
+        "id": "I1.p1",
+        "role": "positive"
+      },
+      {
+        "component_id": "I1",
+        "id": "I1.p2",
+        "role": "negative"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p2",
+        "role": "b"
+      }
+    ],
+    "schema_version": "0.2-draft1"
+  },
+  "electrical_sha256": "e47f6e8f99dd155c56ac50e7f578699f57c4937b0b114165000a628c9e76ab8a",
+  "element_map": [
+    [
+      "I1",
+      "I_0001"
+    ],
+    [
+      "R1",
+      "R_0001"
+    ]
+  ],
+  "issues": [],
+  "mapping_sha256": "9aa6362b823e74323e08fc8c07e772c73b63c2e15426ec8e4f5b29159e3a38f6",
+  "model_map": [],
+  "net_map": [
+    [
+      "n0",
+      "0"
+    ],
+    [
+      "vin",
+      "n_0001"
+    ]
+  ],
+  "status": "SUCCESS"
+}

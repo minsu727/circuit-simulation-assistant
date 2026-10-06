@@ -554,11 +554,13 @@ class ApprovalTests(unittest.TestCase):
         self.assertEqual(stale.document_id, "other")
         self.assertEqual(stale.document_revision, 5)
 
-    def test_public_surface_has_no_export_or_execution_authority(self):
+    def test_approval_surface_has_no_export_or_execution_authority(self):
         envelope = self.make()
-        for name in ("is_exportable", "can_execute", "spice_text", "timestamp", "reviewer"):
+        for name in ("is_exportable", "can_execute", "spice_text", "export_document", "timestamp", "reviewer"):
             self.assertFalse(hasattr(envelope, name))
-        for name in ("_digest", "_context", "make_representation_approval", "export_document", "ExecutionApproval"):
+        # M2C exports a separate preview API; the M2B envelope still grants no
+        # export eligibility or later representation/execution authority.
+        for name in ("_digest", "_context", "make_representation_approval", "ExecutionApproval"):
             self.assertNotIn(name, ir.__all__)
             self.assertFalse(hasattr(ir, name))
 

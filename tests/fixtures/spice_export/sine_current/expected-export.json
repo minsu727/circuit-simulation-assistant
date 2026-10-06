@@ -1,0 +1,155 @@
+{
+  "base_netlist_sha256": "1095e3ea4b2c0617703b2e07a3e1906da80fa366829b5aeaa66af1ca6adcbaad",
+  "document_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+  "electrical_projection": {
+    "components": [
+      {
+        "id": "I1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "I1.p1",
+          "I1.p2"
+        ],
+        "source": {
+          "ac": {
+            "magnitude": {
+              "si_value": "2",
+              "unit": "A"
+            },
+            "phase": {
+              "si_value": "0",
+              "unit": "deg"
+            }
+          },
+          "dc": {
+            "si_value": "0",
+            "unit": "A"
+          },
+          "waveform": {
+            "kind": "sine",
+            "parameters": {
+              "amplitude": {
+                "si_value": "0.01",
+                "unit": "A"
+              },
+              "frequency": {
+                "si_value": "1000",
+                "unit": "Hz"
+              },
+              "offset": {
+                "si_value": "0",
+                "unit": "A"
+              }
+            }
+          }
+        },
+        "type": "current_source",
+        "value": null
+      },
+      {
+        "id": "R1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "R1.p1",
+          "R1.p2"
+        ],
+        "source": null,
+        "type": "resistor",
+        "value": {
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      }
+    ],
+    "connections": [
+      {
+        "net_id": "vin",
+        "pin_id": "I1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "I1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "R1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "R1.p2"
+      }
+    ],
+    "digest_profile": "m2-electrical-digest-v1",
+    "labels": [
+      {
+        "id": "label_in",
+        "net_id": "vin",
+        "scope": "flat",
+        "text": "vin"
+      }
+    ],
+    "metadata": {
+      "catalog_version": "manual_demo"
+    },
+    "nets": [
+      {
+        "id": "n0",
+        "is_ground": true
+      },
+      {
+        "id": "vin",
+        "is_ground": false
+      }
+    ],
+    "pins": [
+      {
+        "component_id": "I1",
+        "id": "I1.p1",
+        "role": "positive"
+      },
+      {
+        "component_id": "I1",
+        "id": "I1.p2",
+        "role": "negative"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p2",
+        "role": "b"
+      }
+    ],
+    "schema_version": "0.2-draft1"
+  },
+  "electrical_sha256": "72fdc8e98f289c3309c91d63a725f8bbb8e301536f252410471cf446627ce279",
+  "element_map": [
+    [
+      "I1",
+      "I_0001"
+    ],
+    [
+      "R1",
+      "R_0001"
+    ]
+  ],
+  "issues": [],
+  "mapping_sha256": "9aa6362b823e74323e08fc8c07e772c73b63c2e15426ec8e4f5b29159e3a38f6",
+  "model_map": [],
+  "net_map": [
+    [
+      "n0",
+      "0"
+    ],
+    [
+      "vin",
+      "n_0001"
+    ]
+  ],
+  "status": "SUCCESS"
+}
