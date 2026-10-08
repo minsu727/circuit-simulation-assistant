@@ -1,0 +1,2 @@
+# Exact M2E composition goldens keep the established LF policy.
+expected.cir text eol=lf

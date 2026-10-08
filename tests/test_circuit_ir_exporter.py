@@ -556,7 +556,8 @@ class ExporterTests(unittest.TestCase):
         result = self.run_export()
         for name in ("can_execute", "representation_approval", "execution_approval", "raw_path", "log_path"):
             self.assertFalse(hasattr(result, name))
-        self.assertFalse(hasattr(ir, "make_representation_approval"))
+        # M2E's separate review API exists; exporter still creates no approval.
+        self.assertTrue(callable(ir.make_representation_approval))
         for name in ("_allocate", "_number", "_mappings", "_source", "_model_line", "_mos_profile", "_si_token"):
             self.assertNotIn(name, ir.__all__)
             self.assertFalse(hasattr(ir, name))

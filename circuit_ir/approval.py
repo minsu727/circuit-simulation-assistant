@@ -3,7 +3,7 @@
 Creation and verification recompute M1 validation for the exact input. No cached
 report, imported reviewed flag or digest supplied by a caller grants authority.
 The trusted caller must obtain the explicit decision/acknowledgements from review.
-Exporter preflight stays separate; representation workflows remain deferred.
+Exporter preflight stays separate. Representation binds regenerated exact bytes.
 """
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ class ApprovalEnvelope:
     """Local shape checks only; construction alone does not verify approval.
 
     Future versions are representable but rejected by the current consuming API.
-    REPRESENTATION fields reserve the documented shape, not its future workflow.
+    REPRESENTATION binds a separately reviewed artifact, never run conditions.
     """
 
     contract_version: str
@@ -363,3 +363,66 @@ def verify_circuit_approval(
     ):
         if actual != expected:
             raise ApprovalError(code, field, f"Current binding does not match {field}.")
+
+
+def _verified_export(document, export_result, circuit_approval, model_context):
+    # Lazy import avoids approval/exporter import cycles. No caller digest is
+    # authority: regenerate through all current preflight/circuit approval gates.
+    from .exporter import ExportResult, ExportStatus, export_document
+    if not isinstance(export_result, ExportResult):
+        raise TypeError("export_result must be ExportResult")
+    verify_circuit_approval(document, circuit_approval, exporter_contract=_EXPORTER,
+                            model_registry_version=model_context[0], model_registry_sha256=model_context[1])
+    if export_result.status is not ExportStatus.SUCCESS:
+        raise ApprovalError("ARTIFACT_NOT_EXPORTABLE", "status", "A complete SUCCESS preview is required.")
+    current = export_document(document, circuit_approval, model_context=model_context)
+    if current.status is not ExportStatus.SUCCESS:
+        raise ApprovalError("ARTIFACT_NOT_EXPORTABLE", "status", "Current export preflight failed.")
+    for field in ("spice_text", "element_map", "net_map", "model_map", "provenance"):
+        if getattr(export_result, field) != getattr(current, field):
+            raise ApprovalError("ARTIFACT_MISMATCH", field, "Artifact differs from current deterministic export.")
+    return current
+
+
+def make_representation_approval(document, export_result, circuit_approval, *, approved: bool,
+                                 model_context: tuple[str, str]) -> ApprovalEnvelope:
+    """Explicit second review; bind exact regenerated text/maps and parent.
+
+    The source and current context are mandatory. Neither an arbitrary text/path
+    nor a caller-supplied hash can manufacture a representation approval.
+    """
+    from dataclasses import replace
+    if type(approved) is not bool:
+        raise TypeError("approved must be a native bool")
+    repository_model_profiles(model_context)
+    current = _verified_export(document, export_result, circuit_approval, model_context)
+    if not approved:
+        raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Explicit representation review is required.")
+    return replace(circuit_approval, scope=ApprovalScope.REPRESENTATION, approved=approved,
+                   parent_approval_sha256=approval_digest(circuit_approval),
+                   base_netlist_sha256=current.provenance.base_netlist_sha256,
+                   mapping_sha256=current.provenance.mapping_sha256)
+
+
+def verify_representation_approval(document, export_result, circuit_approval, representation_approval, *,
+                                   model_context: tuple[str, str]) -> None:
+    if not isinstance(representation_approval, ApprovalEnvelope):
+        raise TypeError("representation_approval must be ApprovalEnvelope")
+    if representation_approval.contract_version != _CONTRACT:
+        raise ApprovalError("APPROVAL_VERSION_UNSUPPORTED", "contract_version", "Unsupported approval version.")
+    if representation_approval.scope is not ApprovalScope.REPRESENTATION:
+        raise ApprovalError("APPROVAL_SCOPE_INVALID", "scope", "Representation approval scope is required.")
+    if not representation_approval.approved:
+        raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Representation was not approved.")
+    repository_model_profiles(model_context)
+    current = _verified_export(document, export_result, circuit_approval, model_context)
+    for field in ("document_id", "document_revision", "document_sha256", "electrical_sha256",
+                  "validation_profile", "validation_ruleset", "validation_sha256", "exporter_contract",
+                  "model_registry_version", "model_registry_sha256", "acknowledged_warning_ids"):
+        if getattr(representation_approval, field) != getattr(circuit_approval, field):
+            raise ApprovalError("REPRESENTATION_BINDING_MISMATCH", field, "Representation binding is stale.")
+    for field, expected in (("parent_approval_sha256", approval_digest(circuit_approval)),
+                            ("base_netlist_sha256", current.provenance.base_netlist_sha256),
+                            ("mapping_sha256", current.provenance.mapping_sha256)):
+        if getattr(representation_approval, field) != expected:
+            raise ApprovalError("REPRESENTATION_BINDING_MISMATCH", field, "Representation binding is stale.")

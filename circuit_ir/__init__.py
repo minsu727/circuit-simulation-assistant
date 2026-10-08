@@ -52,10 +52,17 @@ from .approval import (
     ApprovalScope, ApprovalEnvelope, ApprovalError,
     document_digest, electrical_digest, validation_digest, approval_digest,
     make_circuit_approval, verify_circuit_approval,
+    make_representation_approval, verify_representation_approval,
 )
 from .exporter import (
     ExportStatus, ExportIssue, ExportProvenance, ExportResult,
     check_export_eligibility, export_document,
+)
+from .execution import (
+    ACSweep, ACCondition, TransientCondition, DCCondition, AnalysisRequest,
+    ExecutionApproval, ExecutionIssue, ExecutionProvenance, ExecutionArtifact, CompositionResult,
+    condition_digest, execution_approval_digest, make_execution_approval,
+    verify_execution_approval, compose_execution_netlist,
 )
 
 __all__ = (
@@ -76,6 +83,11 @@ __all__ = (
     "ApprovalScope", "ApprovalEnvelope", "ApprovalError",
     "document_digest", "electrical_digest", "validation_digest", "approval_digest",
     "make_circuit_approval", "verify_circuit_approval",
+    "make_representation_approval", "verify_representation_approval",
     "ExportStatus", "ExportIssue", "ExportProvenance", "ExportResult",
     "check_export_eligibility", "export_document",
+    "ACSweep", "ACCondition", "TransientCondition", "DCCondition", "AnalysisRequest",
+    "ExecutionApproval", "ExecutionIssue", "ExecutionProvenance", "ExecutionArtifact", "CompositionResult",
+    "condition_digest", "execution_approval_digest", "make_execution_approval",
+    "verify_execution_approval", "compose_execution_netlist",
 )

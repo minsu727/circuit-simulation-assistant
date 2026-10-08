@@ -560,7 +560,7 @@ class ApprovalTests(unittest.TestCase):
             self.assertFalse(hasattr(envelope, name))
         # M2C exports a separate preview API; the M2B envelope still grants no
         # export eligibility or later representation/execution authority.
-        for name in ("_digest", "_context", "make_representation_approval", "ExecutionApproval"):
+        for name in ("_digest", "_context"):
             self.assertNotIn(name, ir.__all__)
             self.assertFalse(hasattr(ir, name))
 
@@ -638,6 +638,118 @@ class ModelContextApprovalTests(unittest.TestCase):
         with self.assertRaises(ir.ApprovalError) as caught:
             ir.make_circuit_approval(self.doc, approved=True, acknowledged_warning_ids=(), **self.kwargs)
         self.assertEqual(caught.exception.code, "WARNING_ACKNOWLEDGEMENT_MISMATCH")
+
+
+class RepresentationApprovalTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        from tests.m2e_helpers import chain
+        cls.data = chain()
+
+    def verify(self, **changes):
+        data = dict(self.data, **changes)
+        for key in ("request", "execution_approval"):
+            data.pop(key)
+        return ir.verify_representation_approval(**data)
+
+    def test_exact_artifact_parent_and_binding_fields(self):
+        self.assertIsNone(self.verify())
+        rep, circuit, base = (self.data[k] for k in ("representation_approval", "circuit_approval", "export_result"))
+        self.assertEqual(rep.scope, ir.ApprovalScope.REPRESENTATION)
+        self.assertEqual(rep.parent_approval_sha256, ir.approval_digest(circuit))
+        self.assertEqual(rep.base_netlist_sha256, hashlib.sha256(base.spice_text.encode("utf-8")).hexdigest())
+        self.assertEqual(rep.mapping_sha256, base.provenance.mapping_sha256)
+        self.assertEqual(rep.document_sha256, circuit.document_sha256)
+
+    def test_creation_requires_explicit_second_decision(self):
+        data = {k: v for k, v in self.data.items() if k in ("document", "export_result", "circuit_approval", "model_context")}
+        for approved, error in ((False, ir.ApprovalError), (1, TypeError)):
+            with self.subTest(approved=approved), self.assertRaises(error):
+                ir.make_representation_approval(**data, approved=approved)
+        with self.assertRaises(TypeError):
+            ir.make_representation_approval(**data)
+
+    def test_no_caller_artifact_digest_or_raw_text_api(self):
+        data = {k: v for k, v in self.data.items() if k in ("document", "export_result", "circuit_approval", "model_context")}
+        for field in ("base_netlist_sha256", "mapping_sha256", "raw_netlist", "filename"):
+            with self.subTest(field=field), self.assertRaises(TypeError):
+                ir.make_representation_approval(**data, approved=True, **{field: "a" * 64})
+
+    def test_one_byte_line_endings_and_final_newline_changes_stale(self):
+        base = self.data["export_result"]
+        for text in (base.spice_text.replace("1000", "1001"), base.spice_text.replace("\n", "\r\n"), base.spice_text[:-1]):
+            with self.subTest(tail=text[-20:]), self.assertRaises(ir.ApprovalError) as caught:
+                self.verify(export_result=replace(base, spice_text=text))
+            self.assertEqual(caught.exception.code, "ARTIFACT_MISMATCH")
+
+    def test_model_byte_changed_cannot_be_approved(self):
+        from tests.m2e_helpers import chain
+        data = chain("nmos_common_source")
+        base = data["export_result"]
+        with self.assertRaises(ir.ApprovalError):
+            ir.make_representation_approval(data["document"], replace(base, spice_text=base.spice_text.replace("KP=1e-4", "KP=2e-4")),
+                                           data["circuit_approval"], approved=True, model_context=data["model_context"])
+
+    def test_changed_mapping_or_forged_provenance_rejected(self):
+        base = self.data["export_result"]
+        for field in ("element_map", "net_map"):
+            pairs = getattr(base, field)
+            changed = (*pairs[:-1], (pairs[-1][0], "fake_9999"))
+            with self.subTest(field=field), self.assertRaises(ir.ApprovalError):
+                self.verify(export_result=replace(base, **{field: changed}))
+        with self.assertRaises(ir.ApprovalError):
+            self.verify(export_result=replace(base, provenance=replace(base.provenance, mapping_sha256="a" * 64)))
+
+    def test_blocked_export_cannot_be_approved(self):
+        issue = ir.ExportIssue("EXPORT_MODEL_UNRESOLVED", ir.IssueSeverity.ERROR, (), "model_ref", "Blocked.")
+        blocked = ir.ExportResult(ir.ExportStatus.BLOCKED, None, (issue,), None, (), (), ())
+        with self.assertRaises(ir.ApprovalError) as caught:
+            ir.make_representation_approval(self.data["document"], blocked, self.data["circuit_approval"],
+                                           approved=True, model_context=self.data["model_context"])
+        self.assertEqual(caught.exception.code, "ARTIFACT_NOT_EXPORTABLE")
+
+    def test_wrong_scope_version_and_false_refused(self):
+        rep = self.data["representation_approval"]
+        for value, code in ((self.data["circuit_approval"], "APPROVAL_SCOPE_INVALID"),
+                            (replace(rep, contract_version="future"), "APPROVAL_VERSION_UNSUPPORTED"),
+                            (replace(rep, approved=False), "APPROVAL_NOT_GRANTED")):
+            with self.subTest(code=code), self.assertRaises(ir.ApprovalError) as caught:
+                self.verify(representation_approval=value)
+            self.assertEqual(caught.exception.code, code)
+
+    def test_every_representation_binding_field_is_checked(self):
+        rep = self.data["representation_approval"]
+        for field, value in (("parent_approval_sha256", "a" * 64), ("base_netlist_sha256", "a" * 64), ("mapping_sha256", "a" * 64),
+                             ("document_sha256", "a" * 64), ("validation_sha256", "a" * 64), ("document_revision", 1),
+                             ("model_registry_version", "future"), ("exporter_contract", "future"), ("acknowledged_warning_ids", ("unexpected",))):
+            with self.subTest(field=field), self.assertRaises(ir.ApprovalError) as caught:
+                self.verify(representation_approval=replace(rep, **{field: value}))
+            self.assertEqual(caught.exception.code, "REPRESENTATION_BINDING_MISMATCH")
+
+    def test_current_model_context_does_not_silently_refresh_old_review(self):
+        with self.assertRaises(ir.ApprovalError):
+            self.verify(model_context=ir.repository_model_context())
+
+    def test_changed_parent_source_requires_new_representation_review(self):
+        from tests.m2e_helpers import chain
+        doc = self.data["document"]
+        fresh = chain(doc=replace(doc, metadata=replace(doc.metadata, circuit_id="another")))
+        fresh["representation_approval"] = self.data["representation_approval"]
+        for key in ("request", "execution_approval"):
+            fresh.pop(key)
+        with self.assertRaises(ir.ApprovalError):
+            ir.verify_representation_approval(**fresh)
+
+    def test_representation_cannot_authorize_circuit_export(self):
+        result = ir.export_document(self.data["document"], self.data["representation_approval"], model_context=self.data["model_context"])
+        self.assertEqual(result.status, ir.ExportStatus.BLOCKED)
+        self.assertIsNone(result.spice_text)
+
+    def test_shape_only_records_do_not_become_execution_authority(self):
+        rep = self.data["representation_approval"]
+        self.assertFalse(hasattr(rep, "can_execute"))
+        self.assertFalse(hasattr(rep, "request_sha256"))
+        self.assertEqual(ir.approval_digest(rep), ir.approval_digest(replace(rep)))
 
 
 if __name__ == "__main__":

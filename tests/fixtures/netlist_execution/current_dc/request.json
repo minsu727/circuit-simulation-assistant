@@ -1,0 +1,16 @@
+{
+  "base_fixture": "current_source_load",
+  "base_sha256": "9a81fcf076178c04c7164f5962d417fa7884d476300290a033764bc5805b322f",
+  "condition": {
+    "analysis_type": "DC",
+    "start_value": "-0.001",
+    "step_value": "0.0001",
+    "stop_value": "0.001",
+    "sweep_source": "I1"
+  },
+  "directive": ".dc I_0001 -1m 1m 100u",
+  "execution_sha256": "8b26b6350ff524ce53b3e1423b83245d98c9dcf817c0991dfba519b66f208343",
+  "selection": {
+    "target_net": "vin"
+  }
+}

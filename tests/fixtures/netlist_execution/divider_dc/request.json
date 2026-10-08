@@ -1,0 +1,20 @@
+{
+  "base_fixture": "resistor_divider",
+  "base_sha256": "600e3ea5c6c4bccc3260cfc8d1d74399cf57d0d27ccbb1247341c3918d5d07c4",
+  "condition": {
+    "analysis_type": "DC",
+    "start_value": "0",
+    "step_value": "0.5",
+    "stop_value": "5",
+    "sweep_source": "V1"
+  },
+  "directive": ".dc V_0001 0 5 500m",
+  "execution_sha256": "0f407393abd48738a5b1191683cbda919e48b2c979f7fe95b48540b945ee1576",
+  "selection": {
+    "measurements": [
+      "Value at Sweep Point"
+    ],
+    "requested_point": "3.5",
+    "target_net": "vout"
+  }
+}

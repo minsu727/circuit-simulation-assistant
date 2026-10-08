@@ -1,0 +1,20 @@
+{
+  "base_fixture": "nmos_common_source",
+  "base_sha256": "e17b256023fe1d783b2c5d567c2ff2725349b9d2f545e99eb0d5ebe074ab415f",
+  "condition": {
+    "analysis_type": "DC",
+    "start_value": "0",
+    "step_value": "0.1",
+    "stop_value": "5",
+    "sweep_source": "V1"
+  },
+  "directive": ".dc V_0001 0 5 100m",
+  "execution_sha256": "8310572e278f47e41fc9b0c1889bb4a1c7d3f2b7534f7f7e1d4fa1fa5cc5881f",
+  "selection": {
+    "comparison_net": "vin",
+    "measurements": [
+      "Difference"
+    ],
+    "target_net": "vout"
+  }
+}

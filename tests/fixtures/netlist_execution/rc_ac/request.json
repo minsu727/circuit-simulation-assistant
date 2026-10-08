@@ -1,0 +1,21 @@
+{
+  "base_fixture": "rc_low_pass",
+  "base_sha256": "717a4fd2452f02f768ac06453530e808f6e04ddd81682a4fd893f057403138e4",
+  "condition": {
+    "analysis_type": "AC",
+    "points": 100,
+    "start_frequency": "10",
+    "stop_frequency": "1000000",
+    "sweep": "dec"
+  },
+  "directive": ".ac dec 100 10 1Meg",
+  "execution_sha256": "4a743cac4bdeab2d914e8f2dfdb1b63f5fe90a502761493ade5723724ed27714",
+  "selection": {
+    "measurements": [
+      "Gain",
+      "-3 dB Bandwidth"
+    ],
+    "reference_net": "vin",
+    "target_net": "vout"
+  }
+}
