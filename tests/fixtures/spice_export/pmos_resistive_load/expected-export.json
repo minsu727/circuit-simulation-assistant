@@ -1,0 +1,300 @@
+{
+  "base_netlist_sha256": "a7d72e32497ce28d3d53ac53db3ba226e29d4bb504c8833d301acf506c749a1c",
+  "document_sha256": "34b16b6bcfa7fc39c929d27d4f2afb565f1efbbb8fe3504b9324cf967055942d",
+  "electrical_projection": {
+    "components": [
+      {
+        "id": "M1",
+        "model_ref": "repository_demo_pmos",
+        "parameters": {
+          "length": {
+            "si_value": "0.000001",
+            "unit": "m"
+          },
+          "width": {
+            "si_value": "0.00001",
+            "unit": "m"
+          }
+        },
+        "pin_ids": [
+          "M1.p1",
+          "M1.p2",
+          "M1.p3",
+          "M1.p4"
+        ],
+        "source": null,
+        "type": "pmos",
+        "value": null
+      },
+      {
+        "id": "R1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "R1.p1",
+          "R1.p2"
+        ],
+        "source": null,
+        "type": "resistor",
+        "value": {
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      },
+      {
+        "id": "V1",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "V1.p1",
+          "V1.p2"
+        ],
+        "source": {
+          "ac": null,
+          "dc": {
+            "si_value": "3",
+            "unit": "V"
+          },
+          "waveform": {
+            "kind": "none",
+            "parameters": {}
+          }
+        },
+        "type": "voltage_source",
+        "value": null
+      },
+      {
+        "id": "V2",
+        "model_ref": null,
+        "parameters": {},
+        "pin_ids": [
+          "V2.p1",
+          "V2.p2"
+        ],
+        "source": {
+          "ac": null,
+          "dc": {
+            "si_value": "5",
+            "unit": "V"
+          },
+          "waveform": {
+            "kind": "none",
+            "parameters": {}
+          }
+        },
+        "type": "voltage_source",
+        "value": null
+      }
+    ],
+    "connections": [
+      {
+        "net_id": "vdd",
+        "pin_id": "M1.p1"
+      },
+      {
+        "net_id": "vout",
+        "pin_id": "M1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "M1.p3"
+      },
+      {
+        "net_id": "vdd",
+        "pin_id": "M1.p4"
+      },
+      {
+        "net_id": "vout",
+        "pin_id": "R1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "R1.p2"
+      },
+      {
+        "net_id": "vin",
+        "pin_id": "V1.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "V1.p2"
+      },
+      {
+        "net_id": "vdd",
+        "pin_id": "V2.p1"
+      },
+      {
+        "net_id": "n0",
+        "pin_id": "V2.p2"
+      }
+    ],
+    "digest_profile": "m2-electrical-digest-v1",
+    "labels": [
+      {
+        "id": "label_in",
+        "net_id": "vin",
+        "scope": "flat",
+        "text": "vin"
+      }
+    ],
+    "metadata": {
+      "catalog_version": "manual_demo"
+    },
+    "nets": [
+      {
+        "id": "n0",
+        "is_ground": true
+      },
+      {
+        "id": "vdd",
+        "is_ground": false
+      },
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "vout",
+        "is_ground": false
+      }
+    ],
+    "pins": [
+      {
+        "component_id": "M1",
+        "id": "M1.p1",
+        "role": "bulk"
+      },
+      {
+        "component_id": "M1",
+        "id": "M1.p2",
+        "role": "drain"
+      },
+      {
+        "component_id": "M1",
+        "id": "M1.p3",
+        "role": "gate"
+      },
+      {
+        "component_id": "M1",
+        "id": "M1.p4",
+        "role": "source"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p1",
+        "role": "a"
+      },
+      {
+        "component_id": "R1",
+        "id": "R1.p2",
+        "role": "b"
+      },
+      {
+        "component_id": "V1",
+        "id": "V1.p1",
+        "role": "positive"
+      },
+      {
+        "component_id": "V1",
+        "id": "V1.p2",
+        "role": "negative"
+      },
+      {
+        "component_id": "V2",
+        "id": "V2.p1",
+        "role": "positive"
+      },
+      {
+        "component_id": "V2",
+        "id": "V2.p2",
+        "role": "negative"
+      }
+    ],
+    "schema_version": "0.2-draft1"
+  },
+  "electrical_sha256": "9d6025f574f5d0f209bebad6a2a4ca4a79eb1c9d069391105a825c760d5d8b06",
+  "element_map": [
+    [
+      "M1",
+      "M_0001"
+    ],
+    [
+      "R1",
+      "R_0001"
+    ],
+    [
+      "V1",
+      "V_0001"
+    ],
+    [
+      "V2",
+      "V_0002"
+    ]
+  ],
+  "issues": [
+    {
+      "code": "CHECK_DEFERRED",
+      "field": "component[M1].model_ref",
+      "severity": "WARNING",
+      "target_refs": [
+        "M1"
+      ]
+    }
+  ],
+  "mapping_sha256": "8a1231c27be2f1f00edcb3ade84e1f3904b3b23858741971eec7b1ef918868ff",
+  "model_map": [
+    [
+      "repository_demo_pmos",
+      "mdl_0001"
+    ]
+  ],
+  "model_registry_projection": {
+    "profiles": [
+      {
+        "cgdo": "0",
+        "cgso": "0",
+        "component_type": "nmos",
+        "gamma": "0",
+        "kp": "1e-4",
+        "lambda_": "0.02",
+        "level": 1,
+        "phi": "0.6",
+        "profile_id": "repository_demo_nmos",
+        "vto": "1"
+      },
+      {
+        "cgdo": "0",
+        "cgso": "0",
+        "component_type": "pmos",
+        "gamma": "0",
+        "kp": "1e-4",
+        "lambda_": "0.02",
+        "level": 1,
+        "phi": "0.6",
+        "profile_id": "repository_demo_pmos",
+        "vto": "-1"
+      }
+    ],
+    "registry_version": "m2-demo-models-v1"
+  },
+  "model_registry_sha256": "c941f9efc290039af71bc82297236a5bf1614014dc40b957d2ccd1f4a67a2cba",
+  "net_map": [
+    [
+      "n0",
+      "0"
+    ],
+    [
+      "vdd",
+      "n_0001"
+    ],
+    [
+      "vin",
+      "n_0002"
+    ],
+    [
+      "vout",
+      "n_0003"
+    ]
+  ],
+  "status": "SUCCESS"
+}

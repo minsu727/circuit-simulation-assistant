@@ -47,6 +47,7 @@ from .value_parser import parse_quantity
 from .schema import document_from_dict, load_document, validate_schema
 from .graph import CircuitGraph, GraphBuildResult, build_graph
 from .validation import validate_document
+from .model_profiles import TrustedModelProfile, repository_model_context, repository_model_profiles
 from .approval import (
     ApprovalScope, ApprovalEnvelope, ApprovalError,
     document_digest, electrical_digest, validation_digest, approval_digest,
@@ -71,6 +72,7 @@ __all__ = (
     "LoadResult", "document_from_dict", "load_document", "validate_schema",
     "CircuitGraph", "GraphBuildResult", "build_graph",
     "ValidationResult", "validate_document",
+    "TrustedModelProfile", "repository_model_context", "repository_model_profiles",
     "ApprovalScope", "ApprovalEnvelope", "ApprovalError",
     "document_digest", "electrical_digest", "validation_digest", "approval_digest",
     "make_circuit_approval", "verify_circuit_approval",

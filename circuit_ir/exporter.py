@@ -1,4 +1,4 @@
-"""Pure m2-spice-v1 passive/source preview; no execution permission or I/O.
+"""Pure m2-spice-v1 passive/source/MOS preview; no execution permission or I/O.
 
 M1 technical validity, M2 representability, circuit approval and later artifact /
 execution approval are separate gates. Connections alone supply terminal nets.
@@ -21,12 +21,11 @@ from .approval import (
 from .graph import build_graph
 from .validation import validate_document
 from .value_parser import parse_quantity
+from .model_profiles import _si_token, _profile_projection, repository_model_profiles
 
 
 _CONTRACT = "m2-spice-v1"
-_REGISTRY_VERSION = "m2-no-models-v1"
-_REGISTRY_SHA256 = hashlib.sha256(
-    b'{"profiles":[],"registry_version":"m2-no-models-v1"}').hexdigest()
+_MOS = frozenset((m.ComponentType.NMOS, m.ComponentType.PMOS))
 _PASSIVES = {m.ComponentType.RESISTOR: ("R", "ohm"),
              m.ComponentType.CAPACITOR: ("C", "F"), m.ComponentType.INDUCTOR: ("L", "H")}
 _SOURCES = {m.ComponentType.VOLTAGE_SOURCE: ("V", "V"),
@@ -214,29 +213,36 @@ def _number(value, unit, identity, field, sign=None):
     decimal = Decimal(parsed.quantity.si_value)
     if (sign == "positive" and decimal <= 0) or (sign == "nonnegative" and decimal < 0):
         _refuse("EXPORT_VALUE_INVALID", identity, field, "Quantity violates the required sign.")
-    negative, digits, exponent = decimal.as_tuple()
-    coefficient = "".join(str(d) for d in digits).lstrip("0")
-    if not coefficient:
-        return "0"
-    trimmed = coefficient.rstrip("0")
-    exponent += len(coefficient) - len(trimmed)
-    coefficient = trimmed
-    adjusted = exponent + len(coefficient) - 1
-    prefix = "-" if negative else ""
-    if -3 <= adjusted <= 6:
-        point = len(coefficient) + exponent
-        if point <= 0:
-            body = "0." + "0" * -point + coefficient
-        elif point >= len(coefficient):
-            body = coefficient + "0" * (point - len(coefficient))
-        else:
-            body = coefficient[:point] + "." + coefficient[point:]
-    else:
-        body = coefficient[0] + ("." + coefficient[1:] if len(coefficient) > 1 else "") + "e" + str(adjusted)
-    token = prefix + body
-    if len(token) > 128 or abs(adjusted) > 300:
-        _refuse("EXPORT_VALUE_INVALID", identity, field, "Emitted SI token exceeds the format bounds.")
-    return token
+    try:
+        return _si_token(decimal)
+    except ValueError as error:
+        _refuse("EXPORT_VALUE_INVALID", identity, field, str(error))
+
+
+def _mos_profile(component, profiles):
+    # Logical IDs equal sealed profile IDs: no alias/default/fuzzy substitution.
+    profile = next((p for p in profiles if p.profile_id == component.model_ref), None)
+    if profile is None:
+        _refuse("EXPORT_MODEL_UNRESOLVED", component.id, "model_ref", "No exact trusted model profile.")
+    if profile.component_type is not component.type:
+        _refuse("EXPORT_MODEL_INCOMPATIBLE", component.id, "model_ref", "Trusted profile polarity mismatch.")
+    if set(dict(component.parameters)) != {"width", "length"}:
+        _refuse("EXPORT_UNSUPPORTED_FEATURE", component.id, "parameters", "MOS requires only width and length.")
+    if component.value is not None or component.source is not None:
+        _refuse("EXPORT_UNSUPPORTED_FEATURE", component.id, "value", "MOS cannot carry passive/source settings.")
+    for key in ("width", "length"):
+        _number(dict(component.parameters)[key], "m", component.id, "parameters." + key, "positive")
+    return profile
+
+
+def _model_line(profile, token):
+    values = _profile_projection(profile)
+    polarity = "NMOS" if profile.component_type is m.ComponentType.NMOS else "PMOS"
+    # Fixed keys/template only; IDs and literal model text never enter this row.
+    fields = (("VTO", "vto"), ("KP", "kp"), ("LAMBDA", "lambda_"),
+              ("GAMMA", "gamma"), ("PHI", "phi"), ("CGSO", "cgso"), ("CGDO", "cgdo"))
+    parameters = " ".join(name + "=" + values[key] for name, key in fields)
+    return ".model " + token + " " + polarity + " (LEVEL=1 " + parameters + ")"
 
 
 def _source(component, *, render=True):
@@ -284,7 +290,8 @@ def _source(component, *, render=True):
 
 
 def _terminals(component, graph):
-    expected = ((m.PinRole.A, m.PinRole.B) if component.type in _PASSIVES
+    expected = ((m.PinRole.DRAIN, m.PinRole.GATE, m.PinRole.SOURCE, m.PinRole.BULK)
+                if component.type in _MOS else (m.PinRole.A, m.PinRole.B) if component.type in _PASSIVES
                 else (m.PinRole.POSITIVE, m.PinRole.NEGATIVE))
     assignments = {}
     for pin_id in graph.pins_for_component(component.id):
@@ -321,20 +328,27 @@ def _preflight(document, model_context):
     if document.metadata.origin is not m.Origin.MANUAL or document.source_image_reference is not None:
         return (_issue("EXPORT_UNSUPPORTED_FEATURE", field="metadata.origin",
                        message="Initial exporter admits manual input without an image reference only."),), report, graph
-    if model_context != (_REGISTRY_VERSION, _REGISTRY_SHA256):
+    try:
+        profiles = repository_model_profiles(model_context)
+    except (ValueError, TypeError):
         return (_issue("EXPORT_MODEL_INCOMPATIBLE", field="model_context",
-                       message="M2C requires the exact explicit empty model registry."),), report, graph
+                       message="Exact sealed repository model context is required."),), report, graph
     issues = []
+    supplied_models = set()
     for component in sorted(document.components, key=lambda c: c.id):
-        if component.type not in _PASSIVES and component.type not in _SOURCES:
+        if component.type not in _PASSIVES and component.type not in _SOURCES and component.type not in _MOS:
             issues.append(_issue("EXPORT_UNSUPPORTED_COMPONENT", (component.id,), "type",
-                                 "Only R/C/L/V/I are supported in M2C; MOS remains deferred."))
+                                 "Only R/C/L/V/I/NMOS/PMOS are supported."))
             continue
         try:
+            _terminals(component, graph)
+            if component.type in _MOS:
+                _mos_profile(component, profiles)
+                supplied_models.add(component.id)
+                continue
             if component.parameters or component.model_ref is not None:
                 _refuse("EXPORT_UNSUPPORTED_FEATURE", component.id, "parameters",
                         "Arbitrary instance parameters/model references are unsupported.")
-            _terminals(component, graph)
             if component.type in _PASSIVES:
                 _number(component.value, _PASSIVES[component.type][1], component.id, "value", "positive")
             else:
@@ -350,7 +364,12 @@ def _preflight(document, model_context):
                 item.id in issue.target_refs and item.kind is m.AmbiguityKind.WIRE_GAP
                 and item.state is m.AmbiguityStatus.RESOLVED
                 for item in document.ambiguities))
-            if issue.code == "LABEL_ALIAS" or resolved_stub:
+            supplied_model = (issue.code == "CHECK_DEFERRED"
+                              and issue.field == f"component[{issue.entity_id}].model_ref"
+                              and issue.entity_type == "component"
+                              and issue.entity_id in supplied_models
+                              and issue.target_refs == (issue.entity_id,))
+            if issue.code == "LABEL_ALIAS" or resolved_stub or supplied_model:
                 issues.append(_issue(issue.code, issue.target_refs, issue.field, issue.message, m.IssueSeverity.WARNING))
             else:
                 issues.append(_issue("EXPORT_PREREQUISITE_UNRESOLVED", issue.target_refs, issue.field,
@@ -381,15 +400,16 @@ def _mappings(document):
     element_map = []
     for kind, (prefix, _) in (*_PASSIVES.items(), *_SOURCES.items()):
         element_map.extend(_allocate([c.id for c in document.components if c.type is kind], prefix))
+    element_map.extend(_allocate([c.id for c in document.components if c.type in _MOS], "M"))
     element_map = tuple(sorted(element_map))
     _map_shape(net_map, "net_map")
     _map_shape(element_map, "element_map")
     return element_map, net_map
 
 
-def _mapping_digest(element_map, net_map):
+def _mapping_digest(element_map, net_map, model_map):
     projection = {"mapping_profile": "m2-mapping-v1", "element_map": [list(pair) for pair in element_map],
-                  "net_map": [list(pair) for pair in net_map], "model_map": []}
+                  "net_map": [list(pair) for pair in net_map], "model_map": [list(pair) for pair in model_map]}
     return hashlib.sha256(json.dumps(projection, sort_keys=True, ensure_ascii=True, allow_nan=False,
                                      separators=(",", ":")).encode("utf-8")).hexdigest()
 
@@ -428,9 +448,25 @@ def export_document(document: m.CircuitDocument, circuit_approval: ApprovalEnvel
     try:
         element_map, net_map = _mappings(document)
         elements, nets = dict(element_map), dict(net_map)
+        profiles = repository_model_profiles(model_context)
+        used = {c.model_ref for c in document.components if c.type in _MOS}
+        model_map = _allocate(used, "mdl")
+        _map_shape(model_map, "model_map")
+        models = dict(model_map)
         lines = ["Circuit Simulation Assistant restricted circuit", "* exporter m2-spice-v1",
                  "* source_sha256 " + source_hash, "* electrical_sha256 " + electrical_hash]
+        for profile in sorted(profiles, key=lambda p: p.profile_id):
+            if profile.profile_id in used:
+                lines.append(_model_line(profile, models[profile.profile_id]))
         for component in sorted(document.components, key=lambda c: c.id):
+            if component.type in _MOS:
+                terminals = _terminals(component, graph)
+                params = dict(component.parameters)
+                width = _number(params["width"], "m", component.id, "parameters.width", "positive")
+                length = _number(params["length"], "m", component.id, "parameters.length", "positive")
+                lines.append(" ".join((elements[component.id], *(nets[n] for n in terminals),
+                                       models[component.model_ref], "W=" + width, "L=" + length)))
+                continue
             a, b = _terminals(component, graph)
             suffix = (_number(component.value, _PASSIVES[component.type][1], component.id, "value", "positive")
                       if component.type in _PASSIVES else _source(component))
@@ -444,6 +480,6 @@ def export_document(document: m.CircuitDocument, circuit_approval: ApprovalEnvel
         document.metadata.circuit_id, document.metadata.revision, source_hash, electrical_hash,
         validation_digest(report), approval_digest(circuit_approval), report.profile, report.ruleset_version,
         _CONTRACT, model_context[0], model_context[1], hashlib.sha256(text.encode("utf-8")).hexdigest(),
-        _mapping_digest(element_map, net_map),
+        _mapping_digest(element_map, net_map, model_map),
     )
-    return ExportResult(ExportStatus.SUCCESS, text, issues, provenance, element_map, net_map, ())
+    return ExportResult(ExportStatus.SUCCESS, text, issues, provenance, element_map, net_map, model_map)

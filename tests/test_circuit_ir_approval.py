@@ -440,7 +440,7 @@ class ApprovalTests(unittest.TestCase):
                     self.doc, replace(envelope, contract_version=version)))
         self.refused("APPROVAL_NOT_GRANTED", lambda: self.verify(self.doc, replace(envelope, approved=False)))
 
-    def test_context_is_exact_empty_structured_registry_only(self):
+    def test_empty_context_requires_exact_sealed_registry_digest(self):
         self.assertEqual(self.make().model_registry_sha256, EMPTY_CONTEXT["model_registry_sha256"])
         for changes in ({"model_registry_version": "m2-demo-models-v1"},
                         {"model_registry_sha256": "a" * 64}):
@@ -583,6 +583,61 @@ print(json.dumps([ir.document_digest(d), ir.electrical_digest(d), ir.validation_
                                         env=dict(os.environ, PYTHONHASHSEED=seed),
                                         capture_output=True, text=True, check=True, timeout=30)
                 self.assertEqual(result.stdout.strip(), expected)
+
+
+class ModelContextApprovalTests(unittest.TestCase):
+    def setUp(self):
+        self.doc = load_fixture("nmos_common_source")
+        self.context = ir.repository_model_context()
+        report = ir.validate_document(self.doc)
+        self.ids = tuple(sorted(i.issue_id for i in report.issues if i.severity is ir.IssueSeverity.WARNING))
+        self.kwargs = {"exporter_contract": "m2-spice-v1", "model_registry_version": self.context[0],
+                       "model_registry_sha256": self.context[1]}
+        self.approval = ir.make_circuit_approval(self.doc, approved=True, acknowledged_warning_ids=self.ids, **self.kwargs)
+
+    def test_current_demo_context_verifies_and_exact_report_hashes_unchanged(self):
+        self.assertIsNone(ir.verify_circuit_approval(self.doc, self.approval, **self.kwargs))
+        self.assertEqual(self.approval.document_sha256, ir.document_digest(self.doc))
+        self.assertEqual(self.approval.validation_sha256, ir.validation_digest(ir.validate_document(self.doc)))
+        self.assertEqual(self.approval.electrical_sha256, ir.electrical_digest(self.doc))
+
+    def test_supported_context_switch_invalidates_old_approval_both_directions(self):
+        empty = ir.make_circuit_approval(self.doc, approved=True, acknowledged_warning_ids=self.ids, **EMPTY_CONTEXT)
+        for envelope, context in ((empty, self.kwargs), (self.approval, EMPTY_CONTEXT)):
+            with self.subTest(context=context), self.assertRaises(ir.ApprovalError) as caught:
+                ir.verify_circuit_approval(self.doc, envelope, **context)
+            self.assertEqual(caught.exception.code, "MODEL_CONTEXT_MISMATCH")
+
+    def test_same_version_repo_content_update_invalidates_prior_approval(self):
+        from circuit_ir import model_profiles as mp
+        profiles = ir.repository_model_profiles(self.context)
+        with patch.object(mp, "_DEMO_PROFILES", (replace(profiles[0], kp="0.0002"), profiles[1])):
+            changed = ir.repository_model_context()
+            kwargs = dict(self.kwargs, model_registry_sha256=changed[1])
+            with self.assertRaises(ir.ApprovalError) as caught:
+                ir.verify_circuit_approval(self.doc, self.approval, **kwargs)
+            self.assertEqual(caught.exception.code, "MODEL_CONTEXT_MISMATCH")
+            with self.assertRaises(ir.ApprovalError) as caught:
+                ir.verify_circuit_approval(self.doc, self.approval, **self.kwargs)
+            self.assertEqual(caught.exception.code, "MODEL_CONTEXT_UNSUPPORTED")
+
+    def test_forged_registry_digest_never_creates_approval(self):
+        kwargs = dict(self.kwargs, model_registry_sha256="a" * 64)
+        with self.assertRaises(ir.ApprovalError) as caught:
+            ir.make_circuit_approval(self.doc, approved=True, acknowledged_warning_ids=self.ids, **kwargs)
+        self.assertEqual(caught.exception.code, "MODEL_CONTEXT_UNSUPPORTED")
+
+    def test_registry_binding_changes_envelope_digest_only_not_document(self):
+        empty = ir.make_circuit_approval(self.doc, approved=True, acknowledged_warning_ids=self.ids, **EMPTY_CONTEXT)
+        self.assertEqual(empty.document_sha256, self.approval.document_sha256)
+        self.assertEqual(empty.electrical_sha256, self.approval.electrical_sha256)
+        self.assertEqual(empty.validation_sha256, self.approval.validation_sha256)
+        self.assertNotEqual(ir.approval_digest(empty), ir.approval_digest(self.approval))
+
+    def test_demo_context_does_not_approve_missing_warning_acknowledgements(self):
+        with self.assertRaises(ir.ApprovalError) as caught:
+            ir.make_circuit_approval(self.doc, approved=True, acknowledged_warning_ids=(), **self.kwargs)
+        self.assertEqual(caught.exception.code, "WARNING_ACKNOWLEDGEMENT_MISMATCH")
 
 
 if __name__ == "__main__":

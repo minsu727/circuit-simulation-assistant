@@ -3,7 +3,7 @@
 Creation and verification recompute M1 validation for the exact input. No cached
 report, imported reviewed flag or digest supplied by a caller grants authority.
 The trusted caller must obtain the explicit decision/acknowledgements from review.
-Exporter preflight, model profiles and representation workflows remain deferred.
+Exporter preflight stays separate; representation workflows remain deferred.
 """
 from __future__ import annotations
 
@@ -18,12 +18,12 @@ from .models import CircuitDocument, IssueSeverity, TechnicalState, ValidationRe
 from .serialization import document_to_dict, dump_document
 from .validation import validate_document
 from .value_parser import parse_quantity
+from .model_profiles import repository_model_profiles
 
 
 _CONTRACT = "m2-approval-v1"
 _EXPORTER = "m2-spice-v1"
 _VALIDATOR = "m1-local-v1"
-_EMPTY_REGISTRY = "m2-no-models-v1"
 # Public M1 stage names required by the M2 contract, not validator implementation.
 _REQUIRED_STAGES = frozenset((
     "schema", "ids", "references", "incidence", "pins", "ground", "labels",
@@ -136,9 +136,6 @@ def _digest(projection: dict) -> str:
     encoded = json.dumps(projection, sort_keys=True, separators=(",", ":"),
                          ensure_ascii=True, allow_nan=False).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
-
-
-_EMPTY_REGISTRY_SHA256 = _digest({"registry_version": _EMPTY_REGISTRY, "profiles": []})
 
 
 def document_digest(document: CircuitDocument) -> str:
@@ -266,10 +263,11 @@ def _context(exporter_contract: str, model_registry_version: str,
     if exporter_contract != _EXPORTER:
         raise ApprovalError("EXPORTER_CONTRACT_UNSUPPORTED", "exporter_contract",
                             "Unsupported exporter contract.")
-    # M2B owns only this explicit empty context. Sealed model profiles are M2D.
-    if (model_registry_version, model_registry_sha256) != (_EMPTY_REGISTRY, _EMPTY_REGISTRY_SHA256):
+    try:
+        repository_model_profiles((model_registry_version, model_registry_sha256))
+    except (ValueError, TypeError) as error:
         raise ApprovalError("MODEL_CONTEXT_UNSUPPORTED", "model_registry_sha256",
-                            "M2B supports only the exact explicit empty model registry.")
+                            "An exact sealed repository model context is required.") from error
 
 
 def _fresh_report(document: CircuitDocument) -> ValidationResult:

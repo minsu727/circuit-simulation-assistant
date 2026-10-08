@@ -1,0 +1,13 @@
+Circuit Simulation Assistant restricted circuit
+* exporter m2-spice-v1
+* source_sha256 62ea6d6fe5cc9ffdd5b97714e98b3c41ca9e3657f2b82b810d536559297b3bd2
+* electrical_sha256 539ed05b4c4b54ed0a73afc80ba6476978cb2db9736038e0cd9fb8f9a48d80ee
+.model mdl_0001 NMOS (LEVEL=1 VTO=1 KP=1e-4 LAMBDA=0.02 GAMMA=0 PHI=0.6 CGSO=0 CGDO=0)
+.model mdl_0002 PMOS (LEVEL=1 VTO=-1 KP=1e-4 LAMBDA=0.02 GAMMA=0 PHI=0.6 CGSO=0 CGDO=0)
+M_0001 n_0002 n_0004 n_0003 n_0003 mdl_0002 W=1e-5 L=1e-6
+M_0002 n_0001 n_0004 0 0 mdl_0001 W=1e-5 L=1e-6
+R_0001 n_0003 n_0001 1000
+R_0002 n_0002 0 1000
+V_0001 n_0004 0 DC 2
+V_0002 n_0003 0 DC 5
+.end
