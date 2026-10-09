@@ -1,0 +1,336 @@
+{
+  "catalog_version": "m3-images-1",
+  "annotation_version": "m3-fixture-1",
+  "coordinate_space": "original_pixels",
+  "style": "printed-dot-crossing-v1",
+  "cases": [
+    {
+      "case_id": "divider",
+      "categories": [
+        "A",
+        "N",
+        "ordinary_wire"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "V1 top is positive on VIN. R1 spans VIN to VOUT; R2 spans VOUT to GND. The bottom return conductor joins R2.b and V1.negative; neither resistor body is a wire.",
+      "image": "cases/divider/schematic.png",
+      "source": "cases/divider/source.svg",
+      "expected": "cases/divider/expected.json",
+      "provenance": "cases/divider/provenance.md",
+      "sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "rc",
+      "categories": [
+        "B"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "V1.positive connects to R1.a (VIN). R1.b connects to C1.a (VOUT). C1.b and V1.negative join the explicitly grounded bottom return. Capacitor plates do not short its terminals.",
+      "image": "cases/rc/schematic.png",
+      "source": "cases/rc/source.svg",
+      "expected": "cases/rc/expected.json",
+      "provenance": "cases/rc/provenance.md",
+      "sha256": "40768604c6bc7b295b6b746fbf3cda766d09010bf1141b4fdc2b602d131fc397",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "missing_value",
+      "categories": [
+        "B",
+        "K"
+      ],
+      "interpretation_state": "INCOMPLETE",
+      "rationale": "V1.positive connects to R1.a (VIN). R1.b connects to C1.a (VOUT). C1.b and V1.negative join the explicitly grounded bottom return. Capacitor plates do not short its terminals.",
+      "image": "cases/missing_value/schematic.png",
+      "source": "cases/missing_value/source.svg",
+      "expected": "cases/missing_value/expected.json",
+      "provenance": "cases/missing_value/provenance.md",
+      "sha256": "81d755bc163dab2b83ccdbd2e67b5539cff1f4e2964d63da73db7cc25027aee4",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "unreadable_value",
+      "categories": [
+        "B",
+        "K"
+      ],
+      "interpretation_state": "INCOMPLETE",
+      "rationale": "V1.positive connects to R1.a (VIN). R1.b connects to C1.a (VOUT). C1.b and V1.negative join the explicitly grounded bottom return. Capacitor plates do not short its terminals.",
+      "image": "cases/unreadable_value/schematic.png",
+      "source": "cases/unreadable_value/source.svg",
+      "expected": "cases/unreadable_value/expected.json",
+      "provenance": "cases/unreadable_value/provenance.md",
+      "sha256": "a349caf357e7b6799d4a42c280017bf567cea84e4962eec8c60eabbfef0701d4",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "rlc",
+      "categories": [
+        "C",
+        "ordinary_wire"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "VIN drives R1 then L1 in series; the R-L midpoint is a separate net. C1 shunts VOUT to GND. Series device bodies do not merge those nets.",
+      "image": "cases/rlc/schematic.png",
+      "source": "cases/rlc/source.svg",
+      "expected": "cases/rlc/expected.json",
+      "provenance": "cases/rlc/provenance.md",
+      "sha256": "582819ef5de2156bfed4bd4e0d42fd1de8eb57bdd251668318b821093d800d68",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "nmos",
+      "categories": [
+        "D"
+      ],
+      "interpretation_state": "INCOMPLETE",
+      "rationale": "NMOS upper D connects through R1 to VDD; left G connects to V2 positive; lower S reaches ground. Right B has its own visible return wire to ground.",
+      "image": "cases/nmos/schematic.png",
+      "source": "cases/nmos/source.svg",
+      "expected": "cases/nmos/expected.json",
+      "provenance": "cases/nmos/provenance.md",
+      "sha256": "bff2c239b66a14f313888b7a82c7d44a786eb069b3e8c9cea045d1f6d3394dda",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "pmos",
+      "categories": [
+        "E",
+        "numeric_mega"
+      ],
+      "interpretation_state": "INCOMPLETE",
+      "rationale": "PMOS upper S and right B connect to VDD; lower D drives the resistive VOUT load to ground; left G connects to V2 positive.",
+      "image": "cases/pmos/schematic.png",
+      "source": "cases/pmos/source.svg",
+      "expected": "cases/pmos/expected.json",
+      "provenance": "cases/pmos/provenance.md",
+      "sha256": "089db5cb56e217ad21cd24d06c760fb28351dd396b59a00d75ac9b98d9dcaf62",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "nmos_bulk_unknown",
+      "categories": [
+        "D",
+        "bulk_unresolved"
+      ],
+      "interpretation_state": "INCOMPLETE",
+      "rationale": "NMOS upper D connects through R1 to VDD; left G connects to V2 positive; lower S reaches ground. No B terminal/contact is exposed; its membership remains absent.",
+      "image": "cases/nmos_bulk_unknown/schematic.png",
+      "source": "cases/nmos_bulk_unknown/source.svg",
+      "expected": "cases/nmos_bulk_unknown/expected.json",
+      "provenance": "cases/nmos_bulk_unknown/provenance.md",
+      "sha256": "56ea9d0e0891d5507b5fb3b66d6b05f7a0682441f365e652870d1d5ced1eadaf",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "cross_open",
+      "categories": [
+        "F"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "Four resistor inner terminals meet geometrically at the center. There is no filled junction dot; horizontal and vertical conductors remain separate under the printed style legend.",
+      "image": "cases/cross_open/schematic.png",
+      "source": "cases/cross_open/source.svg",
+      "expected": "cases/cross_open/expected.json",
+      "provenance": "cases/cross_open/provenance.md",
+      "sha256": "4c49486e6d00732287c33fe4fd8e4813729393d4141c2edb11d53ca66e219e99",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "cross_dot",
+      "categories": [
+        "G"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "Four resistor inner terminals meet geometrically at the center. A clear filled dot joins horizontal and vertical conductors.",
+      "image": "cases/cross_dot/schematic.png",
+      "source": "cases/cross_dot/source.svg",
+      "expected": "cases/cross_dot/expected.json",
+      "provenance": "cases/cross_dot/provenance.md",
+      "sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "cross_ambiguous",
+      "categories": [
+        "H"
+      ],
+      "interpretation_state": "NEEDS_REVIEW",
+      "rationale": "Four resistor inner terminals meet geometrically at the center. A faint displaced mark cannot establish junction membership; both partitions are retained, with no selected inner-terminal truth.",
+      "image": "cases/cross_ambiguous/schematic.png",
+      "source": "cases/cross_ambiguous/source.svg",
+      "expected": "cases/cross_ambiguous/expected.json",
+      "provenance": "cases/cross_ambiguous/provenance.md",
+      "sha256": "e2d3a663eb6503c0cb1954d1a633f6fa598c50d086949a4089411aa94e38c0a5",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "shared_labels",
+      "categories": [
+        "I"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "R1.b and C1.a are physically disjoint but have attached VOUT/vout labels in one explicitly flat scope. Trimmed ASCII case-insensitive identity joins them. VIN is R1.a; C1.b meets ground.",
+      "image": "cases/shared_labels/schematic.png",
+      "source": "cases/shared_labels/source.svg",
+      "expected": "cases/shared_labels/expected.json",
+      "provenance": "cases/shared_labels/provenance.md",
+      "sha256": "49b662d755abef19baa3c7af10a8bedc421634f09cc9795c0940d8ed48129b3c",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "rotated_sources",
+      "categories": [
+        "J",
+        "N"
+      ],
+      "interpretation_state": "RESOLVABLE",
+      "rationale": "V1 is horizontal: right plus is positive VIN; left minus joins ground. R1 leads VIN to VOUT. The downward I1 arrow flows positive(top VOUT) to negative(bottom GND); polarity is not assigned by page orientation.",
+      "image": "cases/rotated_sources/schematic.png",
+      "source": "cases/rotated_sources/source.svg",
+      "expected": "cases/rotated_sources/expected.json",
+      "provenance": "cases/rotated_sources/provenance.md",
+      "sha256": "6152a65abd280f32c0664839ee1de0a00bb8aacb3fd926b04b0f4a7887caa14f",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "unsupported_bjt",
+      "categories": [
+        "L"
+      ],
+      "interpretation_state": "UNSUPPORTED",
+      "rationale": "The visible base line, collector and emitter arrow describe an NPN BJT, not a MOS gate/channel. Base reaches VIN, collector reaches VOUT, emitter reaches ground. It must remain an unsupported observation, not be omitted/substituted.",
+      "image": "cases/unsupported_bjt/schematic.png",
+      "source": "cases/unsupported_bjt/source.svg",
+      "expected": "cases/unsupported_bjt/expected.json",
+      "provenance": "cases/unsupported_bjt/provenance.md",
+      "sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "supply_unknown",
+      "categories": [
+        "M"
+      ],
+      "interpretation_state": "INCOMPLETE",
+      "rationale": "VDD is only attached text on R1.a. R1.b and R2.a share the drawn return bend. R2.b has a RETURN label without a ground symbol. There is no voltage source or ground entity to invent.",
+      "image": "cases/supply_unknown/schematic.png",
+      "source": "cases/supply_unknown/source.svg",
+      "expected": "cases/supply_unknown/expected.json",
+      "provenance": "cases/supply_unknown/provenance.md",
+      "sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    },
+    {
+      "case_id": "near_gap",
+      "categories": [
+        "near_gap"
+      ],
+      "interpretation_state": "NEEDS_REVIEW",
+      "rationale": "The horizontal wire ends at (530,260), 10 pixels above the vertical start (530,270). R1.b and R2.a have no visible contact. Keep joined and separated alternatives; do not close a gap by proximity.",
+      "image": "cases/near_gap/schematic.png",
+      "source": "cases/near_gap/source.svg",
+      "expected": "cases/near_gap/expected.json",
+      "provenance": "cases/near_gap/provenance.md",
+      "sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+      "width_px": 1000,
+      "height_px": 650,
+      "source_format": "svg",
+      "media_type": "image/png",
+      "ownership": "repository-original",
+      "annotation_version": "m3-fixture-1",
+      "evaluation_split": "development"
+    }
+  ]
+}

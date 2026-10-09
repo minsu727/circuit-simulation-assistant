@@ -1,0 +1,411 @@
+{
+  "annotation_version": "m3-fixture-1",
+  "case_id": "near_gap",
+  "coordinate_space": "original_pixels",
+  "interpretation_state": "NEEDS_REVIEW",
+  "topology_complete": false,
+  "observations": {
+    "regions": [
+      {
+        "id": "s_R1",
+        "kind": "symbol",
+        "bbox": [
+          210,
+          245,
+          100,
+          30
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R1",
+        "kind": "text",
+        "bbox": [
+          205,
+          190,
+          155,
+          35
+        ],
+        "text": "R1 1k Ω"
+      },
+      {
+        "id": "s_R2",
+        "kind": "symbol",
+        "bbox": [
+          515,
+          350,
+          30,
+          100
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R2",
+        "kind": "text",
+        "bbox": [
+          570,
+          363,
+          180,
+          35
+        ],
+        "text": "R2 10k Ω"
+      },
+      {
+        "id": "l_in",
+        "kind": "label",
+        "bbox": [
+          70,
+          217,
+          80,
+          35
+        ],
+        "text": "VIN"
+      },
+      {
+        "id": "l_out",
+        "kind": "label",
+        "bbox": [
+          545,
+          225,
+          100,
+          35
+        ],
+        "text": "VOUT"
+      },
+      {
+        "id": "g1",
+        "kind": "ground",
+        "bbox": [
+          505,
+          490,
+          50,
+          40
+        ],
+        "text": null
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "points": [
+          [
+            100,
+            260
+          ],
+          [
+            210,
+            260
+          ]
+        ]
+      },
+      {
+        "id": "w2",
+        "points": [
+          [
+            310,
+            260
+          ],
+          [
+            530,
+            260
+          ]
+        ]
+      },
+      {
+        "id": "w3",
+        "points": [
+          [
+            530,
+            270
+          ],
+          [
+            530,
+            350
+          ]
+        ]
+      },
+      {
+        "id": "w4",
+        "points": [
+          [
+            530,
+            450
+          ],
+          [
+            530,
+            490
+          ]
+        ]
+      }
+    ],
+    "junctions": [
+      {
+        "id": "gap",
+        "position": [
+          530,
+          265
+        ],
+        "wire_ids": [
+          "w2",
+          "w3"
+        ],
+        "appearance": "endpoint_gap"
+      }
+    ]
+  },
+  "expected": {
+    "components": [
+      {
+        "id": "R1",
+        "type": "resistor",
+        "reference": "R1",
+        "evidence_ref": "s_R1",
+        "label_ref": "t_R1",
+        "value": {
+          "raw_text": "1k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "1000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "R2",
+        "type": "resistor",
+        "reference": "R2",
+        "evidence_ref": "s_R2",
+        "label_ref": "t_R2",
+        "value": {
+          "raw_text": "10k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "10000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      }
+    ],
+    "pins": [
+      {
+        "id": "R1.a",
+        "component_id": "R1",
+        "role": "a",
+        "position": [
+          210,
+          260
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R1.b",
+        "component_id": "R1",
+        "role": "b",
+        "position": [
+          310,
+          260
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R2.a",
+        "component_id": "R2",
+        "role": "a",
+        "position": [
+          530,
+          350
+        ],
+        "evidence_ref": "s_R2"
+      },
+      {
+        "id": "R2.b",
+        "component_id": "R2",
+        "role": "b",
+        "position": [
+          530,
+          450
+        ],
+        "evidence_ref": "s_R2"
+      }
+    ],
+    "nets": [
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "upper",
+        "is_ground": false
+      },
+      {
+        "id": "lower",
+        "is_ground": false
+      },
+      {
+        "id": "joined",
+        "is_ground": false
+      },
+      {
+        "id": "gnd",
+        "is_ground": true
+      }
+    ],
+    "connections": [
+      {
+        "pin_id": "R1.a",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R2.b",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "w4",
+          "s_R2"
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "evidence_ref": "l_in",
+        "text": "VIN",
+        "net_id": "vin",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_out",
+        "text": "VOUT",
+        "net_id": null,
+        "scope": "flat"
+      }
+    ],
+    "ground_net_id": "gnd",
+    "junction_decisions": [
+      {
+        "observation_id": "gap",
+        "meaning": "unresolved",
+        "net_ids": [],
+        "reason": "A 10-pixel gap is retained as an unresolved contact, never silently repaired."
+      }
+    ],
+    "issues": [
+      {
+        "id": "q_gap",
+        "kind": "wire_gap",
+        "targets": [
+          "gap"
+        ],
+        "evidence_refs": [
+          "gap"
+        ],
+        "required_review": true,
+        "message": "Explicitly confirm whether the drawn gap is intentional.",
+        "alternative_ids": [
+          "joined",
+          "separated"
+        ]
+      },
+      {
+        "id": "q_label",
+        "kind": "label_attachment_unresolved",
+        "targets": [
+          "l_out"
+        ],
+        "evidence_refs": [
+          "l_out"
+        ],
+        "required_review": true,
+        "message": "VOUT lies near both gap sides; its attachment is not selected.",
+        "alternative_ids": []
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "joined",
+        "issue_id": "q_gap",
+        "description": "Manually bridge the visible gap.",
+        "connections": [
+          {
+            "pin_id": "R1.a",
+            "net_id": "vin",
+            "evidence_refs": [
+              "w1",
+              "s_R1"
+            ]
+          },
+          {
+            "pin_id": "R1.b",
+            "net_id": "joined",
+            "evidence_refs": [
+              "w2",
+              "s_R1"
+            ]
+          },
+          {
+            "pin_id": "R2.a",
+            "net_id": "joined",
+            "evidence_refs": [
+              "w3",
+              "s_R2"
+            ]
+          },
+          {
+            "pin_id": "R2.b",
+            "net_id": "gnd",
+            "evidence_refs": [
+              "w4",
+              "s_R2"
+            ]
+          }
+        ],
+        "ground_net_id": "gnd"
+      },
+      {
+        "id": "separated",
+        "issue_id": "q_gap",
+        "description": "Keep the visible gap electrically open.",
+        "connections": [
+          {
+            "pin_id": "R1.a",
+            "net_id": "vin",
+            "evidence_refs": [
+              "w1",
+              "s_R1"
+            ]
+          },
+          {
+            "pin_id": "R1.b",
+            "net_id": "upper",
+            "evidence_refs": [
+              "w2",
+              "s_R1"
+            ]
+          },
+          {
+            "pin_id": "R2.a",
+            "net_id": "lower",
+            "evidence_refs": [
+              "w3",
+              "s_R2"
+            ]
+          },
+          {
+            "pin_id": "R2.b",
+            "net_id": "gnd",
+            "evidence_refs": [
+              "w4",
+              "s_R2"
+            ]
+          }
+        ],
+        "ground_net_id": "gnd"
+      }
+    ],
+    "model_choices": []
+  }
+}

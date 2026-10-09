@@ -116,3 +116,33 @@ cannot be called a real image E2E test.
 If image admission or actual extraction is unavailable, record NOT RUN/BLOCKED;
 M3G cannot close the full image execution profile. No fixed fixture count or
 accuracy target is selected before the M3B review.
+
+## M3B implemented integrity lane
+
+The [16-case catalog](../../../tests/fixtures/schematic_images/README.md) now
+supplies owned originals, independent observation/connection truth and provenance.
+[Fixture Annotations](fixture-annotations.md) specifies the test-only contract;
+[Evaluation Protocol](evaluation-protocol.md) fixes future thresholds, denominators,
+role-aware exact topology, alternatives and proposed resource bounds.
+
+```powershell
+python -X utf8 -m unittest tests.test_m3_fixtures -v
+python -X utf8 -m unittest discover -s tests -p "test_*.py"
+python -m pip check
+git diff --check
+git status --short
+```
+
+The focused module has 45 test methods checking catalogs, rasters, hashes,
+static SVGs, evidence/role/net references, contradictory truth, known versus
+unresolved quantities, source polarity, missing bulk, ground, alternatives,
+privacy and unchanged fixture bytes. No fixture is generated during tests;
+ordinary Windows CI uses existing Pillow only, with no network/key/LTspice/model.
+These are **integrity checks, not extraction accuracy tests**. Actual results are
+recorded in the [checkpoint](implementation-plan.md#m3b-fixtures-and-evaluation-checkpoint).
+
+Current gaps: all cases are agent-reviewed development drawings; no independent
+human adjudication, held-out redraws, post-review M1 goldens, noisy/cropped/EXIF
+assets, bridge/hop, op-amp, mixed ground conventions, complex notation or injection
+assets. The future test lanes above remain planned. Do not close M3 or count a
+fixture outcome as technical validation, confirmation or permission to execute.

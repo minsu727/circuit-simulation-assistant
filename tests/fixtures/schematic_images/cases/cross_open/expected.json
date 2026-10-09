@@ -1,0 +1,449 @@
+{
+  "annotation_version": "m3-fixture-1",
+  "case_id": "cross_open",
+  "coordinate_space": "original_pixels",
+  "interpretation_state": "RESOLVABLE",
+  "topology_complete": true,
+  "observations": {
+    "regions": [
+      {
+        "id": "s_R1",
+        "kind": "symbol",
+        "bbox": [
+          180,
+          305,
+          100,
+          30
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R1",
+        "kind": "text",
+        "bbox": [
+          180,
+          255,
+          155,
+          35
+        ],
+        "text": "R1 1k Ω"
+      },
+      {
+        "id": "s_R2",
+        "kind": "symbol",
+        "bbox": [
+          730,
+          305,
+          100,
+          30
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R2",
+        "kind": "text",
+        "bbox": [
+          730,
+          255,
+          170,
+          35
+        ],
+        "text": "R2 10k Ω"
+      },
+      {
+        "id": "s_R3",
+        "kind": "symbol",
+        "bbox": [
+          505,
+          140,
+          30,
+          100
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R3",
+        "kind": "text",
+        "bbox": [
+          560,
+          150,
+          170,
+          35
+        ],
+        "text": "R3 1k Ω"
+      },
+      {
+        "id": "s_R4",
+        "kind": "symbol",
+        "bbox": [
+          505,
+          450,
+          30,
+          100
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R4",
+        "kind": "text",
+        "bbox": [
+          560,
+          475,
+          170,
+          35
+        ],
+        "text": "R4 10k Ω"
+      },
+      {
+        "id": "g1",
+        "kind": "ground",
+        "bbox": [
+          495,
+          550,
+          50,
+          40
+        ],
+        "text": null
+      }
+    ],
+    "wires": [
+      {
+        "id": "wh",
+        "points": [
+          [
+            280,
+            320
+          ],
+          [
+            730,
+            320
+          ]
+        ]
+      },
+      {
+        "id": "wv",
+        "points": [
+          [
+            520,
+            240
+          ],
+          [
+            520,
+            450
+          ]
+        ]
+      },
+      {
+        "id": "wl",
+        "points": [
+          [
+            180,
+            320
+          ],
+          [
+            130,
+            320
+          ]
+        ]
+      },
+      {
+        "id": "wr",
+        "points": [
+          [
+            830,
+            320
+          ],
+          [
+            900,
+            320
+          ]
+        ]
+      },
+      {
+        "id": "wt",
+        "points": [
+          [
+            520,
+            140
+          ],
+          [
+            520,
+            100
+          ]
+        ]
+      }
+    ],
+    "junctions": [
+      {
+        "id": "jx",
+        "position": [
+          520,
+          320
+        ],
+        "wire_ids": [
+          "wh",
+          "wv"
+        ],
+        "appearance": "no_dot"
+      }
+    ]
+  },
+  "expected": {
+    "components": [
+      {
+        "id": "R1",
+        "type": "resistor",
+        "reference": "R1",
+        "evidence_ref": "s_R1",
+        "label_ref": "t_R1",
+        "value": {
+          "raw_text": "1k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "1000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "R2",
+        "type": "resistor",
+        "reference": "R2",
+        "evidence_ref": "s_R2",
+        "label_ref": "t_R2",
+        "value": {
+          "raw_text": "10k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "10000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "R3",
+        "type": "resistor",
+        "reference": "R3",
+        "evidence_ref": "s_R3",
+        "label_ref": "t_R3",
+        "value": {
+          "raw_text": "1k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "1000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "R4",
+        "type": "resistor",
+        "reference": "R4",
+        "evidence_ref": "s_R4",
+        "label_ref": "t_R4",
+        "value": {
+          "raw_text": "10k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "10000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      }
+    ],
+    "pins": [
+      {
+        "id": "R1.a",
+        "component_id": "R1",
+        "role": "a",
+        "position": [
+          180,
+          320
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R1.b",
+        "component_id": "R1",
+        "role": "b",
+        "position": [
+          280,
+          320
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R2.a",
+        "component_id": "R2",
+        "role": "a",
+        "position": [
+          730,
+          320
+        ],
+        "evidence_ref": "s_R2"
+      },
+      {
+        "id": "R2.b",
+        "component_id": "R2",
+        "role": "b",
+        "position": [
+          830,
+          320
+        ],
+        "evidence_ref": "s_R2"
+      },
+      {
+        "id": "R3.a",
+        "component_id": "R3",
+        "role": "a",
+        "position": [
+          520,
+          140
+        ],
+        "evidence_ref": "s_R3"
+      },
+      {
+        "id": "R3.b",
+        "component_id": "R3",
+        "role": "b",
+        "position": [
+          520,
+          240
+        ],
+        "evidence_ref": "s_R3"
+      },
+      {
+        "id": "R4.a",
+        "component_id": "R4",
+        "role": "a",
+        "position": [
+          520,
+          450
+        ],
+        "evidence_ref": "s_R4"
+      },
+      {
+        "id": "R4.b",
+        "component_id": "R4",
+        "role": "b",
+        "position": [
+          520,
+          550
+        ],
+        "evidence_ref": "s_R4"
+      }
+    ],
+    "nets": [
+      {
+        "id": "left",
+        "is_ground": false
+      },
+      {
+        "id": "right",
+        "is_ground": false
+      },
+      {
+        "id": "top",
+        "is_ground": false
+      },
+      {
+        "id": "gnd",
+        "is_ground": true
+      },
+      {
+        "id": "horizontal",
+        "is_ground": false
+      },
+      {
+        "id": "vertical",
+        "is_ground": false
+      }
+    ],
+    "connections": [
+      {
+        "pin_id": "R1.a",
+        "net_id": "left",
+        "evidence_refs": [
+          "wl",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R2.b",
+        "net_id": "right",
+        "evidence_refs": [
+          "wr",
+          "s_R2"
+        ]
+      },
+      {
+        "pin_id": "R3.a",
+        "net_id": "top",
+        "evidence_refs": [
+          "wt",
+          "s_R3"
+        ]
+      },
+      {
+        "pin_id": "R4.b",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "g1",
+          "s_R4"
+        ]
+      },
+      {
+        "pin_id": "R1.b",
+        "net_id": "horizontal",
+        "evidence_refs": [
+          "wh",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R2.a",
+        "net_id": "horizontal",
+        "evidence_refs": [
+          "wh",
+          "s_R2"
+        ]
+      },
+      {
+        "pin_id": "R3.b",
+        "net_id": "vertical",
+        "evidence_refs": [
+          "wv",
+          "s_R3"
+        ]
+      },
+      {
+        "pin_id": "R4.a",
+        "net_id": "vertical",
+        "evidence_refs": [
+          "wv",
+          "s_R4"
+        ]
+      }
+    ],
+    "labels": [],
+    "ground_net_id": "gnd",
+    "junction_decisions": [
+      {
+        "observation_id": "jx",
+        "meaning": "separated",
+        "net_ids": [
+          "horizontal",
+          "vertical"
+        ],
+        "reason": "Geometric intersection alone is not conductivity. The stated no-dot crossing convention keeps these nets separate."
+      }
+    ],
+    "issues": [],
+    "alternatives": [],
+    "model_choices": []
+  }
+}

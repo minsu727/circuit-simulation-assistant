@@ -1,7 +1,8 @@
 # M3 implementation plan
 
-**M3A specification only.** No proposed module/test/UI/admission change below is
-implemented or authorized by this documentation task.
+**M3A architecture with the M3B fixture checkpoint recorded below.** Production
+observation/topology/review/conversion/UI/admission work remains proposed and
+requires its own phase authorization.
 
 ## Dependency order
 
@@ -105,3 +106,68 @@ untracked documents are not covered by ordinary diff, inspect their whitespace
 and links separately. Preserve initial working-tree edits byte for byte.
 Only `docs/v0.2/m3/` should appear as new public files; audit output belongs in
 ignored local runtime storage. Do not add/stage, commit, push, tag or release.
+
+## M3B fixtures and evaluation checkpoint
+
+Prompt 043, 2026-10-09: starting M3A commit
+`ac86659cd91830fbd69de638b88ba3f7ad145e95` equals remote main. Hosted workflow
+`37884948650` is completed/success for that exact SHA. The historical failed M2
+workflow is not used as the current CI gate. Existing root README modifications
+are preserved; no staging or remote mutation is performed.
+
+Implemented only owned schematic-image assets and fixture integrity. Catalog:
+`tests/fixtures/schematic_images/catalog.json`, version `m3-images-1`, 16 cases,
+each with original SVG, committed grayscale PNG, separate hand-authored
+`m3-fixture-1` truth and provenance. Categories A–N plus ordinary_wire, near_gap,
+bulk_unresolved and numeric_mega are all present. Outcomes: 7 RESOLVABLE,
+2 NEEDS_REVIEW, 1 UNSUPPORTED, 6 INCOMPLETE; these are not M1 technical states.
+Thirteen complete observed topologies, twelve using supported categories.
+
+The authoring agent reviewed the contact sheet and challenging full-size cases.
+Connection rows were authored independently of geometry, with no M1 graph,
+export, promotion or inferred output. Dot/no-dot/unclear/gap cases have distinct
+truth; undecided inner memberships are omitted and both alternatives preserved.
+D/G/S/B, missing bulk, source polarity, absent ground/source/value/model/W/L and
+printed M versus SPICE M retain their explicit evidence and unknowns. This is not
+independent human adjudication or a performance benchmark.
+
+[Annotation contract](fixture-annotations.md) defines the test-only format;
+[evaluation protocol](evaluation-protocol.md) defines future one-to-one matching,
+exact role-aware pin partition and anchored net-name equivalence, pair/merge/split
+errors, uncertainty, workflow/cost denominators and proposed M3C intake limits.
+No actual scorer, fake recognizer, Vision/OCR API, connectivity inference,
+candidate conversion, UI or image admission is added. Current M2 image-origin
+rejection remains unchanged. M3 is not closed.
+
+During integrity checks, a duplicated BJT symbol evidence reference was corrected;
+the privacy scanner was bounded to avoid interpreting the SVG namespace URL as
+a Windows drive. Visual review corrected a rectangle's internal stroke, source
+label spacing, legend/ground spacing and PMOS return evidence association.
+No production fix was necessary.
+
+Final local verification (full suite executed once after focused checks):
+
+| Check | Actual result |
+| --- | --- |
+| `python -X utf8 -m unittest tests.test_m3_fixtures -q` | 45 tests; failures 0, errors 0, skips 0; exit 0 |
+| `python -X utf8 -m unittest discover -s tests -p "test_*.py"` | 893 tests in 407.804 s; failures 0, errors 0, skips 0; exit 0 |
+| `python -m pip check` | No broken requirements found; exit 0 |
+| PNG checks | All 16 decode, recorded dimensions/hash agree; 1000×650 L mode; no image metadata; total 236,724 bytes, largest 20,658 bytes |
+| Source/reference checks | All 16 SVG/annotation/provenance sets present; category/outcome/ID/connection/evidence integrity passes |
+| Preservation audit | 325 of 328 starting tracked files byte-identical; only three authorized M3 documents changed; original root README bytes/diff preserved |
+| Public text/link/privacy audit | 81 relative Markdown link/anchor occurrences pass; no detected secret, email or personal absolute path; public text whitespace/fences pass |
+| Git hygiene | `git diff --check` exit 0; LF→CRLF notices only; 70 intended new public files, zero staged files; temporary authoring/audit output ignored |
+
+The existing 848-test M1/M2/v0.1 baseline plus 45 M3B integrity tests passes
+locally. Hosted CI confirmation above concerns **M3A only**; uncommitted M3B has
+not run on GitHub Actions. No live extraction, remote API or LTspice execution
+was performed. Integrity does not prove image recognition or visual truth.
+
+Temporary
+authoring/audit tools stay ignored in local runtime output; committed SVG/PNG
+sources are public fixture assets, not generated simulator results. No new
+dependency, existing M1/M2 golden, root README, workflow, packaging or release is
+modified. M3C next scope is bounded observation/intake types and fake/static replay;
+M3D topology inference and M3E human review/admission remain separate work.
+New fixture/doc/test files are prepared for version control but remain untracked
+and unstaged in this task. No add/commit/push/tag/Release action is performed.

@@ -1,7 +1,8 @@
 # v0.2 M3 — Image-to-Circuit IR plan
 
-**Prompt 042 / M3A: specification only. No M3 extraction, review UI, conversion
-or image execution is implemented.** Prepared 2026-10-09 (Asia/Seoul).
+**M3A design and M3B owned fixture/evaluation foundation. No M3 extraction,
+review UI, conversion or image execution is implemented. M3 is not closed.**
+Prepared 2026-10-09 (Asia/Seoul).
 
 Design goal: a clean printed textbook-style schematic image becomes an untrusted,
 reviewable candidate; explicit correction/confirmation produces Circuit IR for
@@ -42,6 +43,22 @@ successfully. That is the central quality risk.
 | [Test Plan](test-plan.md) | Owned fixtures, independent goldens, metrics and evaluation lanes |
 | [Implementation Plan](implementation-plan.md) | M3A–G deliverables, dependencies and acceptance gates |
 | [Prompt Breakdown](prompt-breakdown.md) | Small implementation handoffs, protected scope and unresolved decisions |
+| [Fixture Annotations](fixture-annotations.md) | Implemented test-truth format, outcome/unknown rules and independent catalog |
+| [Evaluation Protocol](evaluation-protocol.md) | Future matching/denominators, topology-first success, resource proposals and report boundary |
+
+## M3B implemented boundary
+
+Prompt 043 starts from pushed M3A commit `ac86659`; its exact-source hosted
+[CI run](https://github.com/minsu727/circuit-simulation-assistant/actions/runs/37884948650)
+completed successfully. Existing root README edits are preserved.
+
+The [owned catalog](../../../tests/fixtures/schematic_images/README.md) contains
+16 original SVG/PNG pairs, independently authored connection/role/value goldens,
+per-case provenance and CI-safe integrity tests. All A–N categories are covered,
+with separate gap, missing bulk and printed-mega cases. No recognition accuracy
+or approved CircuitDocument is produced; this is development ground truth,
+reviewed by the authoring agent, pending independent human/held-out adjudication.
+See [checkpoint verification](implementation-plan.md#m3b-fixtures-and-evaluation-checkpoint).
 
 ## Proposed controlled path
 
@@ -67,6 +84,6 @@ guaranteed handwriting, proprietary PDKs, pixel-to-ASC generation, arbitrary
 SPICE and new simulation algorithms are deferred. Unsupported content is retained
 and blocks conversion; it is never removed automatically to make a partial circuit.
 
-M3A adds no implementation, dependency, fixture image, production asset, packaging
-or release change. Documentation audit results are recorded in
+M3A itself added no implementation, dependency, fixture image, production asset,
+packaging or release change. Its historical documentation audit results remain in
 [Implementation Plan](implementation-plan.md#m3a-documentation-verification).

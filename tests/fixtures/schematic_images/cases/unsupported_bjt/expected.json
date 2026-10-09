@@ -1,0 +1,199 @@
+{
+  "annotation_version": "m3-fixture-1",
+  "case_id": "unsupported_bjt",
+  "coordinate_space": "original_pixels",
+  "interpretation_state": "UNSUPPORTED",
+  "topology_complete": true,
+  "observations": {
+    "regions": [
+      {
+        "id": "s_Q1",
+        "kind": "symbol",
+        "bbox": [
+          470,
+          190,
+          90,
+          290
+        ],
+        "text": null
+      },
+      {
+        "id": "t_Q1",
+        "kind": "text",
+        "bbox": [
+          560,
+          300,
+          190,
+          35
+        ],
+        "text": "Q1 NPN"
+      },
+      {
+        "id": "l_in",
+        "kind": "label",
+        "bbox": [
+          220,
+          290,
+          80,
+          35
+        ],
+        "text": "VIN"
+      },
+      {
+        "id": "l_out",
+        "kind": "label",
+        "bbox": [
+          560,
+          185,
+          100,
+          35
+        ],
+        "text": "VOUT"
+      },
+      {
+        "id": "g1",
+        "kind": "ground",
+        "bbox": [
+          525,
+          480,
+          50,
+          40
+        ],
+        "text": null
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "points": [
+          [
+            260,
+            330
+          ],
+          [
+            480,
+            330
+          ]
+        ]
+      }
+    ],
+    "junctions": []
+  },
+  "expected": {
+    "components": [
+      {
+        "id": "Q1",
+        "type": "unsupported_bjt",
+        "reference": "Q1",
+        "evidence_ref": "s_Q1",
+        "label_ref": "t_Q1",
+        "value": null,
+        "source_dc": null
+      }
+    ],
+    "pins": [
+      {
+        "id": "Q1.base",
+        "component_id": "Q1",
+        "role": "base",
+        "position": [
+          480,
+          330
+        ],
+        "evidence_ref": "s_Q1"
+      },
+      {
+        "id": "Q1.collector",
+        "component_id": "Q1",
+        "role": "collector",
+        "position": [
+          550,
+          190
+        ],
+        "evidence_ref": "s_Q1"
+      },
+      {
+        "id": "Q1.emitter",
+        "component_id": "Q1",
+        "role": "emitter",
+        "position": [
+          550,
+          480
+        ],
+        "evidence_ref": "s_Q1"
+      }
+    ],
+    "nets": [
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "vout",
+        "is_ground": false
+      },
+      {
+        "id": "gnd",
+        "is_ground": true
+      }
+    ],
+    "connections": [
+      {
+        "pin_id": "Q1.base",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_Q1"
+        ]
+      },
+      {
+        "pin_id": "Q1.collector",
+        "net_id": "vout",
+        "evidence_refs": [
+          "s_Q1"
+        ]
+      },
+      {
+        "pin_id": "Q1.emitter",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "g1",
+          "s_Q1"
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "evidence_ref": "l_in",
+        "text": "VIN",
+        "net_id": "vin",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_out",
+        "text": "VOUT",
+        "net_id": "vout",
+        "scope": "flat"
+      }
+    ],
+    "ground_net_id": "gnd",
+    "junction_decisions": [],
+    "issues": [
+      {
+        "id": "q_bjt",
+        "kind": "unsupported_component",
+        "targets": [
+          "Q1"
+        ],
+        "evidence_refs": [
+          "s_Q1"
+        ],
+        "required_review": true,
+        "message": "BJT lies outside current M1/M2 supported execution types; retain the symbol.",
+        "alternative_ids": []
+      }
+    ],
+    "alternatives": [],
+    "model_choices": []
+  }
+}

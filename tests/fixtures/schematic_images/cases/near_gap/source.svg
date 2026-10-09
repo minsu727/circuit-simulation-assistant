@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<rect width="1000" height="650" fill="white"/>
+<text x="45" y="35" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">Two-resistor network</text>
+<polyline points="210,260 230,260 240,248 250,272 260,248 270,272 280,248 290,260 310,260" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="210" y="195" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">R1  1k Ω</text>
+<polyline points="100,260 210,260" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="310,260 530,260" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="530,270 530,350" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="530,350 530,370 542,380 518,390 542,400 518,410 542,420 530,430 530,450" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="575" y="368" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">R2  10k Ω</text>
+<polyline points="530,450 530,490" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="530,490 530,510" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="508,510 552,510" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="516,519 544,519" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="524,528 536,528" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="75" y="222" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VIN</text>
+<text x="550" y="230" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VOUT</text>
+</svg>

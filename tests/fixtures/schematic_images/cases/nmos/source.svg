@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<rect width="1000" height="650" fill="white"/>
+<text x="45" y="35" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">NMOS common-source</text>
+<circle cx="170" cy="350" r="40" fill="none" stroke="rgb(0,0,0)" stroke-width="3"/>
+<polyline points="170,280 170,310" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="170,390 170,420" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="160" y="318" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">+</text>
+<text x="160" y="353" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">−</text>
+<text x="45" y="310" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">V1</text>
+<text x="45" y="350" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">5 V</text>
+<polyline points="170,280 170,140 650,140" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="170,420 170,540 820,540" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="650,140 650,180" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="650,180 650,200 662,210 638,220 662,230 638,240 662,250 650,260 650,280" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="650,280 650,320" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="695" y="200" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">R1  10k Ω</text>
+<polyline points="570,400 615,400" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="615,364 615,436" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="635,362 635,378" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="635,392 635,408" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="635,422 635,438" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="650,320 650,370 635,370" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="635,430 650,430 650,480" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="635,400 730,400" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="655,392 642,400 655,408" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="590" y="340" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" dominant-baseline="text-before-edge">G</text>
+<text x="662" y="328" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" dominant-baseline="text-before-edge">D</text>
+<text x="662" y="450" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" dominant-baseline="text-before-edge">S</text>
+<text x="710" y="372" font-family="DejaVu Sans,Arial,sans-serif" font-size="18" dominant-baseline="text-before-edge">B</text>
+<polyline points="650,480 650,540" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="695" y="298" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VOUT</text>
+<polyline points="730,400 820,400 820,540" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="380" cy="400" r="40" fill="none" stroke="rgb(0,0,0)" stroke-width="3"/>
+<polyline points="380,330 380,360" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="380,440 380,470" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="370" y="368" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">+</text>
+<text x="370" y="403" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">−</text>
+<text x="260" y="365" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">V2</text>
+<text x="245" y="405" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">1 V</text>
+<polyline points="380,330 460,330 460,400 570,400" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="490" y="358" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VIN</text>
+<polyline points="380,470 380,540" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="460,540 460,560" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="438,560 482,560" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="446,569 474,569" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="454,578 466,578" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="685" y="438" font-family="DejaVu Sans,Arial,sans-serif" font-size="20" dominant-baseline="text-before-edge">M1</text>
+<text x="45" y="590" font-family="DejaVu Sans,Arial,sans-serif" font-size="20" dominant-baseline="text-before-edge">Model, W and L are not specified.</text>
+</svg>

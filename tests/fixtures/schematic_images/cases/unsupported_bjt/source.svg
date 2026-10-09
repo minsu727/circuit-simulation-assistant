@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<rect width="1000" height="650" fill="white"/>
+<text x="45" y="35" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">Transistor stage</text>
+<polyline points="260,330 480,330" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="480,275 480,385" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="480,305 550,250 550,190" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="480,355 550,420 550,480" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="523,384 545,414 530,405" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="565" y="305" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">Q1  NPN</text>
+<text x="225" y="295" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VIN</text>
+<text x="565" y="190" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VOUT</text>
+<polyline points="550,480 550,500" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="528,500 572,500" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="536,509 564,509" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="544,518 556,518" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+</svg>

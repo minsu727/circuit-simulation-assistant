@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<rect width="1000" height="650" fill="white"/>
+<text x="45" y="35" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">Labeled resistor network</text>
+<polyline points="300,170 300,230" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="300,230 300,250" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="312,250 312,310 288,310 288,250 312,250" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="300,310 300,330" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="300,330 300,410 600,410" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="270" y="125" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VDD</text>
+<text x="345" y="250" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">R1  10k Ω</text>
+<text x="540" y="370" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VOUT</text>
+<polyline points="600,410 620,410 630,398 640,422 650,398 660,422 670,398 680,410 700,410" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="700,410 820,410" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="620" y="350" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">R2  1k Ω</text>
+<text x="770" y="430" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">RETURN</text>
+</svg>

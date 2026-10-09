@@ -1,0 +1,403 @@
+{
+  "annotation_version": "m3-fixture-1",
+  "case_id": "divider",
+  "coordinate_space": "original_pixels",
+  "interpretation_state": "RESOLVABLE",
+  "topology_complete": true,
+  "observations": {
+    "regions": [
+      {
+        "id": "s_V1",
+        "kind": "symbol",
+        "bbox": [
+          140,
+          280,
+          80,
+          140
+        ],
+        "text": null
+      },
+      {
+        "id": "t_V1",
+        "kind": "text",
+        "bbox": [
+          55,
+          325,
+          85,
+          75
+        ],
+        "text": "V1 5 V"
+      },
+      {
+        "id": "s_R1",
+        "kind": "symbol",
+        "bbox": [
+          430,
+          165,
+          100,
+          30
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R1",
+        "kind": "text",
+        "bbox": [
+          435,
+          120,
+          150,
+          35
+        ],
+        "text": "R1 1k Ω"
+      },
+      {
+        "id": "s_R2",
+        "kind": "symbol",
+        "bbox": [
+          685,
+          290,
+          30,
+          100
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R2",
+        "kind": "text",
+        "bbox": [
+          740,
+          300,
+          160,
+          85
+        ],
+        "text": "R2 10k Ω"
+      },
+      {
+        "id": "l_in",
+        "kind": "label",
+        "bbox": [
+          215,
+          140,
+          80,
+          35
+        ],
+        "text": "VIN"
+      },
+      {
+        "id": "l_out",
+        "kind": "label",
+        "bbox": [
+          720,
+          160,
+          95,
+          35
+        ],
+        "text": "VOUT"
+      },
+      {
+        "id": "l_gnd",
+        "kind": "label",
+        "bbox": [
+          465,
+          540,
+          80,
+          35
+        ],
+        "text": "GND"
+      },
+      {
+        "id": "g1",
+        "kind": "ground",
+        "bbox": [
+          415,
+          510,
+          50,
+          40
+        ],
+        "text": null
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "points": [
+          [
+            180,
+            280
+          ],
+          [
+            180,
+            180
+          ],
+          [
+            430,
+            180
+          ]
+        ]
+      },
+      {
+        "id": "w2",
+        "points": [
+          [
+            530,
+            180
+          ],
+          [
+            700,
+            180
+          ],
+          [
+            700,
+            290
+          ]
+        ]
+      },
+      {
+        "id": "w3",
+        "points": [
+          [
+            700,
+            390
+          ],
+          [
+            700,
+            510
+          ],
+          [
+            180,
+            510
+          ],
+          [
+            180,
+            420
+          ]
+        ]
+      }
+    ],
+    "junctions": [
+      {
+        "id": "j1",
+        "position": [
+          700,
+          180
+        ],
+        "wire_ids": [
+          "w2"
+        ],
+        "appearance": "filled_dot"
+      }
+    ]
+  },
+  "expected": {
+    "components": [
+      {
+        "id": "V1",
+        "type": "voltage_source",
+        "reference": "V1",
+        "evidence_ref": "s_V1",
+        "label_ref": "t_V1",
+        "value": null,
+        "source_dc": {
+          "raw_text": "5",
+          "unit_text": "V",
+          "notation": "printed-engineering",
+          "si_value": "5",
+          "unit": "V",
+          "state": "known"
+        }
+      },
+      {
+        "id": "R1",
+        "type": "resistor",
+        "reference": "R1",
+        "evidence_ref": "s_R1",
+        "label_ref": "t_R1",
+        "value": {
+          "raw_text": "1k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "1000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "R2",
+        "type": "resistor",
+        "reference": "R2",
+        "evidence_ref": "s_R2",
+        "label_ref": "t_R2",
+        "value": {
+          "raw_text": "10k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "10000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      }
+    ],
+    "pins": [
+      {
+        "id": "V1.positive",
+        "component_id": "V1",
+        "role": "positive",
+        "position": [
+          180,
+          280
+        ],
+        "evidence_ref": "s_V1"
+      },
+      {
+        "id": "V1.negative",
+        "component_id": "V1",
+        "role": "negative",
+        "position": [
+          180,
+          420
+        ],
+        "evidence_ref": "s_V1"
+      },
+      {
+        "id": "R1.a",
+        "component_id": "R1",
+        "role": "a",
+        "position": [
+          430,
+          180
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R1.b",
+        "component_id": "R1",
+        "role": "b",
+        "position": [
+          530,
+          180
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R2.a",
+        "component_id": "R2",
+        "role": "a",
+        "position": [
+          700,
+          290
+        ],
+        "evidence_ref": "s_R2"
+      },
+      {
+        "id": "R2.b",
+        "component_id": "R2",
+        "role": "b",
+        "position": [
+          700,
+          390
+        ],
+        "evidence_ref": "s_R2"
+      }
+    ],
+    "nets": [
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "vout",
+        "is_ground": false
+      },
+      {
+        "id": "gnd",
+        "is_ground": true
+      }
+    ],
+    "connections": [
+      {
+        "pin_id": "V1.positive",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_V1"
+        ]
+      },
+      {
+        "pin_id": "R1.a",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R1.b",
+        "net_id": "vout",
+        "evidence_refs": [
+          "w2",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R2.a",
+        "net_id": "vout",
+        "evidence_refs": [
+          "w2",
+          "s_R2"
+        ]
+      },
+      {
+        "pin_id": "R2.b",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "w3",
+          "s_R2"
+        ]
+      },
+      {
+        "pin_id": "V1.negative",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "w3",
+          "s_V1"
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "evidence_ref": "l_in",
+        "text": "VIN",
+        "net_id": "vin",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_out",
+        "text": "VOUT",
+        "net_id": "vout",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_gnd",
+        "text": "GND",
+        "net_id": "gnd",
+        "scope": "flat"
+      }
+    ],
+    "ground_net_id": "gnd",
+    "junction_decisions": [
+      {
+        "observation_id": "j1",
+        "meaning": "connected",
+        "net_ids": [
+          "vout"
+        ],
+        "reason": "Dot at the resistor/output branch joins the continuous VOUT corner."
+      }
+    ],
+    "issues": [],
+    "alternatives": [],
+    "model_choices": []
+  }
+}

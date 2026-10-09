@@ -1,0 +1,386 @@
+{
+  "annotation_version": "m3-fixture-1",
+  "case_id": "rc",
+  "coordinate_space": "original_pixels",
+  "interpretation_state": "RESOLVABLE",
+  "topology_complete": true,
+  "observations": {
+    "regions": [
+      {
+        "id": "s_V1",
+        "kind": "symbol",
+        "bbox": [
+          140,
+          280,
+          80,
+          140
+        ],
+        "text": null
+      },
+      {
+        "id": "t_V1",
+        "kind": "text",
+        "bbox": [
+          50,
+          305,
+          75,
+          80
+        ],
+        "text": "V1 1 V"
+      },
+      {
+        "id": "s_R1",
+        "kind": "symbol",
+        "bbox": [
+          380,
+          185,
+          100,
+          30
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R1",
+        "kind": "text",
+        "bbox": [
+          385,
+          135,
+          170,
+          35
+        ],
+        "text": "R1 10k Ω"
+      },
+      {
+        "id": "s_C1",
+        "kind": "symbol",
+        "bbox": [
+          670,
+          290,
+          60,
+          100
+        ],
+        "text": null
+      },
+      {
+        "id": "t_C1",
+        "kind": "text",
+        "bbox": [
+          745,
+          295,
+          175,
+          85
+        ],
+        "text": "C1 100n F"
+      },
+      {
+        "id": "l_in",
+        "kind": "label",
+        "bbox": [
+          215,
+          160,
+          80,
+          35
+        ],
+        "text": "VIN"
+      },
+      {
+        "id": "l_out",
+        "kind": "label",
+        "bbox": [
+          710,
+          160,
+          100,
+          35
+        ],
+        "text": "VOUT"
+      },
+      {
+        "id": "g1",
+        "kind": "ground",
+        "bbox": [
+          415,
+          510,
+          50,
+          40
+        ],
+        "text": null
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "points": [
+          [
+            180,
+            280
+          ],
+          [
+            180,
+            200
+          ],
+          [
+            380,
+            200
+          ]
+        ]
+      },
+      {
+        "id": "w2",
+        "points": [
+          [
+            480,
+            200
+          ],
+          [
+            700,
+            200
+          ],
+          [
+            700,
+            290
+          ]
+        ]
+      },
+      {
+        "id": "w3",
+        "points": [
+          [
+            700,
+            390
+          ],
+          [
+            700,
+            510
+          ],
+          [
+            180,
+            510
+          ],
+          [
+            180,
+            420
+          ]
+        ]
+      }
+    ],
+    "junctions": [
+      {
+        "id": "j1",
+        "position": [
+          700,
+          200
+        ],
+        "wire_ids": [
+          "w2"
+        ],
+        "appearance": "filled_dot"
+      }
+    ]
+  },
+  "expected": {
+    "components": [
+      {
+        "id": "V1",
+        "type": "voltage_source",
+        "reference": "V1",
+        "evidence_ref": "s_V1",
+        "label_ref": "t_V1",
+        "value": null,
+        "source_dc": {
+          "raw_text": "1",
+          "unit_text": "V",
+          "notation": "printed-engineering",
+          "si_value": "1",
+          "unit": "V",
+          "state": "known"
+        }
+      },
+      {
+        "id": "R1",
+        "type": "resistor",
+        "reference": "R1",
+        "evidence_ref": "s_R1",
+        "label_ref": "t_R1",
+        "value": {
+          "raw_text": "10k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "10000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "C1",
+        "type": "capacitor",
+        "reference": "C1",
+        "evidence_ref": "s_C1",
+        "label_ref": "t_C1",
+        "value": {
+          "raw_text": "100n",
+          "unit_text": "F",
+          "notation": "printed-engineering",
+          "si_value": "0.0000001",
+          "unit": "F",
+          "state": "known"
+        },
+        "source_dc": null
+      }
+    ],
+    "pins": [
+      {
+        "id": "V1.positive",
+        "component_id": "V1",
+        "role": "positive",
+        "position": [
+          180,
+          280
+        ],
+        "evidence_ref": "s_V1"
+      },
+      {
+        "id": "V1.negative",
+        "component_id": "V1",
+        "role": "negative",
+        "position": [
+          180,
+          420
+        ],
+        "evidence_ref": "s_V1"
+      },
+      {
+        "id": "R1.a",
+        "component_id": "R1",
+        "role": "a",
+        "position": [
+          380,
+          200
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R1.b",
+        "component_id": "R1",
+        "role": "b",
+        "position": [
+          480,
+          200
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "C1.a",
+        "component_id": "C1",
+        "role": "a",
+        "position": [
+          700,
+          290
+        ],
+        "evidence_ref": "s_C1"
+      },
+      {
+        "id": "C1.b",
+        "component_id": "C1",
+        "role": "b",
+        "position": [
+          700,
+          390
+        ],
+        "evidence_ref": "s_C1"
+      }
+    ],
+    "nets": [
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "vout",
+        "is_ground": false
+      },
+      {
+        "id": "gnd",
+        "is_ground": true
+      }
+    ],
+    "connections": [
+      {
+        "pin_id": "V1.positive",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_V1"
+        ]
+      },
+      {
+        "pin_id": "R1.a",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R1.b",
+        "net_id": "vout",
+        "evidence_refs": [
+          "w2",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "C1.a",
+        "net_id": "vout",
+        "evidence_refs": [
+          "w2",
+          "s_C1"
+        ]
+      },
+      {
+        "pin_id": "C1.b",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "w3",
+          "s_C1"
+        ]
+      },
+      {
+        "pin_id": "V1.negative",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "w3",
+          "s_V1"
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "evidence_ref": "l_in",
+        "text": "VIN",
+        "net_id": "vin",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_out",
+        "text": "VOUT",
+        "net_id": "vout",
+        "scope": "flat"
+      }
+    ],
+    "ground_net_id": "gnd",
+    "junction_decisions": [
+      {
+        "observation_id": "j1",
+        "meaning": "connected",
+        "net_ids": [
+          "vout"
+        ],
+        "reason": "The filled dot lies on the output/capacitor conductor."
+      }
+    ],
+    "issues": [],
+    "alternatives": [],
+    "model_choices": []
+  }
+}

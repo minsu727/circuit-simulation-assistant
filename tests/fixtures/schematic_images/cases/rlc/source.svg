@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<rect width="1000" height="650" fill="white"/>
+<text x="45" y="35" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">RLC ladder</text>
+<circle cx="160" cy="350" r="40" fill="none" stroke="rgb(0,0,0)" stroke-width="3"/>
+<polyline points="160,280 160,310" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="160,390 160,420" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="150" y="318" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">+</text>
+<text x="150" y="353" font-family="DejaVu Sans,Arial,sans-serif" font-size="25" dominant-baseline="text-before-edge">−</text>
+<text x="45" y="310" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">V1</text>
+<text x="45" y="350" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">1 V</text>
+<polyline points="160,280 160,220 320,220" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="320,220 340,220 350,208 360,232 370,208 380,232 390,208 400,220 420,220" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="325" y="160" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">R1  1k Ω</text>
+<polyline points="420,220 500,220" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="500,220 515,220" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="515.0,220.0 515.3066675633984,216.1177143234622 516.2057713659401,212.5 517.636038969321,209.3933982822018 519.5,207.00961894323342 521.6706285940774,205.51111260566398 524.0,205.0 526.3293714059226,205.51111260566398 528.5,207.00961894323342 530.363961030679,209.3933982822018 531.7942286340599,212.5 532.6933324366016,216.1177143234622 533.0,220.0 533.0,220.0 533.3066675633984,216.1177143234622 534.2057713659401,212.5 535.636038969321,209.3933982822018 537.5,207.00961894323342 539.6706285940774,205.51111260566398 542.0,205.0 544.3293714059226,205.51111260566398 546.5,207.00961894323342 548.363961030679,209.3933982822018 549.7942286340599,212.5 550.6933324366016,216.1177143234622 551.0,220.0 551.0,220.0 551.3066675633984,216.1177143234622 552.2057713659401,212.5 553.636038969321,209.3933982822018 555.5,207.00961894323342 557.6706285940774,205.51111260566398 560.0,205.0 562.3293714059226,205.51111260566398 564.5,207.00961894323342 566.363961030679,209.3933982822018 567.7942286340599,212.5 568.6933324366016,216.1177143234622 569.0,220.0 569.0,220.0 569.3066675633984,216.1177143234622 570.2057713659401,212.5 571.636038969321,209.3933982822018 573.5,207.00961894323342 575.6706285940774,205.51111260566398 578.0,205.0 580.3293714059226,205.51111260566398 582.5,207.00961894323342 584.363961030679,209.3933982822018 585.7942286340599,212.5 586.6933324366016,216.1177143234622 587.0,220.0" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="587,220 600,220" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="500" y="160" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">L1  10u H</text>
+<polyline points="600,220 760,220 760,310" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,310 760,352" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="734,352 786,352" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="734,368 786,368" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,368 760,410" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="805" y="320" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">C1  1p F</text>
+<polyline points="760,410 760,520 160,520 160,420" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="420,520 420,540" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="398,540 442,540" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="406,549 434,549" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="414,558 426,558" fill="none" stroke="rgb(0,0,0)" stroke-width="3" stroke-linejoin="round"/>
+<text x="190" y="180" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VIN</text>
+<text x="775" y="190" font-family="DejaVu Sans,Arial,sans-serif" font-size="22" dominant-baseline="text-before-edge">VOUT</text>
+</svg>

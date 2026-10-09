@@ -1,0 +1,305 @@
+{
+  "annotation_version": "m3-fixture-1",
+  "case_id": "shared_labels",
+  "coordinate_space": "original_pixels",
+  "interpretation_state": "RESOLVABLE",
+  "topology_complete": true,
+  "observations": {
+    "regions": [
+      {
+        "id": "s_R1",
+        "kind": "symbol",
+        "bbox": [
+          230,
+          205,
+          100,
+          30
+        ],
+        "text": null
+      },
+      {
+        "id": "t_R1",
+        "kind": "text",
+        "bbox": [
+          225,
+          145,
+          155,
+          35
+        ],
+        "text": "R1 1k Ω"
+      },
+      {
+        "id": "s_C1",
+        "kind": "symbol",
+        "bbox": [
+          680,
+          350,
+          60,
+          100
+        ],
+        "text": null
+      },
+      {
+        "id": "t_C1",
+        "kind": "text",
+        "bbox": [
+          755,
+          360,
+          200,
+          35
+        ],
+        "text": "C1 100n F"
+      },
+      {
+        "id": "l_in",
+        "kind": "label",
+        "bbox": [
+          105,
+          172,
+          80,
+          35
+        ],
+        "text": "VIN"
+      },
+      {
+        "id": "l_out1",
+        "kind": "label",
+        "bbox": [
+          355,
+          175,
+          100,
+          35
+        ],
+        "text": "VOUT"
+      },
+      {
+        "id": "l_out2",
+        "kind": "label",
+        "bbox": [
+          680,
+          238,
+          100,
+          35
+        ],
+        "text": "vout"
+      },
+      {
+        "id": "g1",
+        "kind": "ground",
+        "bbox": [
+          685,
+          510,
+          50,
+          40
+        ],
+        "text": null
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "points": [
+          [
+            110,
+            220
+          ],
+          [
+            230,
+            220
+          ]
+        ]
+      },
+      {
+        "id": "w2",
+        "points": [
+          [
+            330,
+            220
+          ],
+          [
+            490,
+            220
+          ]
+        ]
+      },
+      {
+        "id": "w3",
+        "points": [
+          [
+            710,
+            280
+          ],
+          [
+            710,
+            350
+          ]
+        ]
+      },
+      {
+        "id": "w4",
+        "points": [
+          [
+            710,
+            450
+          ],
+          [
+            710,
+            510
+          ]
+        ]
+      }
+    ],
+    "junctions": []
+  },
+  "expected": {
+    "components": [
+      {
+        "id": "R1",
+        "type": "resistor",
+        "reference": "R1",
+        "evidence_ref": "s_R1",
+        "label_ref": "t_R1",
+        "value": {
+          "raw_text": "1k",
+          "unit_text": "Ω",
+          "notation": "printed-engineering",
+          "si_value": "1000",
+          "unit": "ohm",
+          "state": "known"
+        },
+        "source_dc": null
+      },
+      {
+        "id": "C1",
+        "type": "capacitor",
+        "reference": "C1",
+        "evidence_ref": "s_C1",
+        "label_ref": "t_C1",
+        "value": {
+          "raw_text": "100n",
+          "unit_text": "F",
+          "notation": "printed-engineering",
+          "si_value": "0.0000001",
+          "unit": "F",
+          "state": "known"
+        },
+        "source_dc": null
+      }
+    ],
+    "pins": [
+      {
+        "id": "R1.a",
+        "component_id": "R1",
+        "role": "a",
+        "position": [
+          230,
+          220
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "R1.b",
+        "component_id": "R1",
+        "role": "b",
+        "position": [
+          330,
+          220
+        ],
+        "evidence_ref": "s_R1"
+      },
+      {
+        "id": "C1.a",
+        "component_id": "C1",
+        "role": "a",
+        "position": [
+          710,
+          350
+        ],
+        "evidence_ref": "s_C1"
+      },
+      {
+        "id": "C1.b",
+        "component_id": "C1",
+        "role": "b",
+        "position": [
+          710,
+          450
+        ],
+        "evidence_ref": "s_C1"
+      }
+    ],
+    "nets": [
+      {
+        "id": "vin",
+        "is_ground": false
+      },
+      {
+        "id": "vout",
+        "is_ground": false
+      },
+      {
+        "id": "gnd",
+        "is_ground": true
+      }
+    ],
+    "connections": [
+      {
+        "pin_id": "R1.a",
+        "net_id": "vin",
+        "evidence_refs": [
+          "w1",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "R1.b",
+        "net_id": "vout",
+        "evidence_refs": [
+          "w2",
+          "s_R1"
+        ]
+      },
+      {
+        "pin_id": "C1.a",
+        "net_id": "vout",
+        "evidence_refs": [
+          "w3",
+          "s_C1"
+        ]
+      },
+      {
+        "pin_id": "C1.b",
+        "net_id": "gnd",
+        "evidence_refs": [
+          "w4",
+          "s_C1"
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "evidence_ref": "l_in",
+        "text": "VIN",
+        "net_id": "vin",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_out1",
+        "text": "VOUT",
+        "net_id": "vout",
+        "scope": "flat"
+      },
+      {
+        "evidence_ref": "l_out2",
+        "text": "vout",
+        "net_id": "vout",
+        "scope": "flat"
+      }
+    ],
+    "ground_net_id": "gnd",
+    "junction_decisions": [],
+    "issues": [],
+    "alternatives": [],
+    "model_choices": []
+  }
+}
