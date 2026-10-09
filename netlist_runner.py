@@ -1,9 +1,9 @@
-"""M2E generated-copy adapter with injected runner only; no simulator import.
+"""M2 generated-copy adapter; real simulator imports are lazy and opt-in.
 
 The v0.1 simulation_runner accepts uploads ending .asc, edits AscEditor blocks,
 and uses SpiceEditor for ASC conversion. It is intentionally not called here.
-M2F can implement this protocol with public text SpiceEditor/SimRunner APIs after
-real .cir compatibility checks. Test-only evidence is never RAW parsing/physics.
+The private M2F backend uses the public SimRunner Path API to preserve exact
+text bytes. Test-only evidence is never RAW parsing/physics.
 """
 from __future__ import annotations
 
@@ -182,3 +182,143 @@ def run_generated_netlist(document, export_result, circuit_approval, representat
         return NetlistRunResult(RunStatus.FAILED, artifact, working_file, None, None,
                                process if isinstance(process, RunnerResult) else None,
                                (ExecutionIssue("RUN_ADAPTER_FAILED", None, str(error)),))
+
+
+@dataclass(frozen=True, slots=True)
+class NetlistSimulationResult:
+    """Process/file evidence is distinct from successfully parsed analysis."""
+    run: NetlistRunResult
+    analysis: object | None
+    diagnostics: tuple[str, ...]
+    warnings: tuple[str, ...]
+    executable: Path | None
+    simulator_version: str | None
+
+    @property
+    def status(self):
+        if self.run.status is not RunStatus.SUCCESS:
+            return self.run.status
+        return RunStatus.FAILED if self.diagnostics or self.analysis is None else RunStatus.SUCCESS
+
+
+def _read_log(path):
+    data = path.read_bytes()
+    encoding = ("utf-16" if data.startswith((b"\xff\xfe", b"\xfe\xff"))
+                else "utf-16-le" if b"\x00" in data[:100] else "utf-8-sig")
+    text = data.decode(encoding)
+    if not text.strip():
+        raise ValueError("Simulator LOG is empty")
+    return text
+
+
+def _log_warnings(text):
+    import re
+    # LTspice 26 emits this Level-1 advisory without a 'Warning:' prefix.
+    return tuple(line.strip() for line in text.splitlines()
+                 if re.search(r"\bwarning\b|Length shorter than recommended", line, re.I))
+
+
+class _LTspiceRunner:
+    """Private real backend, bound by the high-level API to verified bytes.
+
+    Passing a Path to SimRunner copies it rather than editor-reserializing it.
+    A per-run LTspice subclass checks that second copy before process launch;
+    it also keeps create_from from modifying the v0.1 global simulator class.
+    The library subprocess.run timeout terminates only its owned subprocess.
+    No broad kill_all_spice/cleanup call is used.
+    """
+    def __init__(self, artifact, timeout):
+        import math
+        if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError("timeout must be finite and positive")
+        self.artifact, self.timeout = artifact, timeout
+        self.executable, self.version, self.warnings = None, None, ()
+
+    def run(self, netlist_path, output_folder):
+        import hashlib
+        import re
+        from runtime_paths import locate_ltspice, MISSING_LTSPICE
+        expected = self.artifact.netlist_bytes
+        digest = self.artifact.provenance.execution_netlist_sha256
+        def check(path):
+            if (path.suffix.lower() != ".cir" or path.read_bytes() != expected
+                    or hashlib.sha256(path.read_bytes()).hexdigest() != digest):
+                raise ValueError("Execution working-copy digest mismatch")
+        check(netlist_path)
+        self.executable = locate_ltspice()
+        if self.executable is None:
+            return RunnerResult(False, None, None, None, MISSING_LTSPICE)
+        from PyLTSpice import SimRunner, LTspice
+        artifact_root = output_folder.resolve()
+        class VerifiedLTspice(LTspice):
+            @classmethod
+            def run(cls, netlist_file, *args, **kwargs):
+                path = Path(netlist_file)
+                _safe_path(artifact_root, path)
+                check(path)
+                return super().run(path, *args, **kwargs)
+        simulator = VerifiedLTspice.create_from(self.executable)
+        runner = SimRunner(simulator=simulator, parallel_sims=1, timeout=self.timeout,
+                           output_folder=str(output_folder), verbose=False)
+        # M2E supplies a new output directory. Do not consume pre-existing output.
+        if any(output_folder.iterdir()):
+            raise ValueError("Real runner requires a fresh empty output folder")
+        raw, log = runner.run_now(netlist_path, run_filename="execution.cir", timeout=self.timeout, exe_log=True)
+        task = runner.completed_tasks[-1]
+        if task.is_alive():
+            return RunnerResult(False, None, None, None, "Simulator task did not complete within its timeout")
+        copy = output_folder / "execution.cir"
+        check(copy)
+        if runner.okSim != 1 or task.retcode != 0:
+            return RunnerResult(False, task.retcode, raw, log, task.exception_text or f"LTspice exit code: {task.retcode}")
+        for label, path in (("RAW", raw), ("LOG", log)):
+            if path is None:
+                raise ValueError(f"LTspice did not return {label}")
+            _safe_path(output_folder, Path(path))
+            if Path(path).resolve() != copy.with_suffix("." + label.lower()).resolve():
+                raise ValueError(f"Unexpected {label} output location")
+            if not Path(path).is_file() or Path(path).stat().st_size == 0:
+                raise ValueError(f"LTspice did not generate nonempty {label}")
+        text = _read_log(Path(log))
+        match = re.search(r"(?im)^LTspice[^\r\n]*", text)
+        self.version = match.group(0) if match else None
+        self.warnings = _log_warnings(text)
+        if re.search(r"(?im)^\s*(fatal error|error on line|unknown subcircuit|can't find|singular matrix|.*failed to converge)", text):
+            return RunnerResult(False, task.retcode, Path(raw), Path(log), "Simulator LOG reports an error; inspect retained evidence")
+        return RunnerResult(True, task.retcode, Path(raw), Path(log))
+
+
+def run_ltspice_netlist(document, export_result, circuit_approval, representation_approval, request,
+                        execution_approval, *, model_context, workspace_root=None, timeout=60):
+    """Real M2 entry point: complete approval chain, never arbitrary raw paths.
+
+    Production never creates approvals. RAW/analysis failure is FAILED even if
+    the underlying process/file evidence was successful; both remain inspectable.
+    Importing this module does not discover or start LTspice.
+    """
+    composed = compose_execution_netlist(document, export_result, circuit_approval, representation_approval,
+        request, execution_approval, model_context=model_context)
+    if composed.artifact is None:
+        run = NetlistRunResult(RunStatus.BLOCKED, None, None, None, None, None, composed.issues)
+        return NetlistSimulationResult(run, None, (), (), None, None)
+    try:
+        backend = _LTspiceRunner(composed.artifact, timeout)
+    except (TypeError, ValueError) as error:
+        run = NetlistRunResult(RunStatus.BLOCKED, None, None, None, None, None,
+                              (ExecutionIssue("RUNNER_CONFIGURATION_INVALID", "timeout", str(error)),))
+        return NetlistSimulationResult(run, None, (), (), None, None)
+    if workspace_root is None:
+        from runtime_paths import simulation_data_root
+        workspace_root = simulation_data_root()
+    run = run_generated_netlist(document, export_result, circuit_approval, representation_approval, request,
+        execution_approval, model_context=model_context, workspace_root=workspace_root, runner=backend)
+    if run.status is not RunStatus.SUCCESS:
+        return NetlistSimulationResult(run, None, (), backend.warnings, backend.executable, backend.version)
+    try:
+        from netlist_result_analysis import read_netlist_analysis
+        analysis = read_netlist_analysis(run.raw_file, run.artifact, request)
+        return NetlistSimulationResult(run, analysis, (), backend.warnings, backend.executable, backend.version)
+    except Exception as error:
+        available = getattr(error, "available", None)
+        detail = str(error) + (f"; available traces: {available}" if available is not None else "")
+        return NetlistSimulationResult(run, None, (detail,), backend.warnings, backend.executable, backend.version)
