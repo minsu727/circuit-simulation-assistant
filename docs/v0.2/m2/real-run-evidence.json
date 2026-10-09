@@ -1,0 +1,2082 @@
+{
+  "inventory_version": "m2g-evidence-v1",
+  "inspected_on": "2026-10-09",
+  "scope": "Observed preserved results, not test expected values. Ignored local files are not included in fresh clones.",
+  "source_report": {
+    "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/report.json",
+    "sha256": "e75c16fd5caef0fb96947e12d494219f5a218fffae6cb39db3cb0de99c84c9bc"
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.5",
+    "libraries": {
+      "PyLTSpice": "6.0.1",
+      "spicelib": "1.6.3",
+      "numpy": "2.5.3"
+    },
+    "simulator": "LTspice 26.0.1 for Windows"
+  },
+  "counts": {
+    "primary_cases": 25,
+    "primary_fixture_families": 10,
+    "mos_reference_runs": 6,
+    "asc_regression_runs": 3,
+    "successful_real_runs": 34,
+    "m2g_new_simulator_runs": 0
+  },
+  "failure_history": [
+    {
+      "report": "simulation_output/m2f-validation/5dd31a33410f4394910b5c70e15aee9f/report.json",
+      "sha256": "e094a1728d8d7c0df21080d6910e7791ea2d3a7ad5d999b655f7036d5d7cf10c",
+      "primary_runs": 25,
+      "failures": 25,
+      "source_preserved": true,
+      "statuses": [
+        "FAIL"
+      ]
+    },
+    {
+      "report": "simulation_output/m2f-validation/152fbfb686754af4b0d8ceb2053bf220/report.json",
+      "sha256": "88c88ca40ddc1d180631a04efddbc02a18b4bd858778ba13219e677541cc5a58",
+      "primary_runs": 25,
+      "failures": 0,
+      "source_preserved": true,
+      "statuses": [
+        "PASS"
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "case_id": "divider_dc",
+      "family": "resistor_divider",
+      "fixture": "tests/fixtures/spice_export/resistor_divider/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc V_0001 0 5 100m",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0002)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": 2.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": -0.0016666667070239782
+        },
+        "voltage_source_current_last": -0.0016666667070239782
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": 2.0,
+          "expected": 2.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "voltage_source_current_last",
+          "actual": -0.0016666667070239782,
+          "expected": -0.0016666666666666668,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "081402b4e6cd8d833afc28b7dcb458fc73033532a545d9283b9954e09559f50c",
+      "committed_fixture_sha256": "081402b4e6cd8d833afc28b7dcb458fc73033532a545d9283b9954e09559f50c",
+      "base_sha256": "600e3ea5c6c4bccc3260cfc8d1d74399cf57d0d27ccbb1247341c3918d5d07c4",
+      "artifact_sha256": "90756b428a341daee9a263e44c5ff83c734174a4cda038b5b05113636d94e21a",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/46e4f6677ef04e01b06878db730c5010/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/46e4f6677ef04e01b06878db730c5010/execution.raw",
+          "bytes": 2580,
+          "sha256": "4b895cc6d0b51c84b3ea9955f21d9038dd024f69b6f207aff564467824421414"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/46e4f6677ef04e01b06878db730c5010/execution.log",
+          "bytes": 605,
+          "sha256": "2e9c7741bc72310d46ebd72638275cb00b9768f378dd1f944930eb95d4df1983"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "divider_ac",
+      "family": "resistor_divider",
+      "fixture": "tests/fixtures/spice_export/resistor_divider/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0002)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": -3.521825181113625,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "linear_gain": 0.6666666666666666,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": -4.082155997157845e-20,
+          "last": -4.082155997157845e-20
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "linear_gain",
+          "actual": 0.6666666666666666,
+          "expected": 0.6666666666666666,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "081402b4e6cd8d833afc28b7dcb458fc73033532a545d9283b9954e09559f50c",
+      "committed_fixture_sha256": "081402b4e6cd8d833afc28b7dcb458fc73033532a545d9283b9954e09559f50c",
+      "base_sha256": "600e3ea5c6c4bccc3260cfc8d1d74399cf57d0d27ccbb1247341c3918d5d07c4",
+      "artifact_sha256": "dac468065a7ef84bc50af33e09a998ed3c1501da5723e04710f6ace6a2933512",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/21e7afab4b434dd5bd074e69c50ea02f/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/21e7afab4b434dd5bd074e69c50ea02f/execution.raw",
+          "bytes": 49228,
+          "sha256": "04a72be6381ce6b52abd5c45464c549cc64ec16f05c7ed46cecb26d8cc9c6314"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/21e7afab4b434dd5bd074e69c50ea02f/execution.log",
+          "bytes": 636,
+          "sha256": "c6c9d1d0d9c701b5a85ad4341dfa0b76c3b39471a757b74c087a71d7339b0bd8"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "rc_ac",
+      "family": "rc_low_pass",
+      "fixture": "tests/fixtures/spice_export/rc_low_pass/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0002)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": -0.02104775587359299,
+        "bandwidth_hz": 159.54018241061164,
+        "bandwidth_status": "Found",
+        "maximum_complex_transfer_error": 3.376611507232129e-16,
+        "input_ac_magnitude": 2.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": -9.406937909969022e-05,
+          "last": -0.001414438605623986
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "bandwidth_hz",
+          "actual": 159.54018241061164,
+          "expected": 158.7774824930003,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "maximum_complex_transfer_error",
+          "actual": 3.376611507232129e-16,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 1e-05,
+          "passed": true
+        },
+        {
+          "measurement": "input_ac_magnitude",
+          "actual": 2.0,
+          "expected": 2.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "418589dc4fabeab720e9f03a64d12659f1d057e36e106385b7be43e03e92cf04",
+      "committed_fixture_sha256": "bb314dc06d2e6d26554aa3da614c4f4a2111da84173b2f20281a7ecbcda27daf",
+      "base_sha256": "4a2b513059d447cc4bca41c18834829d8130921cce8472dc80bf174b56998b73",
+      "artifact_sha256": "47aab99090a7b369214cd14b668925173f59dbd2d70ae2a22ec1f59386e84177",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/d4852b6feaef4dcea037d404acf77fd5/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/d4852b6feaef4dcea037d404acf77fd5/execution.raw",
+          "bytes": 49228,
+          "sha256": "b67a384f6d32329b8b1a8b36857b0667249c5c223b2b344c478b07d0f03d4136"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/d4852b6feaef4dcea037d404acf77fd5/execution.log",
+          "bytes": 636,
+          "sha256": "a422b4b2c73d0adbc45d30f200554d46a24149fa9822fa9ad14b56b4549091c7"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "rc_transient",
+      "family": "rc_low_pass",
+      "fixture": "tests/fixtures/spice_export/rc_low_pass/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0002)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 1.0025447607040405,
+        "Minimum": 0.9984283447265625,
+        "Peak-to-Peak": 0.004116415977478027,
+        "gain_measurements": {
+          "Input Vpp": 0.019999980926513672,
+          "Output Vpp": 0.0031456947326660156,
+          "Voltage Gain": 0.15728488663185752,
+          "Voltage Gain (dB)": -16.06626012702886
+        },
+        "gain_unavailable_reason": "",
+        "periodic_voltage_gain": 0.15728488663185752,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": -1.000000045813705e-18,
+          "last": -1.55215559516364e-06
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "periodic_voltage_gain",
+          "actual": 0.15728488663185752,
+          "expected": 0.15717672547758987,
+          "rtol": 0.02,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "6ae9280de13d4c0c9ce74e03065548948099f5ca11c1971497650d7922f353ea",
+      "committed_fixture_sha256": "bb314dc06d2e6d26554aa3da614c4f4a2111da84173b2f20281a7ecbcda27daf",
+      "base_sha256": "e852fa6ee1457dd4553f4168fb32aa62893aaa2acf483bf115f5937a69fbcf10",
+      "artifact_sha256": "79f70486a8d3b419e8897ad19e8377bcf9f1053588356a21d58a1c1fcb2aade8",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/bb75a5eb4e80456b923fabcc8b4d9059/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/bb75a5eb4e80456b923fabcc8b4d9059/execution.raw",
+          "bytes": 281616,
+          "sha256": "2764b25d848d1ae3ea3f2cbe334478ed19c936f38d8f97d41dfe624731f15d15"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/bb75a5eb4e80456b923fabcc8b4d9059/execution.log",
+          "bytes": 636,
+          "sha256": "09f5d0df947a3c8bc8ec5b240831a980f866335341a450df1087e53a8156011e"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "current_dc",
+      "family": "current_source_load",
+      "fixture": "tests/fixtures/spice_export/current_source_load/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc I_0001 -1m 1m 100u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": -1.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": -0.0010000000474974513,
+          "last": 0.0010000000474974513
+        },
+        "source_current_last": 0.0010000000474974513
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": -1.0,
+          "expected": -1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "source_current_last",
+          "actual": 0.0010000000474974513,
+          "expected": 0.001,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "ce81a07b5acbeffbb4089f98a1ee3175e946264d1cb8e3170569e3cf281e727f",
+      "committed_fixture_sha256": "ce81a07b5acbeffbb4089f98a1ee3175e946264d1cb8e3170569e3cf281e727f",
+      "base_sha256": "9a81fcf076178c04c7164f5962d417fa7884d476300290a033764bc5805b322f",
+      "artifact_sha256": "8b26b6350ff524ce53b3e1423b83245d98c9dcf817c0991dfba519b66f208343",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/b99fee04b0314af1bcfa6f809dda6b65/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/b99fee04b0314af1bcfa6f809dda6b65/execution.raw",
+          "bytes": 1474,
+          "sha256": "0a706abf8436ed51a2fa761bff4b87599b9e1024baf0c463e55791c7903c2d46"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/b99fee04b0314af1bcfa6f809dda6b65/execution.log",
+          "bytes": 605,
+          "sha256": "80ae3c6b243a4ebcfb126bafa553c076df99ccdd5c6bdcc814a95ee3d5f9eb5b"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "rlc_dc",
+      "family": "rlc_network",
+      "fixture": "tests/fixtures/spice_export/rlc_network/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc V_0001 0 5 100m",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": -6.041838036289396e-18
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "50b6f4f4185f5bde1e2724da24e92e152c7a80f2709247bebc0ba54ce8f8e55f",
+      "committed_fixture_sha256": "50b6f4f4185f5bde1e2724da24e92e152c7a80f2709247bebc0ba54ce8f8e55f",
+      "base_sha256": "4e558b40a35a4972342afc1b547b47acb0c1c89f7c132cde8baf8d7555bd66bc",
+      "artifact_sha256": "9edff3d184b9632c4da8fc279304d9bb2f68eecb42aee0fd1b0ffabcaa7ca62b",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/c94007a902084fe0879c2e2f1a18416c/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/c94007a902084fe0879c2e2f1a18416c/execution.raw",
+          "bytes": 3336,
+          "sha256": "23c057a48f7a584219abadee8f56f0158754fd6e2b85c47c2f36fb4856b389be"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/c94007a902084fe0879c2e2f1a18416c/execution.log",
+          "bytes": 605,
+          "sha256": "47e4d449db2b38915544259266be39441be302f3b24ce370c5eb4aa3897fb173"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "rlc_transient",
+      "family": "rlc_network",
+      "fixture": "tests/fixtures/spice_export/rlc_network/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 1.0088175535202026,
+        "Minimum": 0.9912874698638916,
+        "Peak-to-Peak": 0.017530083656311035,
+        "gain_measurements": {
+          "Input Vpp": 0.019999980926513672,
+          "Output Vpp": 0.017425060272216797,
+          "Voltage Gain": 0.8712538445032544,
+          "Voltage Gain (dB)": -1.1971058503523642
+        },
+        "gain_unavailable_reason": "",
+        "periodic_voltage_gain": 0.8712538445032544,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": -1.000000045813705e-18,
+          "last": -4.5811510062776506e-05
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "periodic_voltage_gain",
+          "actual": 0.8712538445032544,
+          "expected": 0.8712514157620073,
+          "rtol": 0.02,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "2919c0322255b1fc8d365e3d3d830e9bb6b0680fd44f9f96822acaaff00963b2",
+      "committed_fixture_sha256": "50b6f4f4185f5bde1e2724da24e92e152c7a80f2709247bebc0ba54ce8f8e55f",
+      "base_sha256": "f9a1460b6b1f524cf56e4c6a6449dcc89ba3e69d2ee0382e4c73f48c5f539e9d",
+      "artifact_sha256": "f8888f6d52d7a602c612a4629ca0810f1785052326aea422f5221b3072b65cb2",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/af2f6babbe2141f7bac3f8ad38e6c688/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/af2f6babbe2141f7bac3f8ad38e6c688/execution.raw",
+          "bytes": 401976,
+          "sha256": "98b6c966783b65423ae35dbf1b021947785f6bbb49139d0e413cd43f44487e82"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/af2f6babbe2141f7bac3f8ad38e6c688/execution.log",
+          "bytes": 636,
+          "sha256": "2cac663dc7cdbf6825c39bbaacb6e0b5460706ef84e8c6eae1921df521274eb4"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "sine_voltage_ac",
+      "family": "sine_voltage",
+      "fixture": "tests/fixtures/spice_export/sine_voltage/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": 0.0,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "source_ac_complex_error": 0.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": -0.002,
+          "last": -0.002
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "source_ac_complex_error",
+          "actual": 0.0,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "9c30884ead0febc376f8c84fe29bb4e13fd3ce99dd7537a1b25a22577f07377d",
+      "committed_fixture_sha256": "9c30884ead0febc376f8c84fe29bb4e13fd3ce99dd7537a1b25a22577f07377d",
+      "base_sha256": "29722cdd4f9b714ee2ff69ad763b74e15b5b57195c385ca6292aba0dba8cdf0b",
+      "artifact_sha256": "2757b5eadbf8c64d57bbf621c8f51e0d60996bf302a142d62f30077749906680",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/3cb5a6569e9942e6a6e0148ddd0d789a/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/3cb5a6569e9942e6a6e0148ddd0d789a/execution.raw",
+          "bytes": 33098,
+          "sha256": "44d57cb50d5f11363da885c8be8f80dd26ac15e662fbaf8653a4decff9bd6147"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/3cb5a6569e9942e6a6e0148ddd0d789a/execution.log",
+          "bytes": 636,
+          "sha256": "4d7b0c7136179c8d80bd7535526576bd39b3791ccceaa05ce9f058e15f241786"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "sine_voltage_transient",
+      "family": "sine_voltage",
+      "fixture": "tests/fixtures/spice_export/sine_voltage/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 0.00999998115003109,
+        "Minimum": -0.00999998115003109,
+        "Peak-to-Peak": 0.01999996230006218,
+        "gain_measurements": {
+          "Input Vpp": 0.01999996230006218,
+          "Output Vpp": 0.01999996230006218,
+          "Voltage Gain": 1.0,
+          "Voltage Gain (dB)": 0.0
+        },
+        "gain_unavailable_reason": "",
+        "output_vpp": 0.01999996230006218,
+        "initial_source_voltage": 0.0,
+        "maximum_source_waveform_error": 4.639504475045797e-10,
+        "periodic_voltage_gain": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 2.4492935875555924e-20
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "output_vpp",
+          "actual": 0.01999996230006218,
+          "expected": 0.02,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "initial_source_voltage",
+          "actual": 0.0,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        },
+        {
+          "measurement": "maximum_source_waveform_error",
+          "actual": 4.639504475045797e-10,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 2e-05,
+          "passed": true
+        },
+        {
+          "measurement": "periodic_voltage_gain",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "9c30884ead0febc376f8c84fe29bb4e13fd3ce99dd7537a1b25a22577f07377d",
+      "committed_fixture_sha256": "9c30884ead0febc376f8c84fe29bb4e13fd3ce99dd7537a1b25a22577f07377d",
+      "base_sha256": "29722cdd4f9b714ee2ff69ad763b74e15b5b57195c385ca6292aba0dba8cdf0b",
+      "artifact_sha256": "462b076f7ac82909f7ef5c43e85ca05998fa68bd01a19409d62cb46daa36b39a",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/79f51a48dcfc4cb18b8a8f66c792a988/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/79f51a48dcfc4cb18b8a8f66c792a988/execution.raw",
+          "bytes": 201374,
+          "sha256": "2d8cb57e398de426b4938aa3d2083a62738c49ad6700c4fcd6459097a5251e37"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/79f51a48dcfc4cb18b8a8f66c792a988/execution.log",
+          "bytes": 636,
+          "sha256": "c61a532f8e0dbfece71a94ec857f9c71b7df4543451dfbd03ebefc961615f9bb"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "sine_voltage_dc",
+      "family": "sine_voltage",
+      "fixture": "tests/fixtures/spice_export/sine_voltage/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc V_0001 0 5 100m",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": -0.004999999888241291
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "9c30884ead0febc376f8c84fe29bb4e13fd3ce99dd7537a1b25a22577f07377d",
+      "committed_fixture_sha256": "9c30884ead0febc376f8c84fe29bb4e13fd3ce99dd7537a1b25a22577f07377d",
+      "base_sha256": "29722cdd4f9b714ee2ff69ad763b74e15b5b57195c385ca6292aba0dba8cdf0b",
+      "artifact_sha256": "3f6b81912ae40e49f063e83336d2f4325ea0de667588c43bd5476c67dbd35d56",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/c8d2a6b0dc214b3eb3da9feb6087c118/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/c8d2a6b0dc214b3eb3da9feb6087c118/execution.raw",
+          "bytes": 2074,
+          "sha256": "65401ca3f0a09efea861e34df65e8e887d4b02069946fe835c0dd4d001b70fb8"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/c8d2a6b0dc214b3eb3da9feb6087c118/execution.log",
+          "bytes": 605,
+          "sha256": "c7e553c7830ff3f77f9bc1a892ee4d32a394b90009bfbb04a03d88789002b67b"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "sine_current_ac",
+      "family": "sine_current",
+      "fixture": "tests/fixtures/spice_export/sine_current/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": 0.0,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "source_ac_complex_error": 0.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": 2.0,
+          "last": 2.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "source_ac_complex_error",
+          "actual": 0.0,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+      "committed_fixture_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+      "base_sha256": "1095e3ea4b2c0617703b2e07a3e1906da80fa366829b5aeaa66af1ca6adcbaad",
+      "artifact_sha256": "347c67fca26461c7da9ceab99d1e17b292b8fbdbb1f0d910c9c2c9b0b180f591",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/a2ebd41510184f969e1c2638155874d2/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/a2ebd41510184f969e1c2638155874d2/execution.raw",
+          "bytes": 33098,
+          "sha256": "7ff1377a2ac2991ecf4705570a20e9f10dd0b66d4a8a77dd339f348fe9968b10"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/a2ebd41510184f969e1c2638155874d2/execution.log",
+          "bytes": 636,
+          "sha256": "7307dec753112ccae54d5a2a9ba762258beff850b73cf23915720e98c4c4fa5e"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "sine_current_transient",
+      "family": "sine_current",
+      "fixture": "tests/fixtures/spice_export/sine_current/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 9.999980926513672,
+        "Minimum": -9.999980926513672,
+        "Peak-to-Peak": 19.999961853027344,
+        "gain_measurements": {
+          "Input Vpp": 19.999961853027344,
+          "Output Vpp": 19.999961853027344,
+          "Voltage Gain": 1.0,
+          "Voltage Gain (dB)": 0.0
+        },
+        "gain_unavailable_reason": "",
+        "output_vpp": 19.999961853027344,
+        "initial_source_voltage": 0.0,
+        "maximum_source_waveform_error": 4.756064981847885e-07,
+        "periodic_voltage_gain": 1.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": 0.0,
+          "last": -2.4492935397342132e-17
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "output_vpp",
+          "actual": 19.999961853027344,
+          "expected": 20.0,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "initial_source_voltage",
+          "actual": 0.0,
+          "expected": -0.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        },
+        {
+          "measurement": "maximum_source_waveform_error",
+          "actual": 4.756064981847885e-07,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 0.02,
+          "passed": true
+        },
+        {
+          "measurement": "periodic_voltage_gain",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+      "committed_fixture_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+      "base_sha256": "1095e3ea4b2c0617703b2e07a3e1906da80fa366829b5aeaa66af1ca6adcbaad",
+      "artifact_sha256": "65ddd9c18063e0dce5dd000f4cf051330ce1df42454aba055784ccad9a4f5d61",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/8ba68eb9ce99463b9ae096b4e8bba4b8/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/8ba68eb9ce99463b9ae096b4e8bba4b8/execution.raw",
+          "bytes": 201374,
+          "sha256": "4c9552a2256e94e3fabca181cbf6bac59a10aa0926f78392b8bb20e0b02898be"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/8ba68eb9ce99463b9ae096b4e8bba4b8/execution.log",
+          "bytes": 636,
+          "sha256": "b5e271bd4761a46bcb390f65154469d3d6f66196e8bf44bb0a31c0aa8669fd12"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "sine_current_dc",
+      "family": "sine_current",
+      "fixture": "tests/fixtures/spice_export/sine_current/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc I_0001 -1m 1m 100u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": -1.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": -0.0010000000474974513,
+          "last": 0.0010000000474974513
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": -1.0,
+          "expected": -1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+      "committed_fixture_sha256": "cd45c545e98f15a9a7b04bb175f77411d5d4a8fa00404112c22e5df0b87cc7b1",
+      "base_sha256": "1095e3ea4b2c0617703b2e07a3e1906da80fa366829b5aeaa66af1ca6adcbaad",
+      "artifact_sha256": "0d655f84265ce3a7b6506917e3ed1167179e6dab7689ada04e5cc4b385787c5f",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/9e6e9fafa8524d168c26bc7d6d4d71b7/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/9e6e9fafa8524d168c26bc7d6d4d71b7/execution.raw",
+          "bytes": 1474,
+          "sha256": "7437b0c41b2cb6a0891d989940ee1890c3a3be26044bd8825f4331f37bdc4da8"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/9e6e9fafa8524d168c26bc7d6d4d71b7/execution.log",
+          "bytes": 605,
+          "sha256": "bb10bf28fa8f80ba1e683462c42cb08049a89adec844e870f8c366cd35f9c2d9"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pulse_voltage_ac",
+      "family": "pulse_voltage",
+      "fixture": "tests/fixtures/spice_export/pulse_voltage/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": 0.0,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "source_ac_complex_error": 0.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": -0.002,
+          "last": -0.002
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "source_ac_complex_error",
+          "actual": 0.0,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "378511c398cc0fbc3d1f937ea9c1510580a56e89024d0c7fd9c3e08ce94d0434",
+      "committed_fixture_sha256": "378511c398cc0fbc3d1f937ea9c1510580a56e89024d0c7fd9c3e08ce94d0434",
+      "base_sha256": "79bc3dbfb01147fc7c23e5ced871484082d5156c145d3941aa1351de922438f8",
+      "artifact_sha256": "e0ca6b172afdc5728424130d4a6b005678180e5f8513291d2cbc8407b41258e7",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/079ec1e14199468da2c4692c71882a44/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/079ec1e14199468da2c4692c71882a44/execution.raw",
+          "bytes": 33098,
+          "sha256": "27fb4c4294fd2bd844adbf164c30021017d04d681b5eea1141628891eb826397"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/079ec1e14199468da2c4692c71882a44/execution.log",
+          "bytes": 636,
+          "sha256": "c55f5cbd666f6809c54467da32e36d742107b361cd5bc4e8d96244c00b05a6ca"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pulse_voltage_transient",
+      "family": "pulse_voltage",
+      "fixture": "tests/fixtures/spice_export/pulse_voltage/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 1.0,
+        "Minimum": -1.0,
+        "Peak-to-Peak": 2.0,
+        "gain_measurements": {},
+        "gain_unavailable_reason": "Input/output do not show at least three complete, stable cycles with matching periods.",
+        "output_vpp": 2.0,
+        "initial_source_voltage": -1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0010000000474974513,
+          "last": 0.0010000000474974513
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "output_vpp",
+          "actual": 2.0,
+          "expected": 2.0,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "initial_source_voltage",
+          "actual": -1.0,
+          "expected": -1.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "378511c398cc0fbc3d1f937ea9c1510580a56e89024d0c7fd9c3e08ce94d0434",
+      "committed_fixture_sha256": "378511c398cc0fbc3d1f937ea9c1510580a56e89024d0c7fd9c3e08ce94d0434",
+      "base_sha256": "79bc3dbfb01147fc7c23e5ced871484082d5156c145d3941aa1351de922438f8",
+      "artifact_sha256": "b92c7406ca4b3188e01fe310198529b29fedee4ecc033adb10d2674167130f1e",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/712c40b85edf468aa1a65c1f62bc2f8d/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/712c40b85edf468aa1a65c1f62bc2f8d/execution.raw",
+          "bytes": 201394,
+          "sha256": "26ae13b406ac80bd32685afcd491788f40aa2339fa203f36532129389ad16fc3"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/712c40b85edf468aa1a65c1f62bc2f8d/execution.log",
+          "bytes": 636,
+          "sha256": "99dd4694f60c5c461d6641e4d7f2fb9488e3c8a4892f5df32426cfd42db6d196"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pulse_voltage_dc",
+      "family": "pulse_voltage",
+      "fixture": "tests/fixtures/spice_export/pulse_voltage/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc V_0001 0 5 100m",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": -0.004999999888241291
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "378511c398cc0fbc3d1f937ea9c1510580a56e89024d0c7fd9c3e08ce94d0434",
+      "committed_fixture_sha256": "378511c398cc0fbc3d1f937ea9c1510580a56e89024d0c7fd9c3e08ce94d0434",
+      "base_sha256": "79bc3dbfb01147fc7c23e5ced871484082d5156c145d3941aa1351de922438f8",
+      "artifact_sha256": "10348366026f8f757fff83e7ca2b077c4bd27f512c5eab57d04c24069de20a1e",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/fc4a0155e0274b8296e3a4beb6448389/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/fc4a0155e0274b8296e3a4beb6448389/execution.raw",
+          "bytes": 2074,
+          "sha256": "f3fb036e59757be4ac037412c224fd9a82be636314cae44dd8e1a9d9fcb2932c"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/fc4a0155e0274b8296e3a4beb6448389/execution.log",
+          "bytes": 605,
+          "sha256": "36f5d159089b74685f68c7f66921277d7d1fd069aa86eec6b5921a14edf92e4c"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pulse_current_ac",
+      "family": "pulse_current",
+      "fixture": "tests/fixtures/spice_export/pulse_current/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": 0.0,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "source_ac_complex_error": 0.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": 2.0,
+          "last": 2.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "source_ac_complex_error",
+          "actual": 0.0,
+          "expected": 0.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+      "committed_fixture_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+      "base_sha256": "068900e9c71bfb3937fefb6c400232ddb1103a5d65b3a136a27f61c3add6801c",
+      "artifact_sha256": "5859e2e277ebaddc42a3d8b8a1f73c12e089ae402ad13c02ccc15934b3ede08d",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/1227b7928aa4461a84101dd30cfabf5d/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/1227b7928aa4461a84101dd30cfabf5d/execution.raw",
+          "bytes": 33098,
+          "sha256": "6a043d1c8cbc7074eedab3e313d0c24f36aaf50ac1679bbbc38c683163562acf"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/1227b7928aa4461a84101dd30cfabf5d/execution.log",
+          "bytes": 636,
+          "sha256": "c4f4056fb796aa5bae7916965efb531889090f95b3e471d9e48bf3550f59d9ef"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pulse_current_transient",
+      "family": "pulse_current",
+      "fixture": "tests/fixtures/spice_export/pulse_current/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 1000.0,
+        "Minimum": -1000.0,
+        "Peak-to-Peak": 2000.0,
+        "gain_measurements": {},
+        "gain_unavailable_reason": "Input/output do not show at least three complete, stable cycles with matching periods.",
+        "output_vpp": 2000.0,
+        "initial_source_voltage": 1000.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": -1.0,
+          "last": -1.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "output_vpp",
+          "actual": 2000.0,
+          "expected": 2000.0,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "initial_source_voltage",
+          "actual": 1000.0,
+          "expected": 1000.0,
+          "rtol": 0.005,
+          "atol": 1e-06,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+      "committed_fixture_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+      "base_sha256": "068900e9c71bfb3937fefb6c400232ddb1103a5d65b3a136a27f61c3add6801c",
+      "artifact_sha256": "1eb781142927e2fd2baa00a8231037a71a49594a4394f2a9ef6047d8514e8cb1",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/ae4d311585ae46db893af275944e2757/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/ae4d311585ae46db893af275944e2757/execution.raw",
+          "bytes": 201394,
+          "sha256": "27543983ab364abb48fd36301714c304a3f5f75abf1db01920dea56b1541291a"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/ae4d311585ae46db893af275944e2757/execution.log",
+          "bytes": 636,
+          "sha256": "7c50a52f0604383531b60a58c2baf62578f084c9fc2aecaa34069d2f49e1d3fc"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pulse_current_dc",
+      "family": "pulse_current",
+      "fixture": "tests/fixtures/spice_export/pulse_current/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc I_0001 -1m 1m 100u",
+      "trace_map": [
+        [
+          "target_net",
+          "vin",
+          "V(n_0001)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": -1.0,
+        "current_probe": {
+          "ir_id": "I1",
+          "raw_trace": "I(I_0001)",
+          "first": -0.0010000000474974513,
+          "last": 0.0010000000474974513
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": -1.0,
+          "expected": -1.0,
+          "rtol": 0.005,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [],
+      "source_json_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+      "committed_fixture_sha256": "198d62badb58a49d54fecd995f39767b83c49da556cd91d62518db2b56f2843f",
+      "base_sha256": "068900e9c71bfb3937fefb6c400232ddb1103a5d65b3a136a27f61c3add6801c",
+      "artifact_sha256": "6d9d6543736f3a0d6bb8670a767ecde679d3f321bce62d9d8b800a6c00e79676",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/ebb0e77fbff04c6aae3fec6e29468145/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/ebb0e77fbff04c6aae3fec6e29468145/execution.raw",
+          "bytes": 1474,
+          "sha256": "cbb53088a9228382c1e89baae2c69c111fb2cefb9400024543330ac1a4ed2f84"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/ebb0e77fbff04c6aae3fec6e29468145/execution.log",
+          "bytes": 605,
+          "sha256": "9c81a52c0ae74ed36287e537343a18e1e1b4c674c08e489b5fda4c045623ef5a"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "nmos_common_source_dc",
+      "family": "nmos_common_source",
+      "fixture": "tests/fixtures/spice_export/nmos_common_source/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc V_0001 0 5 100m",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": 4.455445766448975,
+        "resistor_load_current_at_bias": 0.0005445544375106692,
+        "load_current_trace": "I(R_0001)",
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 0.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": 4.455445766448975,
+          "expected": 4.455445544554456,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "resistor_load_current_at_bias",
+          "actual": 0.0005445544375106692,
+          "expected": 0.0005445544554455446,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [
+        "Instance \"M_0001\": Length shorter than recommended for a level 1 MOSFET."
+      ],
+      "source_json_sha256": "427a67389fdcd96e3cfdd5452ef0b2b6c1388040a5f7dce47f8cd0aa3bbb3a20",
+      "committed_fixture_sha256": "427a67389fdcd96e3cfdd5452ef0b2b6c1388040a5f7dce47f8cd0aa3bbb3a20",
+      "base_sha256": "e17b256023fe1d783b2c5d567c2ff2725349b9d2f545e99eb0d5ebe074ab415f",
+      "artifact_sha256": "8310572e278f47e41fc9b0c1889bb4a1c7d3f2b7534f7f7e1d4fa1fa5cc5881f",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/6e742db3d63e4e0caec521133c1fe9ca/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/6e742db3d63e4e0caec521133c1fe9ca/execution.raw",
+          "bytes": 3878,
+          "sha256": "de17fec986f0e808128d69bd3fb4be6488da6a738e147faaa6260e0db44552c9"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/6e742db3d63e4e0caec521133c1fe9ca/execution.log",
+          "bytes": 647,
+          "sha256": "13274dd55375c4386dcc50a0d767db10121f761b50b8bbbe309cc085f8b410af"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "nmos_common_source_dc_reference",
+      "family": "MOS authored reference",
+      "fixture": "tests/fixtures/spice_export/nmos_common_source/expected.cir",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F reference evidence)",
+      "simulator_exit_code": 0,
+      "exit_code_source": "M2F harness required overall SUCCESS; LOG/RAW re-read, no standalone task record",
+      "measurements": {
+        "maximum_sample_error": 0.0
+      },
+      "comparisons": [
+        {
+          "measurement": "target_samples",
+          "expected": "Equivalent independently authored device/model body on same simulator",
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "artifact_sha256": "8310572e278f47e41fc9b0c1889bb4a1c7d3f2b7534f7f7e1d4fa1fa5cc5881f",
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/0f08343921254667b9037270ef9a9fae/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/0f08343921254667b9037270ef9a9fae/execution.raw",
+          "bytes": 3878,
+          "sha256": "93918299cd563a224744112104c44997734af8377e48bff9fa3b5e9aa09b312f"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/0f08343921254667b9037270ef9a9fae/execution.log",
+          "bytes": 647,
+          "sha256": "285752f6f09219965dff6a589e98276900b609138b915804fb0e411c410b4c63"
+        }
+      }
+    },
+    {
+      "case_id": "nmos_common_source_ac",
+      "family": "nmos_common_source",
+      "fixture": "tests/fixtures/spice_export/nmos_common_source/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0002)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": 0.6549987418500733,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "finite_gain": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 0.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "finite_gain",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0,
+          "atol": 0,
+          "passed": true
+        },
+        {
+          "measurement": "common_source_inversion",
+          "passed": true
+        }
+      ],
+      "warnings": [
+        "Instance \"M_0001\": Length shorter than recommended for a level 1 MOSFET."
+      ],
+      "source_json_sha256": "d1c16433380ad4395fb28bf445bcba62f7ff793fce50d6945836fbbd1edd5618",
+      "committed_fixture_sha256": "427a67389fdcd96e3cfdd5452ef0b2b6c1388040a5f7dce47f8cd0aa3bbb3a20",
+      "base_sha256": "394089d0c1084fa1db29deddc11cdcb1cde27a422e418aa0bf0cfc55c54f699b",
+      "artifact_sha256": "d68f8ca021967ce71859a504b5dabc9b9cc23fbbf9243fdc43bc27ea674bfe3e",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/9ccd9442a9a843448544e193c64a6e05/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/9ccd9442a9a843448544e193c64a6e05/execution.raw",
+          "bytes": 89586,
+          "sha256": "fa198075bf5023b3cab899a4fc653d98d43155d2b2d91c9e3946fc406692e039"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/9ccd9442a9a843448544e193c64a6e05/execution.log",
+          "bytes": 709,
+          "sha256": "d86dd576a0565e154908dd9ca936bd35ad2eb59dea07f83a448bc5bc1cac2318"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "nmos_common_source_ac_reference",
+      "family": "MOS authored reference",
+      "fixture": "tests/fixtures/spice_export/nmos_common_source/expected.cir",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F reference evidence)",
+      "simulator_exit_code": 0,
+      "exit_code_source": "M2F harness required overall SUCCESS; LOG/RAW re-read, no standalone task record",
+      "measurements": {
+        "maximum_sample_error": 0.0
+      },
+      "comparisons": [
+        {
+          "measurement": "target_samples",
+          "expected": "Equivalent independently authored device/model body on same simulator",
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "artifact_sha256": "d68f8ca021967ce71859a504b5dabc9b9cc23fbbf9243fdc43bc27ea674bfe3e",
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/299f55898aab4d85bc86763b5a4578c6/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/299f55898aab4d85bc86763b5a4578c6/execution.raw",
+          "bytes": 89586,
+          "sha256": "1df2cfb2ac538771db1e68dc22545ed9fde58a02aa80d894e9bad6e6ef5b56a7"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/299f55898aab4d85bc86763b5a4578c6/execution.log",
+          "bytes": 709,
+          "sha256": "342d6cdaa08e96671220fdb2145b5a8905b61b4ddf23fd3a47cb3835dd2c5769"
+        }
+      }
+    },
+    {
+      "case_id": "nmos_common_source_transient",
+      "family": "nmos_common_source",
+      "fixture": "tests/fixtures/spice_export/nmos_common_source/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0002)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 4.466176986694336,
+        "Minimum": 4.444610595703125,
+        "Peak-to-Peak": 0.021566390991210938,
+        "gain_measurements": {
+          "Input Vpp": 0.019999980926513672,
+          "Output Vpp": 0.021566390991210938,
+          "Voltage Gain": 1.078320577927187,
+          "Voltage Gain (dB)": 0.654957861306683
+        },
+        "gain_unavailable_reason": "",
+        "finite_gain": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 0.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "finite_gain",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0,
+          "atol": 0,
+          "passed": true
+        }
+      ],
+      "warnings": [
+        "Instance \"M_0001\": Length shorter than recommended for a level 1 MOSFET."
+      ],
+      "source_json_sha256": "d1c16433380ad4395fb28bf445bcba62f7ff793fce50d6945836fbbd1edd5618",
+      "committed_fixture_sha256": "427a67389fdcd96e3cfdd5452ef0b2b6c1388040a5f7dce47f8cd0aa3bbb3a20",
+      "base_sha256": "394089d0c1084fa1db29deddc11cdcb1cde27a422e418aa0bf0cfc55c54f699b",
+      "artifact_sha256": "ca9d882921b8180f980f1e3b25e0b40471c4d71573d9823248a4ca45f0f98bcf",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/2e3fadf3b3264a4c88b078fafc45bfff/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/2e3fadf3b3264a4c88b078fafc45bfff/execution.raw",
+          "bytes": 482254,
+          "sha256": "b83aa30db3a7abe155a86022840b7b4e2b4950d79821e11e8a44269a38460810"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/2e3fadf3b3264a4c88b078fafc45bfff/execution.log",
+          "bytes": 709,
+          "sha256": "66aa25bafd7781efd71c0188fbb683a3a40ec842272ba2a9307369522ed176a5"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "nmos_common_source_transient_reference",
+      "family": "MOS authored reference",
+      "fixture": "tests/fixtures/spice_export/nmos_common_source/expected.cir",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F reference evidence)",
+      "simulator_exit_code": 0,
+      "exit_code_source": "M2F harness required overall SUCCESS; LOG/RAW re-read, no standalone task record",
+      "measurements": {
+        "maximum_sample_error": 0.0
+      },
+      "comparisons": [
+        {
+          "measurement": "target_samples",
+          "expected": "Equivalent independently authored device/model body on same simulator",
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "artifact_sha256": "ca9d882921b8180f980f1e3b25e0b40471c4d71573d9823248a4ca45f0f98bcf",
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/9af8ab8783c54d808d70146538cb0668/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/9af8ab8783c54d808d70146538cb0668/execution.raw",
+          "bytes": 482254,
+          "sha256": "c8a82e0a9fd78dab277258bba919822db65a324577ad3b18f2fdda1e6799093e"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/9af8ab8783c54d808d70146538cb0668/execution.log",
+          "bytes": 709,
+          "sha256": "c0dc50cdd11706c20e927160dd12c83056519e712d1e3d2976151d6daa31675f"
+        }
+      }
+    },
+    {
+      "case_id": "pmos_resistive_load_dc",
+      "family": "pmos_resistive_load",
+      "fixture": "tests/fixtures/spice_export/pmos_resistive_load/circuit.json",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".dc V_0001 0 5 100m",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ]
+      ],
+      "measurements": {
+        "value_at_point": 0.5445544719696045,
+        "resistor_load_current_at_bias": 0.0005445544375106692,
+        "load_current_trace": "I(R_0001)",
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 0.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "value_at_point",
+          "actual": 0.5445544719696045,
+          "expected": 0.5445544554455446,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        },
+        {
+          "measurement": "resistor_load_current_at_bias",
+          "actual": 0.0005445544375106692,
+          "expected": 0.0005445544554455446,
+          "rtol": 0.01,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "warnings": [
+        "Instance \"M_0001\": Length shorter than recommended for a level 1 MOSFET."
+      ],
+      "source_json_sha256": "34b16b6bcfa7fc39c929d27d4f2afb565f1efbbb8fe3504b9324cf967055942d",
+      "committed_fixture_sha256": "34b16b6bcfa7fc39c929d27d4f2afb565f1efbbb8fe3504b9324cf967055942d",
+      "base_sha256": "a7d72e32497ce28d3d53ac53db3ba226e29d4bb504c8833d301acf506c749a1c",
+      "artifact_sha256": "044b3bb49dc8a189aa81ec3fe7b5e7814580525e18c10cae04a64c6b7450824d",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/e6f08876a22243669d7cc6c7131dc863/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/e6f08876a22243669d7cc6c7131dc863/execution.raw",
+          "bytes": 3878,
+          "sha256": "8033c99c50ad7c24f558182876787f06df2572779987f530c9c1f0a6bf881740"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/e6f08876a22243669d7cc6c7131dc863/execution.log",
+          "bytes": 647,
+          "sha256": "3cc135fcedb5f6397701aed1dac0320e2da401ab29722b8cdbdc172cf14ead28"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pmos_resistive_load_dc_reference",
+      "family": "MOS authored reference",
+      "fixture": "tests/fixtures/spice_export/pmos_resistive_load/expected.cir",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F reference evidence)",
+      "simulator_exit_code": 0,
+      "exit_code_source": "M2F harness required overall SUCCESS; LOG/RAW re-read, no standalone task record",
+      "measurements": {
+        "maximum_sample_error": 0.0
+      },
+      "comparisons": [
+        {
+          "measurement": "target_samples",
+          "expected": "Equivalent independently authored device/model body on same simulator",
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "artifact_sha256": "044b3bb49dc8a189aa81ec3fe7b5e7814580525e18c10cae04a64c6b7450824d",
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/1d4272dc7c3446e0a47f48989d2c23d1/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/1d4272dc7c3446e0a47f48989d2c23d1/execution.raw",
+          "bytes": 3878,
+          "sha256": "15291a2107e83a7a6d40aa9fd302a303868f0ed668a974b12dedfe0a1ed9a3c0"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/1d4272dc7c3446e0a47f48989d2c23d1/execution.log",
+          "bytes": 647,
+          "sha256": "5cb486a2a1219c615713a35eb723136a34c522886614bc12cf760a5d6780cd94"
+        }
+      }
+    },
+    {
+      "case_id": "pmos_resistive_load_ac",
+      "family": "pmos_resistive_load",
+      "fixture": "tests/fixtures/spice_export/pmos_resistive_load/circuit.json",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".ac dec 100 10 1Meg",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0002)"
+        ]
+      ],
+      "measurements": {
+        "gain_db": 0.6549987418500733,
+        "bandwidth_hz": null,
+        "bandwidth_status": "Not found within sweep range",
+        "finite_gain": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 0.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "finite_gain",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0,
+          "atol": 0,
+          "passed": true
+        },
+        {
+          "measurement": "common_source_inversion",
+          "passed": true
+        }
+      ],
+      "warnings": [
+        "Instance \"M_0001\": Length shorter than recommended for a level 1 MOSFET."
+      ],
+      "source_json_sha256": "0827c01daaf25cc31e1b8c110686c24a46fbe47321bab5ff9d91138f90d15ce3",
+      "committed_fixture_sha256": "34b16b6bcfa7fc39c929d27d4f2afb565f1efbbb8fe3504b9324cf967055942d",
+      "base_sha256": "3d4082b245d444a1a44b58ee8685a892f187b2b9abf3b482d3e5ec94fcf9287a",
+      "artifact_sha256": "7da618e959d9e09c24864df1ccbed508d6492deedff122722fba66136f06c7c2",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/1756489a5164431b9c580f865a156dc3/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/1756489a5164431b9c580f865a156dc3/execution.raw",
+          "bytes": 89586,
+          "sha256": "d5b7414ff960d67aef90b0459351a5f8fb290df0bc50193cdeed94bd28c614bb"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/1756489a5164431b9c580f865a156dc3/execution.log",
+          "bytes": 709,
+          "sha256": "9a212f7834c39c793d87523de47a81266e5272378917f966675e329e7e787b3e"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pmos_resistive_load_ac_reference",
+      "family": "MOS authored reference",
+      "fixture": "tests/fixtures/spice_export/pmos_resistive_load/expected.cir",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F reference evidence)",
+      "simulator_exit_code": 0,
+      "exit_code_source": "M2F harness required overall SUCCESS; LOG/RAW re-read, no standalone task record",
+      "measurements": {
+        "maximum_sample_error": 0.0
+      },
+      "comparisons": [
+        {
+          "measurement": "target_samples",
+          "expected": "Equivalent independently authored device/model body on same simulator",
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "artifact_sha256": "7da618e959d9e09c24864df1ccbed508d6492deedff122722fba66136f06c7c2",
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/3800f3d71f754f418d8775feb76589da/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/3800f3d71f754f418d8775feb76589da/execution.raw",
+          "bytes": 89586,
+          "sha256": "4d88de59ae07efa86514495e9e108384a66115308efc55ca3de46e1f28529a80"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/3800f3d71f754f418d8775feb76589da/execution.log",
+          "bytes": 709,
+          "sha256": "7e18ff19f0b995c7f1eb842b7115f5b0e380ca05bf7440905fc534aefbf1ce25"
+        }
+      }
+    },
+    {
+      "case_id": "pmos_resistive_load_transient",
+      "family": "pmos_resistive_load",
+      "fixture": "tests/fixtures/spice_export/pmos_resistive_load/circuit.json",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F evidence re-read; no new simulation)",
+      "simulator_exit_code": 0,
+      "directive": ".tran 0 10m 0 1u",
+      "trace_map": [
+        [
+          "target_net",
+          "vout",
+          "V(n_0003)"
+        ],
+        [
+          "reference_net",
+          "vin",
+          "V(n_0002)"
+        ]
+      ],
+      "measurements": {
+        "Maximum": 0.5553894639015198,
+        "Minimum": 0.5338230133056641,
+        "Peak-to-Peak": 0.021566450595855713,
+        "gain_measurements": {
+          "Input Vpp": 0.019999980926513672,
+          "Output Vpp": 0.021566450595855713,
+          "Voltage Gain": 1.0783235581622679,
+          "Voltage Gain (dB)": 0.6549818671151288
+        },
+        "gain_unavailable_reason": "",
+        "finite_gain": 1.0,
+        "current_probe": {
+          "ir_id": "V1",
+          "raw_trace": "I(V_0001)",
+          "first": 0.0,
+          "last": 0.0
+        }
+      },
+      "comparisons": [
+        {
+          "measurement": "finite_gain",
+          "actual": 1.0,
+          "expected": 1.0,
+          "rtol": 0,
+          "atol": 0,
+          "passed": true
+        }
+      ],
+      "warnings": [
+        "Instance \"M_0001\": Length shorter than recommended for a level 1 MOSFET."
+      ],
+      "source_json_sha256": "0827c01daaf25cc31e1b8c110686c24a46fbe47321bab5ff9d91138f90d15ce3",
+      "committed_fixture_sha256": "34b16b6bcfa7fc39c929d27d4f2afb565f1efbbb8fe3504b9324cf967055942d",
+      "base_sha256": "3d4082b245d444a1a44b58ee8685a892f187b2b9abf3b482d3e5ec94fcf9287a",
+      "artifact_sha256": "b8ff4b542f0be81a71eb1ad53752904ab6895fdec6e106250b51295c7f180902",
+      "source_and_artifact_preserved": true,
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/647f54b56d5d4509bbe7154519aa6ab7/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/647f54b56d5d4509bbe7154519aa6ab7/execution.raw",
+          "bytes": 482254,
+          "sha256": "7db3a787516b44a451ce51cc7d5e4d002befc927ba1bffb08bf7578584adbf1e"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/647f54b56d5d4509bbe7154519aa6ab7/execution.log",
+          "bytes": 709,
+          "sha256": "24ac843707cbaeac7500d8727c909d23ed27007b8902d50fe10f53a36a2a33ca"
+        }
+      },
+      "reinspection": "Exact copies/digests, RAW mode/axis/mapped traces, recorded measurements and declared comparisons verified."
+    },
+    {
+      "case_id": "pmos_resistive_load_transient_reference",
+      "family": "MOS authored reference",
+      "fixture": "tests/fixtures/spice_export/pmos_resistive_load/expected.cir",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F reference evidence)",
+      "simulator_exit_code": 0,
+      "exit_code_source": "M2F harness required overall SUCCESS; LOG/RAW re-read, no standalone task record",
+      "measurements": {
+        "maximum_sample_error": 0.0
+      },
+      "comparisons": [
+        {
+          "measurement": "target_samples",
+          "expected": "Equivalent independently authored device/model body on same simulator",
+          "rtol": 1e-06,
+          "atol": 1e-08,
+          "passed": true
+        }
+      ],
+      "artifact_sha256": "b8ff4b542f0be81a71eb1ad53752904ab6895fdec6e106250b51295c7f180902",
+      "working_file": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_input/4a40d704055545babbc2f5c19c4c2606/m2/execution.cir",
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/4a40d704055545babbc2f5c19c4c2606/execution.raw",
+          "bytes": 482254,
+          "sha256": "bef6015d3a36935fab94d54785578433cc0d80dad59044e12441dd729f129619"
+        },
+        "log": {
+          "path": "simulation_output/m2f-validation/4203463bacf54472af46b1c8f3d347d0 smoke workspace/simulation_output/4a40d704055545babbc2f5c19c4c2606/execution.log",
+          "bytes": 709,
+          "sha256": "f14ea2639346755a6189793d2c5fbc9ed9aafdfcd5d27311c120a5d3786b8d94"
+        }
+      }
+    },
+    {
+      "case_id": "v01_asc_ac",
+      "family": "v0.1 ASC regression",
+      "fixture": "examples/common_source_amplifier/common_source_amplifier.asc",
+      "analysis": "AC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F ASC smoke re-read)",
+      "simulator_exit_code": null,
+      "exit_code_source": "Not separately recorded for ASC; unchanged wrapper required completion and readable output",
+      "directive": ".ac dec 100 10 1Meg",
+      "measurements": {
+        "gain_db": 12.943483351570727,
+        "bandwidth_hz": 8255.964074877482
+      },
+      "comparisons": [],
+      "comparison_scope": "Finite results/source-preserving smoke; no new theoretical tolerance asserted.",
+      "source_sha256": "5736eb12ba0e4526381c89eb67a99d00150739c13d29954eeba2aa6c6e2338af",
+      "source_preserved": true,
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/278e430a384343bbacc05bf2acdd1f7c/common_source_amplifier_1.raw",
+          "bytes": 97478,
+          "sha256": "8c51b616ea96175d607dc759bf526badad26678c54755c081c55ea5cd543ff87"
+        },
+        "log": {
+          "path": "simulation_output/278e430a384343bbacc05bf2acdd1f7c/common_source_amplifier_1.log",
+          "bytes": 653,
+          "sha256": "7b54384ee7f5148c166a98f1612d3af11de31312555b7b53a1273fd4bf7095f5"
+        }
+      }
+    },
+    {
+      "case_id": "v01_asc_tran",
+      "family": "v0.1 ASC regression",
+      "fixture": "examples/common_source_amplifier/common_source_amplifier.asc",
+      "analysis": "TRAN",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F ASC smoke re-read)",
+      "simulator_exit_code": null,
+      "exit_code_source": "Not separately recorded for ASC; unchanged wrapper required completion and readable output",
+      "directive": ".tran 0 10m 5m 2u",
+      "measurements": {
+        "Input Vpp": 0.009999752044677734,
+        "Output Vpp": 0.04405784606933594,
+        "Voltage Gain": 4.4058938534166225,
+        "Voltage Gain (dB)": 12.880680598779154
+      },
+      "comparisons": [],
+      "comparison_scope": "Finite results/source-preserving smoke; no new theoretical tolerance asserted.",
+      "source_sha256": "5736eb12ba0e4526381c89eb67a99d00150739c13d29954eeba2aa6c6e2338af",
+      "source_preserved": true,
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/6e10e412228d44a994b5b8875198fe36/common_source_amplifier_1.raw",
+          "bytes": 131474,
+          "sha256": "e09ff0362dc928e0b466d0d33a2ca8110eed8f519fcc0b912a200d0f2d199072"
+        },
+        "log": {
+          "path": "simulation_output/6e10e412228d44a994b5b8875198fe36/common_source_amplifier_1.log",
+          "bytes": 653,
+          "sha256": "02059c054df12c25fd94ee96efbfc4a67028c5e17dafbf53ca9445a915198f91"
+        }
+      }
+    },
+    {
+      "case_id": "v01_asc_dc",
+      "family": "v0.1 ASC regression",
+      "fixture": "examples/common_source_amplifier/common_source_amplifier.asc",
+      "analysis": "DC",
+      "status": "PASS",
+      "verification": "VERIFIED LOCALLY (preserved M2F ASC smoke re-read)",
+      "simulator_exit_code": null,
+      "exit_code_source": "Not separately recorded for ASC; unchanged wrapper required completion and readable output",
+      "directive": ".dc V1 1.8 2.2 10m",
+      "measurements": {
+        "value_at_gate_2V": 7.692307472229004
+      },
+      "comparisons": [],
+      "comparison_scope": "Finite results/source-preserving smoke; no new theoretical tolerance asserted.",
+      "source_sha256": "5736eb12ba0e4526381c89eb67a99d00150739c13d29954eeba2aa6c6e2338af",
+      "source_preserved": true,
+      "evidence": {
+        "raw": {
+          "path": "simulation_output/7397d8cb7cc64d90838028a313d58658/common_source_amplifier_1.raw",
+          "bytes": 3430,
+          "sha256": "5737d38d2329dc3ce6facff0d8ac77547e15cc38d7bce82f05fa10c41bc02603"
+        },
+        "log": {
+          "path": "simulation_output/7397d8cb7cc64d90838028a313d58658/common_source_amplifier_1.log",
+          "bytes": 591,
+          "sha256": "593e6a11573e48fd8f55ddc2d0c59039cec7ad69d12508ed4f61af5c1779f5a5"
+        }
+      }
+    }
+  ]
+}
