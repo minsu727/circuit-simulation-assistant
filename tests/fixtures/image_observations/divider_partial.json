@@ -1,0 +1,203 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "95aca0ed021d0de58deda85eea7fef5282a81da9534e25600482e13dd1b4575b",
+    "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+    "normalized_sha256": "8691369c3fa5ce9605f6761a745a47a08569d591615264ca5dfcec6bf2490d54",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "R1",
+      "kind": "symbol",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": [
+          445,
+          160,
+          70,
+          40
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "value",
+      "kind": "text",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": [
+          480,
+          118,
+          70,
+          28
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "1k Ω",
+        "purpose": "value",
+        "component_ref": "R1",
+        "value": {
+          "raw_scalar": "1k",
+          "raw_unit": "Ω",
+          "notation": "printed_engineering",
+          "unit": "ohm",
+          "si_value": "1000"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "pin_a",
+      "kind": "pin",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            450,
+            180
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R1",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "wire_a",
+      "kind": "wire_segment",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            180,
+            180
+          ],
+          [
+            449,
+            180
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [
+          "incomplete_wire"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "contact",
+      "kind": "contact_candidate",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": null,
+      "data": {
+        "refs": [
+          "pin_a",
+          "wire_a"
+        ],
+        "interpretation": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "contact_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": [
+          {
+            "id": "touch",
+            "data": {
+              "refs": [
+                "pin_a",
+                "wire_a"
+              ],
+              "interpretation": "touching"
+            }
+          },
+          {
+            "id": "gap",
+            "data": {
+              "refs": [
+                "pin_a",
+                "wire_a"
+              ],
+              "interpretation": "separated"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

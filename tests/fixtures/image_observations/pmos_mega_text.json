@@ -1,0 +1,123 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "e55271e15bc9bd97e4091f504c7e3b68b23c57b66c5a1810920441fc55380b3e",
+    "source_sha256": "089db5cb56e217ad21cd24d06c760fb28351dd396b59a00d75ac9b98d9dcaf62",
+    "normalized_sha256": "d79a066b450f3ffd144aaf97db0461ec9a15dfc1fc50084f793087fbd22dcc74",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "M1",
+      "kind": "symbol",
+      "source_sha256": "089db5cb56e217ad21cd24d06c760fb28351dd396b59a00d75ac9b98d9dcaf62",
+      "geometry": {
+        "bbox": [
+          10,
+          10,
+          40,
+          20
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "pmos",
+        "observed_name": "pmos",
+        "reference_text": "M1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "drain",
+      "kind": "pin",
+      "source_sha256": "089db5cb56e217ad21cd24d06c760fb28351dd396b59a00d75ac9b98d9dcaf62",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            30,
+            10
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "M1",
+        "role": "drain"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "resistance",
+      "kind": "text",
+      "source_sha256": "089db5cb56e217ad21cd24d06c760fb28351dd396b59a00d75ac9b98d9dcaf62",
+      "geometry": {
+        "bbox": [
+          70,
+          20,
+          90,
+          25
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "1M Ω",
+        "purpose": "value",
+        "component_ref": null,
+        "value": {
+          "raw_scalar": "1M",
+          "raw_unit": "Ω",
+          "notation": "printed_engineering",
+          "unit": "ohm",
+          "si_value": "1000000"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

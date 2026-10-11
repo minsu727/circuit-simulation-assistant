@@ -1,6 +1,8 @@
 # M3 candidate contract
 
-**Proposed typed sidecar; no records/schema implemented.** This contract is separate
+**M3C observation/intake subset is implemented in the
+[Observation Contract](observation-contract.md); candidate/review/promotion layers
+below remain proposed.** This contract is separate
 from [M1 data types](../m1/data-model.md), especially the existing M1 `Candidate`
 record, which contains only an ambiguity ID/description. Do not extend that
 record into a Vision response.
@@ -18,7 +20,9 @@ record into a Vision response.
 Separate collection ownership prevents a provider from overwriting human edits.
 No object references back to parents; use bounded IDs and immutable snapshots.
 The planned namespace is a separate `circuit_image` package, not `circuit_ir`.
-Names below describe future responsibilities, not a frozen public Python API.
+Names below describe responsibilities, not a public API for the future layers.
+The implemented observation subset fixes the former M3C wire placeholders;
+Claim/CandidateCircuit/review/conversion are not implemented.
 
 ## Minimal proposed records
 

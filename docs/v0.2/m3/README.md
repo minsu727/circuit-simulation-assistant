@@ -1,6 +1,7 @@
 # v0.2 M3 — Image-to-Circuit IR plan
 
-**M3A design and M3B owned fixture/evaluation foundation. No M3 extraction,
+**M3A design, M3B owned fixture/evaluation foundation and M3C bounded intake,
+strict observations/static replay. No live extraction, topology reconstruction,
 review UI, conversion or image execution is implemented. M3 is not closed.**
 Prepared 2026-10-09 (Asia/Seoul).
 
@@ -11,6 +12,9 @@ but incorrectly connected circuit can be technically VALID and simulate
 successfully. That is the central quality risk.
 
 ## Inspected baseline and scope differences
+
+The following baseline records the original M3A design task; later M3B/M3C
+checkpoints below describe subsequent implementation without rewriting history.
 
 - Repository HEAD: `7152c13`, latest M2 evidence commit. [M1](../m1/status.md) and
   [restricted M2](../m2/status.md) are closed in their documented scopes.
@@ -45,6 +49,7 @@ successfully. That is the central quality risk.
 | [Prompt Breakdown](prompt-breakdown.md) | Small implementation handoffs, protected scope and unresolved decisions |
 | [Fixture Annotations](fixture-annotations.md) | Implemented test-truth format, outcome/unknown rules and independent catalog |
 | [Evaluation Protocol](evaluation-protocol.md) | Future matching/denominators, topology-first success, resource proposals and report boundary |
+| [Implemented Observation Contract](observation-contract.md) | M3C APIs, wire keys, coordinates, limits, replay, diagnostics and security |
 
 ## M3B implemented boundary
 
@@ -61,6 +66,13 @@ reviewed by the authoring agent, pending independent human/held-out adjudication
 See [checkpoint verification](implementation-plan.md#m3b-fixtures-and-evaluation-checkpoint).
 
 ## Proposed controlled path
+
+M3C implements only bytes intake → strict original-frame observations → static
+replay in `circuit_image`, with separate handcrafted response examples. Exact
+[APIs/limits/wire contract](observation-contract.md) and
+[verification checkpoint](implementation-plan.md#m3c-intake-observation-and-replay-checkpoint)
+are documented. No live/local recognizer, graph, review or executable circuit is
+produced. Root README and existing M1/M2/v0.1 functionality are preserved.
 
 Image → local safe intake → untrusted observations → candidate topology/value
 claims → explicit correction and snapshot confirmation → image-origin M1 document

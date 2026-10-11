@@ -1,0 +1,206 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "95aca0ed021d0de58deda85eea7fef5282a81da9534e25600482e13dd1b4575b",
+    "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+    "normalized_sha256": "8691369c3fa5ce9605f6761a745a47a08569d591615264ca5dfcec6bf2490d54",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "V1",
+      "kind": "symbol",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": [
+          10,
+          10,
+          40,
+          20
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "voltage_source",
+        "observed_name": "voltage_source",
+        "reference_text": "V1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "terminal",
+      "kind": "pin",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            30,
+            10
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "V1",
+        "role": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "polarity_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": [
+          {
+            "id": "positive",
+            "data": {
+              "component_ref": "V1",
+              "role": "positive"
+            }
+          },
+          {
+            "id": "negative",
+            "data": {
+              "component_ref": "V1",
+              "role": "negative"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dc",
+      "kind": "text",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": [
+          70,
+          20,
+          90,
+          25
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "DC ?",
+        "purpose": "source_dc",
+        "component_ref": "V1",
+        "value": null
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "missing",
+        "reasons": [
+          "value_missing"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "ac",
+      "kind": "text",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": [
+          70,
+          20,
+          90,
+          25
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "AC 1 V",
+        "purpose": "source_ac",
+        "component_ref": "V1",
+        "value": {
+          "raw_scalar": "1",
+          "raw_unit": "V",
+          "notation": "si",
+          "unit": "V",
+          "si_value": "1"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "waveform",
+      "kind": "text",
+      "source_sha256": "aa335c6c4d43d32e47089c71ff472eb2622a84dd888ce6442642e457199e6e19",
+      "geometry": {
+        "bbox": [
+          70,
+          20,
+          90,
+          25
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "SINE(0 10m 1k)",
+        "purpose": "source_waveform",
+        "component_ref": "V1",
+        "value": null
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

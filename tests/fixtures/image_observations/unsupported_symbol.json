@@ -1,0 +1,57 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "bf95d9adea1dc5ac2dd689e13a1d2e13fd56bb020b119e23dc90b7f0c1009e5f",
+    "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+    "normalized_sha256": "8effd587f6eebce243a97eb68ca372f4b253d4a01012da10c1c6d0efd97ef6ee",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "Q1",
+      "kind": "symbol",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": [
+          10,
+          10,
+          40,
+          20
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "classification": "unsupported",
+        "component_type": null,
+        "observed_name": "NPN",
+        "reference_text": "Q1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "unsupported_symbol"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

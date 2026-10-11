@@ -1,0 +1,184 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "82104c7f6d6dbd4297cff12969de09a356201499dabeeed5073eb2312997909b",
+    "source_sha256": "56ea9d0e0891d5507b5fb3b66d6b05f7a0682441f365e652870d1d5ced1eadaf",
+    "normalized_sha256": "d99d988afccbadacbef7f895ca30cf6c45512eee9879d7b6e25ea2ced9b8d378",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "M1",
+      "kind": "symbol",
+      "source_sha256": "56ea9d0e0891d5507b5fb3b66d6b05f7a0682441f365e652870d1d5ced1eadaf",
+      "geometry": {
+        "bbox": [
+          300,
+          200,
+          70,
+          100
+        ],
+        "points": [],
+        "orientation": "r0_mirror"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "nmos",
+        "observed_name": "nmos",
+        "reference_text": "M1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "symbol_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": [
+          {
+            "id": "n",
+            "data": {
+              "classification": "supported",
+              "component_type": "nmos",
+              "observed_name": "nmos",
+              "reference_text": "M1"
+            }
+          },
+          {
+            "id": "p",
+            "data": {
+              "classification": "supported",
+              "component_type": "pmos",
+              "observed_name": "pmos",
+              "reference_text": "M1"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "terminal",
+      "kind": "pin",
+      "source_sha256": "56ea9d0e0891d5507b5fb3b66d6b05f7a0682441f365e652870d1d5ced1eadaf",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            340,
+            200
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "M1",
+        "role": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "mos_role_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": [
+          {
+            "id": "drain",
+            "data": {
+              "component_ref": "M1",
+              "role": "drain"
+            }
+          },
+          {
+            "id": "source",
+            "data": {
+              "component_ref": "M1",
+              "role": "source"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "bulk",
+      "kind": "pin",
+      "source_sha256": "56ea9d0e0891d5507b5fb3b66d6b05f7a0682441f365e652870d1d5ced1eadaf",
+      "geometry": null,
+      "data": {
+        "component_ref": "M1",
+        "role": "bulk"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "missing",
+        "reasons": [
+          "bulk_missing"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "width",
+      "kind": "text",
+      "source_sha256": "56ea9d0e0891d5507b5fb3b66d6b05f7a0682441f365e652870d1d5ced1eadaf",
+      "geometry": {
+        "bbox": [
+          70,
+          20,
+          90,
+          25
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "W = 10 µm",
+        "purpose": "device_width",
+        "component_ref": "M1",
+        "value": {
+          "raw_scalar": "10",
+          "raw_unit": "µm",
+          "notation": "printed_engineering",
+          "unit": "m",
+          "si_value": "0.00001"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

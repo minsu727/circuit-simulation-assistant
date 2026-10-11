@@ -202,7 +202,12 @@ No fabricated estimate is a measured cost; do not discard failed-call cost.
 Publish count plus median/range and timeout count; do not treat a timeout as a
 successful latency sample. No model provider is selected or contacted in M3B.
 
-Fixture-informed **proposed M3C limits**, not implemented intake guarantees:
+The following are historical fixture-informed proposals. M3C now implements
+intake/observation budgets in the [Observation Contract](observation-contract.md).
+Topology alternatives and live-inference attempts/hard deadlines remain future
+work; replay has one attempt and a cooperative callback budget only.
+
+Fixture-informed **proposed limits**:
 encoded PNG/JPEG ≤8 MiB; sides 64–4096 px; decoded pixels ≤8,000,000; ≤128 symbols,
 512 terminals, 1024 text regions, 2048 segments, 512 junctions; text ≤256 codepoints,
 ≤8 alternatives/claim, ≤64 competing topology alternatives; caller-visible
@@ -213,7 +218,7 @@ must fail/review rather than silently downsample away a dot or prune to a winner
 
 ## M3C/D compatibility and limits
 
-M3C's exact next scope: separate observation/candidate-sidecar types, strict tagged
+M3C's implemented scope: separate observation-sidecar types, strict tagged
 records, original/transmitted identities and transforms, bounded PNG/JPEG decode,
 reference/finite/resource checks, and a deterministic fake/static replay adapter.
 It does not reconstruct nets, convert to M1, approve, change UI or execute LTspice.

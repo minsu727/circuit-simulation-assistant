@@ -1,0 +1,141 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "31add4c0183bfa99e8f1d8698cf12c947cc9fa82760933a41fbff5cd537ac898",
+    "source_sha256": "e2d3a663eb6503c0cb1954d1a633f6fa598c50d086949a4089411aa94e38c0a5",
+    "normalized_sha256": "0c83bca7e0a07434773b1bb52302a127cc9037fc6b2d3c09ec9f5b042558fa65",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "horizontal",
+      "kind": "wire_segment",
+      "source_sha256": "e2d3a663eb6503c0cb1954d1a633f6fa598c50d086949a4089411aa94e38c0a5",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            300,
+            300
+          ],
+          [
+            600,
+            300
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "vertical",
+      "kind": "wire_segment",
+      "source_sha256": "e2d3a663eb6503c0cb1954d1a633f6fa598c50d086949a4089411aa94e38c0a5",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            450,
+            150
+          ],
+          [
+            450,
+            450
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "crossing",
+      "kind": "crossing",
+      "source_sha256": "e2d3a663eb6503c0cb1954d1a633f6fa598c50d086949a4089411aa94e38c0a5",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            450,
+            300
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "wire_refs": [
+          "horizontal",
+          "vertical"
+        ],
+        "interpretation": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "crossing_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": [
+          {
+            "id": "dot",
+            "data": {
+              "wire_refs": [
+                "horizontal",
+                "vertical"
+              ],
+              "interpretation": "connected"
+            }
+          },
+          {
+            "id": "open",
+            "data": {
+              "wire_refs": [
+                "horizontal",
+                "vertical"
+              ],
+              "interpretation": "separated"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

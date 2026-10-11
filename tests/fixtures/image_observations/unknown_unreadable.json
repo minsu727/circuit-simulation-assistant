@@ -1,0 +1,125 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "be1b42ebf893531d10532f8abfbe8e71bad4cd27f252d0870d8499e92579174d",
+    "source_sha256": "a349caf357e7b6799d4a42c280017bf567cea84e4962eec8c60eabbfef0701d4",
+    "normalized_sha256": "716573630f889d252ea1e0b160bdb394ac5e68df04a4950426117813a04d0d14",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "unknown",
+      "kind": "unknown_symbol",
+      "source_sha256": "a349caf357e7b6799d4a42c280017bf567cea84e4962eec8c60eabbfef0701d4",
+      "geometry": {
+        "bbox": [
+          250,
+          200,
+          60,
+          60
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "observed_name": null
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "symbol_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "unreadable",
+      "kind": "text",
+      "source_sha256": "a349caf357e7b6799d4a42c280017bf567cea84e4962eec8c60eabbfef0701d4",
+      "geometry": {
+        "bbox": [
+          70,
+          20,
+          90,
+          25
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "1?0nF",
+        "purpose": "value",
+        "component_ref": null,
+        "value": {
+          "raw_scalar": "1?0",
+          "raw_unit": "nF",
+          "notation": "unresolved",
+          "unit": null,
+          "si_value": null
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "unreadable",
+        "reasons": [
+          "text_unreadable"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "ground",
+      "kind": "ground",
+      "source_sha256": "a349caf357e7b6799d4a42c280017bf567cea84e4962eec8c60eabbfef0701d4",
+      "geometry": {
+        "bbox": [
+          300,
+          500,
+          30,
+          20
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "style": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "ground_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

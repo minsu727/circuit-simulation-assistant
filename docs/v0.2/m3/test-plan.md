@@ -146,3 +146,33 @@ human adjudication, held-out redraws, post-review M1 goldens, noisy/cropped/EXIF
 assets, bridge/hop, op-amp, mixed ground conventions, complex notation or injection
 assets. The future test lanes above remain planned. Do not close M3 or count a
 fixture outcome as technical validation, confirmation or permission to execute.
+
+## M3C offline contract lane
+
+Prompt 044 implements the [observation contract](observation-contract.md), not
+visual accuracy evaluation. New tests: 22 intake, 42 observation, 18 adapter;
+**82 M3C tests**. Focused command passes (failures/errors/skips 0; exit 0).
+
+```powershell
+python -X utf8 -m unittest tests.test_m3_image_intake tests.test_m3_observations tests.test_m3_provider_adapter -v
+python -X utf8 -m unittest discover -s tests -p "test_*.py"
+python -m pip check
+git diff --check
+git status --short
+```
+
+Cases include PNG/JPEG, all eight EXIF mappings, corruption/truncation, unsafe
+headers/limits, metadata stripping, immutable identity, forged artifacts, strict
+fields/versions/aliases/references, finite/bounded geometry, MOS role preservation,
+missing bulk, unknown/unsupported symbols, confidence/alternatives, printed-mega
+versus SPICE-m, source/W/L annotations, deterministic scope/serialization,
+hostile text without filesystem/network/process access, provider failures and
+cooperative timeouts. No live API, network/model/key dependency in these tests.
+
+Ten [separate replay examples](../../../tests/fixtures/image_observations/README.md)
+are hand-composed, with intentional omissions/wrong/unclear proposals and invalid
+responses. The divider's R1/value region was visually checked against its public
+PNG; synthetic records are not independent visual adjudication or a benchmark.
+No M3B expected.json is used to generate replay output. The original 16 PNGs,
+SVGs, truth/provenance/catalog are unchanged; M3B integrity remains a separate lane.
+Actual full-suite/preservation results are in the implementation checkpoint.

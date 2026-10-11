@@ -1,8 +1,8 @@
 # M3 implementation plan
 
-**M3A architecture with the M3B fixture checkpoint recorded below.** Production
-observation/topology/review/conversion/UI/admission work remains proposed and
-requires its own phase authorization.
+**M3A architecture with M3B fixtures and M3C offline observation foundation
+recorded below.** Topology/review/conversion/UI/admission and live inference
+remain proposed and require separate authorization. M3 is not closed.
 
 ## Dependency order
 
@@ -171,3 +171,80 @@ modified. M3C next scope is bounded observation/intake types and fake/static rep
 M3D topology inference and M3E human review/admission remain separate work.
 New fixture/doc/test files are prepared for version control but remain untracked
 and unstaged in this task. No add/commit/push/tag/Release action is performed.
+
+## M3C intake, observation and replay checkpoint
+
+Prompt 044, 2026-10-11: starting HEAD/remote main
+`8388bba05061ba3c6dccdf7009132b4911f5dad6`, M3B commit. Read-only hosted check:
+[workflow 37891229541](https://github.com/minsu727/circuit-simulation-assistant/actions/runs/37891229541)
+completed/success for that exact source. Historical local baseline: 893 tests.
+Existing root README bytes/diff are preserved. No Git mutation is performed.
+
+Implemented a separate `circuit_image` package: frozen intake/source/transform
+records, bounded PNG/JPEG decode, exact EXIF matrices, tagged observation records,
+strict bounded untrusted JSON parsing, explicit serialization, local ID remapping,
+provider protocol and static replay only. [Implemented contract](observation-contract.md)
+owns exact API/schema/limits/security/uncertainty semantics. Versions:
+`m3-intake-1`, `m3-observations-1`; M1 `0.2-draft1` is unchanged.
+
+Ten independently hand-composed replay responses are separate from M3B truth.
+They deliberately include omissions/wrong/unknown/ambiguous proposals and invalid
+JSON/references; all valid examples report partial coverage. R1/value was checked
+visually on the divider PNG, not read from expected.json. Intake tests use ten
+representative M3B PNGs; synthetic JPEG/EXIF/corruption images exist only in test
+memory. No recognition accuracy, topology, M1 conversion or executable candidate
+is claimed. Model metadata remains null; remote/local inference is disabled.
+
+Quality fixes made during development:
+
+- Pillow PNG verification must immediately follow opening/header inspection;
+  reading EXIF before verify had moved the stream. Verification now precedes the
+  separate bounded decode/EXIF pass; all eight orientation tests pass.
+- Provider payload is excluded from repr; exception diagnostics do not echo
+  secrets/paths/recognized text. Invalid callback options fail before invocation.
+- Unit proposals require an explicit recognized unit token, preventing fabricated
+  volts for missing units. Numeric checks reuse M1 scalar parsing, not electrical
+  validation. Printed M versus SPICE m retains its explicit notation.
+- Alternatives are distinct after typed numeric normalization: 1000 and 1e3
+  cannot masquerade as different readings of the same literal.
+- The first M2 boundary test omitted mandatory approval arguments; the test was
+  corrected to use the existing API and assert the unchanged image-origin gate.
+  No M1/M2 production change was required.
+
+Focused final run: **82 tests** (22 intake, 42 observations, 18 adapter),
+failures/errors/skips 0, exit 0, 9.094 s. `python -m pip check`: no broken
+requirements, exit 0. No dependency added; existing pinned Pillow 12.3.0 reused.
+Final local verification (full suite executed once after final focused checks):
+
+| Check | Actual result |
+| --- | --- |
+| Focused M3C command in Test Plan | 82 tests in 9.094 s; failures 0, errors 0, skips 0; exit 0 |
+| `python -X utf8 -m unittest discover -s tests -p "test_*.py"` | 975 tests in 238.268 s; failures 0, errors 0, skips 0; exit 0 |
+| `python -m pip check` | No broken requirements found; exit 0 |
+| Preservation audit | 392/398 starting tracked files byte-identical; only six authorized M3 Markdown documents changed; root README bytes/diff unchanged |
+| M3B preservation | All 66 catalog/README/image/SVG/truth/provenance files byte-identical; no M1/M2 golden/schema/production change |
+| Public text/link audit | 76 relative link/anchor occurrences resolve; no detected personal absolute path/email/API-key pattern or trailing whitespace; Markdown fences balanced |
+| Git hygiene | `git diff --check` exit 0; LF→CRLF notices only; 24 new intended public files, zero staged files; diagnostic authoring/log/cache outputs ignored |
+
+The full run retains the historical 893-test baseline plus 82 new M3C cases;
+existing v0.1 ASC/UI, M1/M2 and M3B tests pass. Hosted CI evidence above concerns
+committed **M3B only**, not these uncommitted M3C changes. No real Vision/API/OCR
+or LTspice run, simulation, build, installation or release was performed.
+
+New public scope: seven `circuit_image` modules; three focused tests and their
+hand-composed helper; ten replay payloads plus catalog/README; the implemented
+observation document. Six existing M3 documents link/record the boundary. Root
+README remains the original unrelated user modification. Requirements, CI,
+packaging, installer, assets, M1/M2/v0.1 logic and existing fixtures are untouched.
+One-off audit/authoring tools and logs remain ignored under local simulation
+output; no public generated image/simulator result is added. No add/commit/push/
+tag/Release action is performed.
+
+Known limits: shape-valid/reported-complete is not recognition fidelity or human
+confirmation; callback timeout is cooperative, not arbitrary-code preemption;
+normalized hashes assume the same codec/settings. No live SDK/API/OCR, retained
+bundle/remote-consent policy, graph/review/conversion/UI or image admission.
+M3D requires validated original-frame records/artifact, separate evidence-linked
+claims/constraints, resource bounds and independent partition/role/abstention
+tests. It must not merge by distance/confidence or invent body/ground/source/value.
+M2 image restrictions stay intact; M3 is not closed.

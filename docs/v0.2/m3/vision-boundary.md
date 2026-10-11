@@ -1,6 +1,8 @@
 # Vision adapter, privacy and untrusted input
 
-**Design only.** The [candidate sidecar](candidate-contract.md) is the output
+**M3C bounded intake/strict observation/static replay subset is implemented;
+live/local inference, consent UI and persistence remain design only.** See the
+[implemented API and policy](observation-contract.md). The [candidate sidecar](candidate-contract.md) is the output
 boundary; the provider must not return a trusted CircuitDocument or approvals.
 
 ## Proposed provider seam
@@ -10,7 +12,8 @@ explicit extraction options and a versioned observation contract. It returns
 either an ObservationSet proposal with provenance/uncertainty or a typed failure.
 Local orchestration remaps IDs and validates all fields before assembly.
 
-This is a responsibility contract, not a currently implemented function signature.
+This table describes responsibilities; the M3C implemented subset's exact
+signatures/limits are in the linked contract. Future live adapters remain blocked.
 Core M1 types know nothing about provider SDKs, network credentials or endpoints.
 
 | Adapter responsibility | Local controller responsibility |

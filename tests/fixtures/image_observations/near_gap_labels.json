@@ -1,0 +1,192 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "da0cb22c3dba6dd59ab27863e1be1e45fd8f4b7c49ee555b53e0fa0b8ca7cab6",
+    "source_sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+    "normalized_sha256": "41c2f8729b2e7f1e229991c511bad54ac46f509b260dd70f730b7682d7ca6083",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "partial",
+  "observations": [
+    {
+      "id": "left",
+      "kind": "wire_segment",
+      "source_sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            100,
+            300
+          ],
+          [
+            300,
+            300
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "right",
+      "kind": "wire_segment",
+      "source_sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            310,
+            300
+          ],
+          [
+            500,
+            300
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "contact",
+      "kind": "contact_candidate",
+      "source_sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+      "geometry": null,
+      "data": {
+        "refs": [
+          "left",
+          "right"
+        ],
+        "interpretation": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "contact_unclear"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "label_a",
+      "kind": "label",
+      "source_sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+      "geometry": {
+        "bbox": [
+          350,
+          260,
+          70,
+          20
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "VOUT",
+        "attachment_ref": null
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "possible_label_equivalence"
+        ],
+        "related_refs": [],
+        "alternatives": [
+          {
+            "id": "left_wire",
+            "data": {
+              "raw_text": "VOUT",
+              "attachment_ref": "left"
+            }
+          },
+          {
+            "id": "right_wire",
+            "data": {
+              "raw_text": "VOUT",
+              "attachment_ref": "right"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "label_b",
+      "kind": "supply_label",
+      "source_sha256": "1fc1c9715184a9e4c7b93f24dd0998f0fc677d3c7dd1d539f906597bcbe313db",
+      "geometry": {
+        "bbox": [
+          550,
+          100,
+          70,
+          20
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "VOUT",
+        "attachment_ref": null
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "ambiguous",
+        "reasons": [
+          "possible_label_equivalence"
+        ],
+        "related_refs": [
+          "label_a"
+        ],
+        "alternatives": []
+      }
+    }
+  ]
+}

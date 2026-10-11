@@ -1,0 +1,76 @@
+{
+  "version": "m3c-replay-catalog-1",
+  "provenance": "Independently hand-composed static examples, not model predictions or M3B truth copies.",
+  "cases": [
+    {
+      "case_id": "divider_partial",
+      "image_case": "divider",
+      "payload": "divider_partial.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Hand-authored resistor/value plus incomplete wire; deliberately omits other devices."
+    },
+    {
+      "case_id": "mos_missing_bulk",
+      "image_case": "nmos_bulk_unknown",
+      "payload": "mos_missing_bulk.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Ambiguous MOS and D/S evidence; absent bulk has no coordinates or source tie."
+    },
+    {
+      "case_id": "pmos_mega_text",
+      "image_case": "pmos",
+      "payload": "pmos_mega_text.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Provisional PMOS role and independent printed-mega normalization example; not golden truth."
+    },
+    {
+      "case_id": "crossing_ambiguous",
+      "image_case": "cross_ambiguous",
+      "payload": "crossing_ambiguous.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Hand-composed crossing hypotheses, not a canonical net partition."
+    },
+    {
+      "case_id": "near_gap_labels",
+      "image_case": "near_gap",
+      "payload": "near_gap_labels.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Near-gap wire/contact and shared text do not authorize joining nets."
+    },
+    {
+      "case_id": "unknown_unreadable",
+      "image_case": "unreadable_value",
+      "payload": "unknown_unreadable.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Unknown region, uncertain text and ground style preserved without repair."
+    },
+    {
+      "case_id": "unsupported_symbol",
+      "image_case": "unsupported_bjt",
+      "payload": "unsupported_symbol.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Unsupported visual symbol retained; no executable BJT model introduced."
+    },
+    {
+      "case_id": "source_polarity",
+      "image_case": "divider",
+      "payload": "source_polarity.json",
+      "expected_status": "INCOMPLETE",
+      "description": "Uncertain polarity and source annotations remain data; no inferred zero/DC or waveform execution."
+    },
+    {
+      "case_id": "invalid_reference",
+      "image_case": "divider",
+      "payload": "invalid_reference.json",
+      "expected_status": "FAILED",
+      "description": "Deliberately invalid provider response with a dangling observation reference."
+    },
+    {
+      "case_id": "malformed",
+      "image_case": "divider",
+      "payload": "malformed.txt",
+      "expected_status": "FAILED",
+      "description": "Deliberately truncated JSON response."
+    }
+  ]
+}
