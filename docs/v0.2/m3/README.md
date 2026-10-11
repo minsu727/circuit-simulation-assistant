@@ -1,8 +1,8 @@
 # v0.2 M3 — Image-to-Circuit IR plan
 
-**M3A design, M3B fixtures, M3C bounded observations/static replay and M3D
-unapproved topology reconstruction are implemented in their recorded scopes.
-No live extraction, review UI, conversion or image execution. M3 is not closed.**
+**M3A–M3D and M3E domain review/correction, confirmed M1 promotion and separate
+image admission are implemented in their recorded scopes. No live extraction,
+review UI or image execution. M3 is not closed.**
 Prepared 2026-10-09 (Asia/Seoul).
 
 Design goal: a clean printed textbook-style schematic image becomes an untrusted,
@@ -25,7 +25,7 @@ checkpoints below describe subsequent implementation without rewriting history.
 - M1 already has image references, visual records and ambiguity/confidence fields;
   its wire version remains `0.2-draft1`. Rich observations/review history belong
   in an M3 sidecar, not additional M1 fields.
-- **Current M2 explicitly rejects image origin or any image reference.** Reviewed
+- **Original M3A baseline: M2 rejected image origin or any image reference.** Reviewed
   image conversion can reach M1 now in principle, but image execution needs a
   separately approved future admission contract. Never erase image provenance or
   relabel the document manual to pass the existing gate.
@@ -44,6 +44,7 @@ checkpoints below describe subsequent implementation without rewriting history.
 | [Vision Boundary](vision-boundary.md) | Provider adapter, intake, consent, privacy and injection handling |
 | [Topology and Uncertainty](topology-and-uncertainty.md) | Wire/net hypotheses, symbols, values, MOS/power/ground and fail-closed rules |
 | [Review Contract](review-contract.md) | Human actions, snapshot confirmation, M1 conversion and approval invalidation |
+| [Promotion and Admission](promotion-and-admission.md) | Implemented M3E APIs, revisions, M1 projection, provenance and narrow M2 gate |
 | [Test Plan](test-plan.md) | Owned fixtures, independent goldens, metrics and evaluation lanes |
 | [Implementation Plan](implementation-plan.md) | M3A–G deliverables, dependencies and acceptance gates |
 | [Prompt Breakdown](prompt-breakdown.md) | Small implementation handoffs, protected scope and unresolved decisions |
@@ -74,13 +75,14 @@ replay in `circuit_image`, with separate handcrafted response examples. Exact
 [verification checkpoint](implementation-plan.md#m3c-intake-observation-and-replay-checkpoint)
 are documented. M3D additionally reconstructs unapproved candidate connectivity;
 [its contract](topology-contract.md) and [checkpoint](implementation-plan.md#m3d-topology-reconstruction-checkpoint)
-record the prepared-observation evaluation boundary. No live/local recognizer,
-reviewed M1 document or executable image circuit is produced. Root README and
+record the prepared-observation evaluation boundary. M3E now adds domain review,
+confirmed M1 promotion and separate admission as [specified here](promotion-and-admission.md).
+No live/local recognizer or executable image circuit is produced. Root README and
 existing M1/M2/v0.1 functionality are preserved.
 
 Image → local safe intake → untrusted observations → candidate topology/value
 claims → explicit correction and snapshot confirmation → image-origin M1 document
-→ unchanged M1 validation → **future reviewed image-admission gate** → existing
+→ unchanged M1 validation → **separate exact M3E image admission** → existing
 CIRCUIT_EXPORT → preview → REPRESENTATION → typed request → EXECUTION → M2 runner
 → existing RAW analysis.
 

@@ -1,6 +1,8 @@
 # M3C implemented observation contract
 
 Prompt 044, 2026-10-11 (Asia/Seoul). **Offline foundation only; M3 is not closed.**
+This document records M3C's own scope; subsequent review/promotion/admission APIs
+are documented separately in [M3E](promotion-and-admission.md).
 No live Vision/OCR, topology, review UI, M1 conversion, image-aware M2 admission
 or simulator execution is provided. The candidate/review layers in
 [Candidate Contract](candidate-contract.md) remain proposals.

@@ -2,8 +2,9 @@
 
 **M3C observation/intake subset is implemented in the
 [Observation Contract](observation-contract.md); M3D hypotheses/claims are fixed
-in the [Topology Contract](topology-contract.md). Review/promotion layers below
-remain proposed.** This contract is separate
+in the [Topology Contract](topology-contract.md). M3E's implemented domain subset
+is in [Promotion and Admission](promotion-and-admission.md); broader review/UI
+records below remain proposed.** This contract is separate
 from [M1 data types](../m1/data-model.md), especially the existing M1 `Candidate`
 record, which contains only an ambiguity ID/description. Do not extend that
 record into a Vision response.

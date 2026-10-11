@@ -172,6 +172,11 @@ cases. This does **not** measure AI recognition accuracy or held-out generalizat
 
 ## Known limits and M3E prerequisites
 
+The original prerequisite list below is now implemented in the scoped M3E domain
+[Promotion and Admission contract](promotion-and-admission.md), authorized by
+Prompt 046. Original M3D hypotheses still remain unapproved and unchanged;
+UI, live extraction and actual image execution are not implemented.
+
 Prepared observations may themselves be wrong despite valid syntax and coherent
 geometry. No pixel-based recognition, inferred symbol/body masking, fuzzy snapping,
 hierarchy, arbitrary labels, full alternative graph enumeration or ground/supply

@@ -1,6 +1,9 @@
 # Human review and M1 conversion
 
-**Future contract only.** [Candidate Contract](candidate-contract.md) owns records,
+**Domain subset implemented in M3E; UI remains future.** The exact APIs, supported
+corrections and admission are in [Promotion and Admission](promotion-and-admission.md).
+The broader proposed interaction/authoring scope below is not all implemented.
+[Candidate Contract](candidate-contract.md) owns records,
 [Topology](topology-and-uncertainty.md) owns interpretation and
 [Architecture](architecture.md) owns the unresolved M2 image-admission gate.
 
@@ -89,9 +92,9 @@ Identity/ordering normalization does not add an electrical fact.
    a new revision and revalidation; neither human confirmation nor confidence
    waives a technical finding.
 3. VALID still does not establish image fidelity, external model availability
-   or export permission. Current M2 **blocks image-origin export**. Until the
-   separately authorized image-admission policy exists, show that boundary and
-   make no representation/execution request.
+   or export permission. M2 **blocks image-origin export without exact M3E
+   admission**. That separately verified context permits explicit CIRCUIT_EXPORT
+   review; it never grants representation/execution permission.
 4. Future admission must verify the actual source asset, review and promotion
    bindings before current explicit CIRCUIT_EXPORT review. Bind/recheck that
    evidence throughout subsequent M2 stages; a boolean “image reviewed” is
@@ -122,6 +125,6 @@ trusted live confirmation or M2 approval. Recheck asset integrity and require a
 current explicit review action. No persisted checkbox or imported reviewed
 status automatically restores execution authority.
 
-The future image-admission implementation is an M3E prerequisite requiring
-separate review/authorization. Until resolved, M3E conversion-only acceptance can
-pass while M3F execution and M3G full M3 closure remain blocked.
+Prompt 046 authorized the minimal versioned image-admission interface now recorded
+in [Promotion and Admission](promotion-and-admission.md). The domain prerequisite
+is implemented; M3F UI/runner execution and M3G full closure remain unimplemented.

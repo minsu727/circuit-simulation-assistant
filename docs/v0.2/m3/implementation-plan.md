@@ -1,8 +1,8 @@
 # M3 implementation plan
 
-**M3A architecture, M3B fixtures, M3C observations and M3D unapproved topology
-are recorded below.** Review/conversion/UI/admission and live inference remain
-proposed and require separate authorization. M3 is not closed.
+**M3A–M3D and M3E domain review, confirmed conversion and image admission are
+recorded below.** UI/runner image execution and live inference remain future.
+M3 is not closed. [M3E contract](promotion-and-admission.md).
 
 ## Dependency order
 
@@ -329,3 +329,63 @@ M1 validation, and a separately specified/authorized image-aware admission gate.
 Current M2 restrictions and all export/representation/execution approvals remain
 unchanged. No UI, Vision/OCR/API, LTspice, generated image/netlist, build/release,
 dependency change or Git add/commit/push/tag operation is performed. M3 is open.
+
+## M3E review, promotion and image-admission checkpoint
+
+Prompt 046, 2026-10-11 (Asia/Seoul). Baseline M3D HEAD `4e8ef04`;
+required hosted [CI run 38118695850](https://github.com/minsu727/circuit-simulation-assistant/actions/runs/38118695850)
+was read with `gh run view`: status completed, conclusion success. This mandatory
+read-only precondition was the only external network action. Implementation/tests
+use prepared local observations, not Vision/OCR/network or LTspice.
+
+Implemented [contract and public APIs](promotion-and-admission.md): immutable
+exact-source review sessions, 18 typed corrections, atomic deterministic revisions,
+explicit complete-claim confirmation, strict archival replay without restored
+confirmation, existing M1 promotion/schema/validation, immutable provenance/maps
+and separately verified image admission. The optional M2 context and image-bound
+approval hash are the narrow authorized boundary change; manual digest projection,
+M1 rules, model policy and all three explicit approvals remain unchanged.
+
+| Prepared cases after explicit test-review actions | Actual outcome |
+| --- | --- |
+| divider, rc, rlc, cross_dot, rotated_sources | Confirmed → complete existing M1 document → VALID → admission eligible |
+| nmos, pmos | Reviewer selects matching sealed profile and explicit W/L → confirmed/VALID/eligible |
+| cross_ambiguous | Explicit connected choice → confirmed/VALID/eligible; separated choice also review-tested without convenient automatic selection |
+| near_gap | Gap stays separate initially; explicit touching choice and corrected label attachment → confirmed/VALID/eligible |
+| nmos_bulk_unknown | Initially blocks; reviewer explicitly assigns already-observed bulk pin → confirmed/VALID/eligible, no invented bulk/tie |
+| missing_value, unreadable_value | Reviewer explicitly supplies C1 quantity → confirmed/VALID/eligible; original visible text untouched |
+| cross_open | Confirmed but M1 INVALID (`ISOLATED_SUBNETWORK`); admission blocked |
+| shared_labels | Confirmed but M1 INVALID (`FLOATING_DC_NODE`); admission blocked |
+| supply_unknown | Review blocked by missing ground; no ground/source invention |
+| unsupported_bjt | Unsupported acknowledgment retained; full confirmation/promotion blocked, no fake supported substitute |
+
+The additional negative-resistor test confirms review-confirmed but INVALID
+behavior. An independent divider check verifies supply/resistor pin groups and
+ground/polarity after M1 projection. These are replay-domain results, not image
+recognition accuracy, independent human adjudication or physical simulation.
+
+| Verification | Actual result |
+| --- | --- |
+| Focused M3E group | 94 tests: 47 review + 22 promotion + 25 admission; exit 0 |
+| Full suite | 1,143 tests in 493.195 s; failures 0, errors 0, skips 0; exit 0; historical 1,049 tests retained |
+| Final catalog-provenance correction | Subsequent complete M3E group: 94 tests in 65.138 s; exit 0; preserves original observation catalog version |
+| `python -m pip check` | No broken requirements found; exit 0; dependencies added: none |
+| Protected inputs | 66 M3B files, 12 prior M3C replay files and 18 M3D replay/catalog files byte-identical; M3D engine/evaluation and M1 schema/models/validation unchanged |
+| Existing app | v0.1 simulation/parser/analysis/UI, launcher, packaging, requirements, CI and unrelated root README bytes preserved |
+| Final preservation/public audit | 432/448 starting tracked files byte-identical; only 16 intended existing files changed and 10 intended files added; existing log prefixes preserved |
+| Markdown/privacy | 96 relative link/anchor occurrences resolve; no detected secret/email/personal absolute-path pattern in intended changed/new text |
+| Git hygiene | `git diff --check` exit 0; LF→CRLF notices only; zero staged files and zero tracked generated/audit outputs |
+
+Quality fixes: use the actual uncertainty enum contract and retain uncertain
+values for explicit correction; reject conflicting writes/choices and stale
+confirmation; archive numeric booleans cannot impersonate revision integers;
+unsupported devices cannot be reclassified into fake supported devices. One
+synthetic ownership test initially violated the minimum-two-alternatives M3C
+contract; its hand-authored input was corrected without changing source fixtures.
+
+Limitations: UI, live recognition/consent/provider evaluation, broad missing
+component authoring, pose/CAD editing and actual image→LTspice execution are not
+implemented. M3F must integrate current context into the existing runner; no
+alternate runner path exists. Review/admission hashes provide integrity/staleness,
+not authenticated user identity or image fidelity. M3G closure remains future.
+No add/commit/push/tag/release action is performed.

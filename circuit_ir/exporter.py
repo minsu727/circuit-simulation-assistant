@@ -304,7 +304,7 @@ def _terminals(component, graph):
     return tuple(assignments[role] for role in expected)
 
 
-def _preflight(document, model_context):
+def _preflight(document, model_context, image_admission=None):
     if not isinstance(document, m.CircuitDocument):
         raise TypeError("document must be CircuitDocument")
     if (type(model_context) is not tuple or len(model_context) != 2
@@ -326,8 +326,16 @@ def _preflight(document, model_context):
         return (_issue("EXPORT_DOCUMENT_NOT_VALID", field="connections",
                        message="Checked graph is unavailable."),), report, None
     if document.metadata.origin is not m.Origin.MANUAL or document.source_image_reference is not None:
-        return (_issue("EXPORT_UNSUPPORTED_FEATURE", field="metadata.origin",
-                       message="Initial exporter admits manual input without an image reference only."),), report, graph
+        if image_admission is None:
+            return (_issue("EXPORT_UNSUPPORTED_FEATURE", field="metadata.origin",
+                           message="Image origin requires exact reviewed image admission."),), report, graph
+        from circuit_image.admission import verify_image_admission
+        diagnostics = verify_image_admission(document, image_admission, validation=report)
+        if diagnostics:
+            return tuple(_issue(d.code, field=d.field, message=d.message) for d in diagnostics), report, graph
+    elif image_admission is not None:
+        return (_issue("IMAGE_ADMISSION_UNEXPECTED", field="image_admission",
+                       message="Ordinary manual documents do not accept image admission."),), report, graph
     try:
         profiles = repository_model_profiles(model_context)
     except (ValueError, TypeError):
@@ -381,9 +389,9 @@ def _preflight(document, model_context):
     return _ordered(issues), report, graph
 
 
-def check_export_eligibility(document: m.CircuitDocument, *, model_context: tuple[str, str]) -> tuple[ExportIssue, ...]:
+def check_export_eligibility(document: m.CircuitDocument, *, model_context: tuple[str, str], image_admission=None) -> tuple[ExportIssue, ...]:
     """Fresh diagnostic-only preflight; no text, approval or execution authority."""
-    return _preflight(document, model_context)[0]
+    return _preflight(document, model_context, image_admission)[0]
 
 
 def _allocate(ids, prefix):
@@ -419,7 +427,7 @@ def _blocked(issues):
 
 
 def export_document(document: m.CircuitDocument, circuit_approval: ApprovalEnvelope | None,
-                    *, model_context: tuple[str, str]) -> ExportResult:
+                    *, model_context: tuple[str, str], image_admission=None) -> ExportResult:
     """Return complete deterministic base text or BLOCKED with no partial artifact.
 
     No cached validation argument, directive, path or approval boolean is accepted.
@@ -427,7 +435,7 @@ def export_document(document: m.CircuitDocument, circuit_approval: ApprovalEnvel
     """
     if circuit_approval is not None and not isinstance(circuit_approval, ApprovalEnvelope):
         raise TypeError("circuit_approval must be ApprovalEnvelope or None")
-    issues, report, graph = _preflight(document, model_context)
+    issues, report, graph = _preflight(document, model_context, image_admission)
     if any(issue.blocking for issue in issues):
         return _blocked(issues)
     if circuit_approval is None or not circuit_approval.approved:
@@ -435,7 +443,8 @@ def export_document(document: m.CircuitDocument, circuit_approval: ApprovalEnvel
                                         message="An approved circuit envelope is required.")))
     try:
         verify_circuit_approval(document, circuit_approval, exporter_contract=_CONTRACT,
-                                model_registry_version=model_context[0], model_registry_sha256=model_context[1])
+                                model_registry_version=model_context[0], model_registry_sha256=model_context[1],
+                                image_admission=image_admission)
     except ApprovalError as failure:
         return _blocked((*issues, _issue("EXPORT_APPROVAL_STALE", field=failure.field,
                                         message="Circuit approval verification failed: " + failure.code)))

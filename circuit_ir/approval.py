@@ -93,8 +93,11 @@ class ApprovalEnvelope:
     parent_approval_sha256: str | None
     base_netlist_sha256: str | None
     mapping_sha256: str | None
+    image_admission_sha256: str | None = None
 
     def __post_init__(self) -> None:
+        if self.image_admission_sha256 is not None:
+            _sha256(self.image_admission_sha256, "image_admission_sha256")
         for field, value in (
             ("contract_version", self.contract_version), ("document_id", self.document_id),
             ("validation_profile", self.validation_profile),
@@ -236,7 +239,7 @@ def approval_digest(approval: ApprovalEnvelope) -> str:
     """Hash all explicit envelope fields; no self-reference or timestamp."""
     if not isinstance(approval, ApprovalEnvelope):
         raise TypeError("approval must be ApprovalEnvelope")
-    return _digest({
+    projection = {
         "contract_version": approval.contract_version, "scope": approval.scope.value,
         "approved": approval.approved, "document_id": approval.document_id,
         "document_revision": approval.document_revision,
@@ -252,7 +255,22 @@ def approval_digest(approval: ApprovalEnvelope) -> str:
         "parent_approval_sha256": approval.parent_approval_sha256,
         "base_netlist_sha256": approval.base_netlist_sha256,
         "mapping_sha256": approval.mapping_sha256,
-    })
+    }
+    # Keep the established non-image projection byte-for-byte unchanged.
+    if approval.image_admission_sha256 is not None:
+        projection["image_admission_sha256"] = approval.image_admission_sha256
+    return _digest(projection)
+
+
+def _image_binding(document, image_admission, result):
+    if image_admission is None:
+        return None
+    from circuit_image.admission import verify_image_admission
+    diagnostics = verify_image_admission(document, image_admission, validation=result)
+    if diagnostics:
+        raise ApprovalError(diagnostics[0].code, diagnostics[0].field,
+                            "Current image admission verification failed.")
+    return image_admission.admission.digest
 
 
 def _context(exporter_contract: str, model_registry_version: str,
@@ -299,6 +317,7 @@ def _warnings(result: ValidationResult) -> tuple[str, ...]:
 def make_circuit_approval(
     document: CircuitDocument, *, approved: bool, acknowledged_warning_ids: tuple[str, ...],
     exporter_contract: str, model_registry_version: str, model_registry_sha256: str,
+    image_admission=None,
 ) -> ApprovalEnvelope:
     """Bind a trusted explicit review decision to fresh M1 validation.
 
@@ -311,6 +330,7 @@ def make_circuit_approval(
     _warning_ids(acknowledged_warning_ids)
     _context(exporter_contract, model_registry_version, model_registry_sha256)
     result = _fresh_report(document)
+    image_hash = _image_binding(document, image_admission, result)
     if not approved:
         raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "An explicit approved decision is required.")
     if acknowledged_warning_ids != _warnings(result):
@@ -322,13 +342,13 @@ def make_circuit_approval(
         document_digest(document), electrical_digest(document),
         result.profile, result.ruleset_version, validation_digest(result),
         exporter_contract, model_registry_version, model_registry_sha256,
-        acknowledged_warning_ids, None, None, None,
+        acknowledged_warning_ids, None, None, None, image_hash,
     )
 
 
 def verify_circuit_approval(
     document: CircuitDocument, approval: ApprovalEnvelope, *, exporter_contract: str,
-    model_registry_version: str, model_registry_sha256: str,
+    model_registry_version: str, model_registry_sha256: str, image_admission=None,
 ) -> None:
     """Return None on exact match or raise fail-fast ApprovalError(code, field).
 
@@ -347,6 +367,10 @@ def verify_circuit_approval(
         raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Approval was not granted.")
     _context(exporter_contract, model_registry_version, model_registry_sha256)
     result = _fresh_report(document)
+    image_hash = _image_binding(document, image_admission, result)
+    if approval.image_admission_sha256 != image_hash:
+        raise ApprovalError("IMAGE_ADMISSION_BINDING_MISMATCH", "image_admission_sha256",
+                            "Exact current image admission is required for this approval.")
     # Explicit ordered comparisons keep the first failure deterministic.
     for field, actual, expected, code in (
         ("document_id", approval.document_id, document.metadata.circuit_id, "DOCUMENT_ID_MISMATCH"),
@@ -365,17 +389,18 @@ def verify_circuit_approval(
             raise ApprovalError(code, field, f"Current binding does not match {field}.")
 
 
-def _verified_export(document, export_result, circuit_approval, model_context):
+def _verified_export(document, export_result, circuit_approval, model_context, image_admission=None):
     # Lazy import avoids approval/exporter import cycles. No caller digest is
     # authority: regenerate through all current preflight/circuit approval gates.
     from .exporter import ExportResult, ExportStatus, export_document
     if not isinstance(export_result, ExportResult):
         raise TypeError("export_result must be ExportResult")
     verify_circuit_approval(document, circuit_approval, exporter_contract=_EXPORTER,
-                            model_registry_version=model_context[0], model_registry_sha256=model_context[1])
+                            model_registry_version=model_context[0], model_registry_sha256=model_context[1],
+                            image_admission=image_admission)
     if export_result.status is not ExportStatus.SUCCESS:
         raise ApprovalError("ARTIFACT_NOT_EXPORTABLE", "status", "A complete SUCCESS preview is required.")
-    current = export_document(document, circuit_approval, model_context=model_context)
+    current = export_document(document, circuit_approval, model_context=model_context, image_admission=image_admission)
     if current.status is not ExportStatus.SUCCESS:
         raise ApprovalError("ARTIFACT_NOT_EXPORTABLE", "status", "Current export preflight failed.")
     for field in ("spice_text", "element_map", "net_map", "model_map", "provenance"):
@@ -385,7 +410,7 @@ def _verified_export(document, export_result, circuit_approval, model_context):
 
 
 def make_representation_approval(document, export_result, circuit_approval, *, approved: bool,
-                                 model_context: tuple[str, str]) -> ApprovalEnvelope:
+                                 model_context: tuple[str, str], image_admission=None) -> ApprovalEnvelope:
     """Explicit second review; bind exact regenerated text/maps and parent.
 
     The source and current context are mandatory. Neither an arbitrary text/path
@@ -395,7 +420,7 @@ def make_representation_approval(document, export_result, circuit_approval, *, a
     if type(approved) is not bool:
         raise TypeError("approved must be a native bool")
     repository_model_profiles(model_context)
-    current = _verified_export(document, export_result, circuit_approval, model_context)
+    current = _verified_export(document, export_result, circuit_approval, model_context, image_admission)
     if not approved:
         raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Explicit representation review is required.")
     return replace(circuit_approval, scope=ApprovalScope.REPRESENTATION, approved=approved,
@@ -405,7 +430,7 @@ def make_representation_approval(document, export_result, circuit_approval, *, a
 
 
 def verify_representation_approval(document, export_result, circuit_approval, representation_approval, *,
-                                   model_context: tuple[str, str]) -> None:
+                                   model_context: tuple[str, str], image_admission=None) -> None:
     if not isinstance(representation_approval, ApprovalEnvelope):
         raise TypeError("representation_approval must be ApprovalEnvelope")
     if representation_approval.contract_version != _CONTRACT:
@@ -415,10 +440,10 @@ def verify_representation_approval(document, export_result, circuit_approval, re
     if not representation_approval.approved:
         raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Representation was not approved.")
     repository_model_profiles(model_context)
-    current = _verified_export(document, export_result, circuit_approval, model_context)
+    current = _verified_export(document, export_result, circuit_approval, model_context, image_admission)
     for field in ("document_id", "document_revision", "document_sha256", "electrical_sha256",
                   "validation_profile", "validation_ruleset", "validation_sha256", "exporter_contract",
-                  "model_registry_version", "model_registry_sha256", "acknowledged_warning_ids"):
+                  "model_registry_version", "model_registry_sha256", "acknowledged_warning_ids", "image_admission_sha256"):
         if getattr(representation_approval, field) != getattr(circuit_approval, field):
             raise ApprovalError("REPRESENTATION_BINDING_MISMATCH", field, "Representation binding is stale.")
     for field, expected in (("parent_approval_sha256", approval_digest(circuit_approval)),

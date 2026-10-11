@@ -1,7 +1,7 @@
 # M3 architecture
 
-**Broader architecture remains proposed. M3C observations and M3D unapproved
-topology now have [implemented contracts](topology-contract.md).** [Index](README.md) owns scope/baseline;
+**Broader architecture remains proposed. M3C/M3D and M3E domain review/promotion
+have [implemented contracts](promotion-and-admission.md).** [Index](README.md) owns scope/baseline;
 [Candidate Contract](candidate-contract.md) owns records and
 [Review Contract](review-contract.md) owns promotion.
 
@@ -15,9 +15,9 @@ flowchart TD
     D --> E[Human correction and explicit snapshot confirmation]
     E --> F[Deterministic image-origin M1 conversion]
     F --> G[Unchanged M1 validation]
-    G --> H{Future image-admission contract}
+    G --> H{Exact M3E image admission}
     H -->|Absent or refused| I[Blocked export and zero runner calls]
-    H -->|Separately authorized implementation| J[CIRCUIT_EXPORT decision]
+    H -->|Verified current context| J[CIRCUIT_EXPORT decision]
     J --> K[Restricted preview and REPRESENTATION decision]
     K --> L[Typed request and EXECUTION decision]
     L --> M[Existing M2 copy runner and RAW analysis]
@@ -70,15 +70,20 @@ is authorized merely because a model is confident.
 | [graph.py](../../../circuit_ir/graph.py) | Connection is the only canonical pin–net assignment; no geometry-based electrical repair |
 | [validation.py](../../../circuit_ir/validation.py) | Fresh M1 state; image reference/geometry and unresolved inference checks; asset resolution remains deferred |
 | [approval.py](../../../circuit_ir/approval.py) | Snapshot/report/context binding, CIRCUIT_EXPORT and REPRESENTATION are separate explicit decisions |
-| [exporter.py](../../../circuit_ir/exporter.py) | Manual-only initial admission; complete supported device/model subset, no arbitrary paths/directives |
+| [exporter.py](../../../circuit_ir/exporter.py) | Manual admission unchanged; image origin requires exact M3E admission; no arbitrary paths/directives |
 | [execution.py](../../../circuit_ir/execution.py) | Typed AC/TRAN/DC requests, separate ExecutionApproval and fresh composition |
 | [netlist_runner.py](../../../netlist_runner.py) | Public complete-chain runner, no arbitrary netlist-path shortcut; blocked chain means no files/runner |
 | [netlist_result_analysis.py](../../../netlist_result_analysis.py) | Exact generated trace mapping to existing algorithms |
 | [app.py](../../../app.py) | Current ASC upload/session condition review; no image uploader or v0.2 review workflow |
 
-## Image admission is a required future design gate
+## Image admission: original design gate and implemented M3E boundary
 
-Current `export_document` returns `EXPORT_UNSUPPORTED_FEATURE` for
+The design requirement below records the original M3A boundary. Prompt 046
+explicitly authorized its narrow domain implementation; [Promotion and Admission](promotion-and-admission.md)
+defines the exact optional context and approval digest binding. No M1 schema or
+validation rule changes. The actual runner handoff and image execution remain M3F.
+
+Without exact current M3E admission, `export_document` returns `EXPORT_UNSUPPORTED_FEATURE` for
 `metadata.origin != MANUAL` **or** non-null `source_image_reference`, even if M1
 is VALID and CIRCUIT_EXPORT was explicitly granted. A blocked preview cannot
 receive valid representation/execution approval. Conversion does not remove

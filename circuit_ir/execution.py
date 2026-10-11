@@ -276,10 +276,11 @@ def execution_approval_digest(approval: ExecutionApproval) -> str:
 
 
 def make_execution_approval(document, export_result, circuit_approval, representation_approval, request, *,
-                              approved: bool, model_context: tuple[str, str]) -> ExecutionApproval:
+                              approved: bool, model_context: tuple[str, str], image_admission=None) -> ExecutionApproval:
     if type(approved) is not bool:
         raise TypeError("approved must be a native bool")
-    verify_representation_approval(document, export_result, circuit_approval, representation_approval, model_context=model_context)
+    verify_representation_approval(document, export_result, circuit_approval, representation_approval,
+                                   model_context=model_context, image_admission=image_admission)
     _request_view(document, export_result, request)
     if not approved:
         raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Explicit condition approval is required.")
@@ -289,14 +290,15 @@ def make_execution_approval(document, export_result, circuit_approval, represent
 
 
 def verify_execution_approval(document, export_result, circuit_approval, representation_approval, request,
-                                execution_approval, *, model_context: tuple[str, str]) -> None:
+                                execution_approval, *, model_context: tuple[str, str], image_admission=None) -> None:
     if not isinstance(execution_approval, ExecutionApproval):
         raise TypeError("execution_approval must be ExecutionApproval")
     if execution_approval.contract_version != _APPROVAL or execution_approval.adapter_contract != _ADAPTER:
         raise ApprovalError("EXECUTION_VERSION_UNSUPPORTED", "contract_version", "Unsupported execution contract.")
     if not execution_approval.approved:
         raise ApprovalError("APPROVAL_NOT_GRANTED", "approved", "Conditions were not approved.")
-    verify_representation_approval(document, export_result, circuit_approval, representation_approval, model_context=model_context)
+    verify_representation_approval(document, export_result, circuit_approval, representation_approval,
+                                   model_context=model_context, image_admission=image_admission)
     _request_view(document, export_result, request)
     for field, expected in (("representation_approval_sha256", approval_digest(representation_approval)),
                             ("base_netlist_sha256", export_result.provenance.base_netlist_sha256),
@@ -385,11 +387,11 @@ class CompositionResult:
 
 
 def compose_execution_netlist(document, export_result, circuit_approval, representation_approval, request,
-                                execution_approval, *, model_context: tuple[str, str]) -> CompositionResult:
+                                execution_approval, *, model_context: tuple[str, str], image_admission=None) -> CompositionResult:
     """Fail closed with no artifact; no file I/O and no implicit review action."""
     try:
         verify_execution_approval(document, export_result, circuit_approval, representation_approval, request,
-                                    execution_approval, model_context=model_context)
+                                    execution_approval, model_context=model_context, image_admission=image_admission)
         directive, traces, source_map = _request_view(document, export_result, request)
         text = export_result.spice_text
         # Checked byte editor: exact regenerated base only, not general replacement.

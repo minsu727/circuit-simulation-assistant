@@ -1,7 +1,8 @@
 # Topology and uncertainty
 
 **M3D's implemented subset is fixed in the [Topology Contract](topology-contract.md).
-Broader review/conversion rules below remain proposed, not recognition claims.** The [candidate](candidate-contract.md)
+M3E's implemented [domain review/conversion](promotion-and-admission.md) is separate
+from broader proposed UI/authoring rules below, not recognition claims.** The [candidate](candidate-contract.md)
 holds hypotheses; only [reviewed conversion](review-contract.md) creates canonical
 M1 connections.
 

@@ -55,6 +55,12 @@ stable references and repeatable reconstruction. No UI or real simulator.
 
 ## M3E — Review, correction, M1 conversion and admission
 
+Prompt 046 implements the API/domain checkpoint in
+[Promotion and Admission](promotion-and-admission.md), including the explicitly
+authorized narrow M2 context extension. The minimal UI checkpoint is deliberately
+deferred by that prompt; it is not claimed implemented. Actual image execution
+and live extraction remain M3F, with separate approvals and controller integration.
+
 Use small checkpoints in order: review transactions; pure M1 projection;
 **image-admission contract review/authorization**; minimal UI integration.
 Return complete image-origin M1 documents or issues without a partial document.
@@ -68,7 +74,8 @@ Do not freeze proposed context names/signatures in advance.
 
 Gate: atomic edits, stale-revision rejection, exact independently authored M1
 projection, no approval restoration/import trust, current ASC/UI regression.
-If admission is deferred, clearly label conversion-only completion.
+If admission is deferred, clearly label conversion-only completion. It is now
+implemented for current confirmed/VALID replay-domain inputs; this does not close M3.
 
 ## M3F — Actual extraction and real E2E examples
 

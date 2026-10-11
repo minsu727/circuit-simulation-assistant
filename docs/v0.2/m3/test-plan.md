@@ -1,9 +1,40 @@
 # M3 evaluation and tests
 
 **M3A's original plan is retained below; M3B/M3C and the M3D offline topology
-lane are recorded as later checkpoints. No live recognition is measured.**
+lane are recorded as later checkpoints. M3E adds domain review/promotion/admission
+tests below. No live recognition is measured.**
 [Implementation Plan](implementation-plan.md) owns gates;
 [Vision Boundary](vision-boundary.md) owns consent and privacy.
+
+## M3E domain review, promotion and admission lane
+
+The [implemented contract](promotion-and-admission.md) has 94 focused tests:
+47 atomic review/serialization/security tests, 22 promotion/provenance/M1 boundary
+tests and 25 admission/staleness/M2 approval tests. The original 1,049 tests remain
+in the full repository suite.
+
+```powershell
+python -X utf8 -m unittest tests.test_m3_review tests.test_m3_promotion tests.test_m3_admission
+python -X utf8 -m unittest discover -s tests -p "test_*.py"
+python -m pip check
+git diff --check
+git status --short
+```
+
+Coverage includes all 16 existing prepared replays; explicit connected/separated
+crossing/gap decisions; ambiguous pin contact/ownership/ground; source polarity;
+missing/unclear values; MOS roles/profile/W/L and explicit bulk assignment;
+unsupported acknowledgment without fake substitution; atomic conflicts/stale
+callbacks; copied/invalidated confirmations; deterministic/reordered mapping;
+source preservation; strict archives that cannot revive confirmation; inert
+directives/paths; M1 confirmed-but-INVALID; changed source/review/document/report/
+ruleset/version; no automatic circuit/representation/execution approval.
+
+M2 tests use diagnostic eligibility and pure approval/preview verification only,
+never a runner or LTspice. The independent divider audit checks authored supply,
+resistor and ground memberships after M1 projection. Replay-domain success is
+not image recognition or physical simulation validation. Actual results and
+preservation audits are recorded in the M3E implementation checkpoint.
 
 ## M3D prepared-observation lane
 
