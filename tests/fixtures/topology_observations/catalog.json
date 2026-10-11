@@ -1,0 +1,118 @@
+{
+  "version": "m3-topology-replays-1",
+  "lane": "prepared-observations",
+  "cases": [
+    {
+      "case_id": "cross_ambiguous",
+      "file": "cross_ambiguous.json",
+      "sha256": "d13b614fc67f29ea3cc62fc687c401962a3d2d90d15edb4c72c0f89b5d2f3ecc",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "cross_dot",
+      "file": "cross_dot.json",
+      "sha256": "502635f39825bd0c50ff1dfe24ea63b01ee5725cf9d12adb43a8a52242c3bf80",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "cross_open",
+      "file": "cross_open.json",
+      "sha256": "d142e1fcbb5ab657fea21007f3b0ea5072d8a052267de6639f8b78e915ad7d38",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "divider",
+      "file": "divider.json",
+      "sha256": "f48db9062f3e5444e2ef5ed97c22f7afa7f308bcdda4118ecec8fff641af7165",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "missing_value",
+      "file": "missing_value.json",
+      "sha256": "23ce73f711d2f5a7795dfbea013a123781cc7a1abc5ce1ada0978634ef3a8cf1",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "near_gap",
+      "file": "near_gap.json",
+      "sha256": "302aa11f1f15315a962f3e6193938a51ddbb43421ba854ae915be87d1b4e3b92",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "nmos",
+      "file": "nmos.json",
+      "sha256": "5b8afa98d2dacc3680359ff2d7c5f1bf663365c445fa65f026a35184c17f7e91",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "nmos_bulk_unknown",
+      "file": "nmos_bulk_unknown.json",
+      "sha256": "8531b6f657243360cfcdd83f8c649663961af68e1df665290f66213d0f0024ed",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "pmos",
+      "file": "pmos.json",
+      "sha256": "2780e8dfbd91d9a945628eb008dcb553f48d338977ce7759a4b2e333aee8b908",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "rc",
+      "file": "rc.json",
+      "sha256": "56e31673794651107af8270dba697dca41b5bea18005dcff30fa2f39a5964b29",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "rlc",
+      "file": "rlc.json",
+      "sha256": "3d1c6f94816550efc05e3f0898852c929739f3ad34f88d75b2cccc49524e36f7",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "rotated_sources",
+      "file": "rotated_sources.json",
+      "sha256": "b7d0ab81642dc3e0567787fad05043d17462f99bb4097ea9c7c0de13a1f42b24",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "shared_labels",
+      "file": "shared_labels.json",
+      "sha256": "8669ebd3e72a31e1427d6c66c9899af286103c5644375b4f20be0c7f91765827",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "supply_unknown",
+      "file": "supply_unknown.json",
+      "sha256": "57f3053215657d12f9f16c16f3bcb8ccf29e2ab1ec0abc73ab41a88ac74e94aa",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "unreadable_value",
+      "file": "unreadable_value.json",
+      "sha256": "93472f2c3c428a97abf63ae02549e175e5aa2b4a8a9afbff86b87580b5102096",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    },
+    {
+      "case_id": "unsupported_bjt",
+      "file": "unsupported_bjt.json",
+      "sha256": "79935f8b99ff6dbe26318dfdab46e3ff6fb106b64ddfb9495fb8b494a26365a1",
+      "source": "repository-owned-svg-manual-transcription",
+      "truth_used_as_input": false
+    }
+  ]
+}

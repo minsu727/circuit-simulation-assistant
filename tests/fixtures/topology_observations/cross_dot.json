@@ -1,0 +1,765 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "82c1c63e46fe26972452c05f91fbf2312f392c882a15058b161bf6d02497e787",
+    "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+    "normalized_sha256": "259529b891c083f3fde01ae12c898a7690a04b0035edeb2dc512d6c5a5e725dc",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "reported_complete",
+  "observations": [
+    {
+      "id": "R1",
+      "kind": "symbol",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          180,
+          305,
+          100,
+          30
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R1.a",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            180,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R1",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R1.b",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            280,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R1",
+        "role": "b"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "text_R1",
+      "kind": "text",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          180,
+          265,
+          120,
+          30
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "1k",
+        "purpose": "value",
+        "component_ref": "R1",
+        "value": {
+          "raw_scalar": "1k",
+          "raw_unit": "ohm",
+          "notation": "printed_engineering",
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R2",
+      "kind": "symbol",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          730,
+          305,
+          100,
+          30
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R2"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R2.a",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            730,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R2",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R2.b",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            830,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R2",
+        "role": "b"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "text_R2",
+      "kind": "text",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          730,
+          265,
+          120,
+          30
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "10k",
+        "purpose": "value",
+        "component_ref": "R2",
+        "value": {
+          "raw_scalar": "10k",
+          "raw_unit": "ohm",
+          "notation": "printed_engineering",
+          "si_value": "10000",
+          "unit": "ohm"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R3",
+      "kind": "symbol",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          505,
+          140,
+          30,
+          100
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R3"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R3.a",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            140
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R3",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R3.b",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            240
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R3",
+        "role": "b"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "text_R3",
+      "kind": "text",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          505,
+          100,
+          120,
+          30
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "1k",
+        "purpose": "value",
+        "component_ref": "R3",
+        "value": {
+          "raw_scalar": "1k",
+          "raw_unit": "ohm",
+          "notation": "printed_engineering",
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R4",
+      "kind": "symbol",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          505,
+          450,
+          30,
+          100
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R4"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R4.a",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            450
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R4",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R4.b",
+      "kind": "pin",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            550
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R4",
+        "role": "b"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "text_R4",
+      "kind": "text",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          505,
+          410,
+          120,
+          30
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "10k",
+        "purpose": "value",
+        "component_ref": "R4",
+        "value": {
+          "raw_scalar": "10k",
+          "raw_unit": "ohm",
+          "notation": "printed_engineering",
+          "si_value": "10000",
+          "unit": "ohm"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "horizontal0",
+      "kind": "wire_segment",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            280,
+            320
+          ],
+          [
+            730,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "vertical0",
+      "kind": "wire_segment",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            240
+          ],
+          [
+            520,
+            450
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "left0",
+      "kind": "wire_segment",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            180,
+            320
+          ],
+          [
+            130,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "right0",
+      "kind": "wire_segment",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            830,
+            320
+          ],
+          [
+            900,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "top0",
+      "kind": "wire_segment",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            140
+          ],
+          [
+            520,
+            100
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "earth",
+      "kind": "ground",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": [
+          498,
+          550,
+          44,
+          40
+        ],
+        "points": [
+          [
+            520,
+            550
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "style": "signal"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "mark",
+      "kind": "junction",
+      "source_sha256": "c00c7434dc77414097787ca3ad2a1e78d55aa237e6db3b07508994f674ffa4ea",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            520,
+            320
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "wire_refs": [
+          "horizontal0",
+          "vertical0"
+        ],
+        "interpretation": "connected"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 # M3 implementation plan
 
-**M3A architecture with M3B fixtures and M3C offline observation foundation
-recorded below.** Topology/review/conversion/UI/admission and live inference
-remain proposed and require separate authorization. M3 is not closed.
+**M3A architecture, M3B fixtures, M3C observations and M3D unapproved topology
+are recorded below.** Review/conversion/UI/admission and live inference remain
+proposed and require separate authorization. M3 is not closed.
 
 ## Dependency order
 
@@ -248,3 +248,84 @@ M3D requires validated original-frame records/artifact, separate evidence-linked
 claims/constraints, resource bounds and independent partition/role/abstention
 tests. It must not merge by distance/confidence or invent body/ground/source/value.
 M2 image restrictions stay intact; M3 is not closed.
+
+## M3D topology reconstruction checkpoint
+
+Prompt 045, 2026-10-11: starting source
+`b6878d0c3ad2bf70164e07e049491f0c59ee1912`, historical local baseline 975 tests.
+The user supplied successful hosted run 38115371769 for that committed baseline;
+this task makes no network call and claims no new hosted validation. The existing
+root README modification is preserved byte-for-byte, with no staging.
+
+Implemented four modules: immutable unapproved topology records, conservative
+reconstruction, explicit serialization/digest and independent bounded evaluation.
+The [Topology Contract](topology-contract.md) fixes exact API/state/coordinate/
+evidence/limit semantics and M3E prerequisites. One narrow `circuit_image` export
+extension exposes only the reconstruction surface; evaluation reference records
+stay in their comparison module, never become final M1 Circuit IR.
+
+Sixteen separately hand-transcribed M3C responses, catalog and provenance README
+are distinct from independent M3B annotation targets. Predictions are constructed
+before truth loading. No expected.json data is used to author engine inputs.
+The original M3B fixtures and earlier M3C replay files remain byte-identical.
+
+Quality findings and fixes:
+
+- Exact contact tolerance is zero; nearby gaps and unexplained intersections
+  retain alternatives rather than joining. A certain dot cannot authorize an
+  uncertain conductor. An ambiguous pin/contact cannot attach through a second
+  nearby wire. No component body supplies an implicit conductive edge.
+- Contradictory contact evidence quarantines the whole affected positive group.
+  Conflicting physical-group labels cannot propagate equivalence to other wires.
+  Ground needs an observed lead endpoint; rail names do not invent sources.
+- Missing bulk, unsupported content, values and model/W/L stay unrepaired.
+  Topology resolution remains separate from conversion completeness and approval.
+- Initial divider/RC-family replay preparation omitted visibly drawn corner
+  dots. Independent junction comparison correctly rejected exact matches. The
+  missing observations were transcribed from public SVGs without golden edits.
+- The first 74-test focused run had one test setup failure: M3C correctly rejects
+  empty observations claiming complete coverage. The empty-set test now uses
+  partial coverage, asserts incomplete/review state, and its focused rerun passed.
+
+Final prepared-observation comparison:
+
+| Profile | Result |
+| --- | --- |
+| Unique supported exact topology | 12/12: divider, rc, missing_value, unreadable_value, rlc, nmos, pmos, cross_open, cross_dot, shared_labels, rotated_sources, supply_unknown |
+| Required pin assignments / joined pairs | 82/82 pins; 46/46 required joined pairs |
+| False added / missing primary joins | 0 / 0 across 16 prepared cases |
+| Authored required-review issues | 12/12, kind and localized target checked |
+| Ambiguous crossing / gap | Both local choices retained, correct abstention; excluded from unique exact denominator |
+| Missing bulk | 9 visible terminals, bulk unresolved; no inferred tie; excluded from exact denominator |
+| Unsupported BJT | Symbol and three unknown-role terminal records retained; unsupported and reviewed; role/anchor errors reported, excluded from supported exact denominator |
+| Corrupted predictions | Wrong joins/splits, D/S/polarity swaps, missed/duplicate objects, wrong labels/ground and wrong-target review are detected |
+
+These are scores for reconstruction **given prepared observations**, not actual
+AI extraction accuracy, held-out generalization, human adjudication or simulation
+success. Review precision and full alternative-circuit materialization are not
+claimed. M3D never calls M1 validation to establish image fidelity.
+
+Final local verification:
+
+| Check | Actual result |
+| --- | --- |
+| `python -X utf8 -m unittest discover -s tests -p "test_*.py"` | 1,049 tests in 501.015 s; failures 0, errors 0, skips 0; exit 0 |
+| M3D cases included in final suite | 74: 45 reconstruction/fail-closed + 29 evaluation; all pass |
+| Existing regression | Historical 975 tests retained, including M1/M2 and v0.1 behavior; all pass |
+| `python -m pip check` | No broken requirements found; exit 0; no dependencies added |
+| Tracked-file preservation | 414/422 starting files byte-identical; only package exports and seven authorized M3 documents changed |
+| Protected fixtures/source | All 66 M3B files and 12 prior M3C replay files byte-identical; no M1/M2/v0.1/packaging/requirements/CI change; root README bytes unchanged |
+| Public text/link audit | 69 local link/anchor occurrences resolve; no detected secret/email/personal absolute-path pattern; balanced fences; no trailing whitespace |
+| Git hygiene | `git diff --check` exit 0; LF→CRLF notices only; 26 new intended public files, zero staged; audit helpers/logs/temporary outputs ignored |
+
+Streamlit's existing bare-mode ScriptRunContext warnings appear in the unit/AppTest
+run, without failures. No actual LTspice or live extraction/API was invoked by
+this task. Local uncommitted verification is distinct from the supplied baseline
+hosted CI result.
+
+M3E remains next: exact-source-bound review/correction revisions, explicit choices,
+atomic stale-safe human confirmation, pure image-origin M1 conversion, unchanged
+M1 validation, and a separately specified/authorized image-aware admission gate.
+Current M2 restrictions and all export/representation/execution approvals remain
+unchanged. No UI, Vision/OCR/API, LTspice, generated image/netlist, build/release,
+dependency change or Git add/commit/push/tag operation is performed. M3 is open.

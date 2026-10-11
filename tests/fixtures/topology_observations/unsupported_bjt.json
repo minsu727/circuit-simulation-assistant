@@ -1,0 +1,272 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "bf95d9adea1dc5ac2dd689e13a1d2e13fd56bb020b119e23dc90b7f0c1009e5f",
+    "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+    "normalized_sha256": "8effd587f6eebce243a97eb68ca372f4b253d4a01012da10c1c6d0efd97ef6ee",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "reported_complete",
+  "observations": [
+    {
+      "id": "Q1",
+      "kind": "symbol",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": [
+          470,
+          190,
+          90,
+          290
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "unsupported",
+        "component_type": null,
+        "observed_name": "NPN",
+        "reference_text": "Q1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [
+          "unsupported_symbol"
+        ],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "Q1.base",
+      "kind": "pin",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            480,
+            330
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "Q1",
+        "role": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "Q1.collector",
+      "kind": "pin",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            550,
+            190
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "Q1",
+        "role": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "Q1.emitter",
+      "kind": "pin",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            550,
+            480
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "Q1",
+        "role": "unknown"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "input0",
+      "kind": "wire_segment",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            260,
+            330
+          ],
+          [
+            480,
+            330
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "earth",
+      "kind": "ground",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": [
+          528,
+          480,
+          44,
+          40
+        ],
+        "points": [
+          [
+            550,
+            480
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "style": "signal"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "vin",
+      "kind": "label",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": [
+          225,
+          295,
+          75,
+          32
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "VIN",
+        "attachment_ref": "input0"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "vout",
+      "kind": "label",
+      "source_sha256": "b1e6c0eb19e00dce2923f119a4522c3d95fb2095bc169ef868d7527b638775d3",
+      "geometry": {
+        "bbox": [
+          565,
+          190,
+          90,
+          32
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "VOUT",
+        "attachment_ref": null
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 # v0.2 M3 — Image-to-Circuit IR plan
 
-**M3A design, M3B owned fixture/evaluation foundation and M3C bounded intake,
-strict observations/static replay. No live extraction, topology reconstruction,
-review UI, conversion or image execution is implemented. M3 is not closed.**
+**M3A design, M3B fixtures, M3C bounded observations/static replay and M3D
+unapproved topology reconstruction are implemented in their recorded scopes.
+No live extraction, review UI, conversion or image execution. M3 is not closed.**
 Prepared 2026-10-09 (Asia/Seoul).
 
 Design goal: a clean printed textbook-style schematic image becomes an untrusted,
@@ -50,6 +50,7 @@ checkpoints below describe subsequent implementation without rewriting history.
 | [Fixture Annotations](fixture-annotations.md) | Implemented test-truth format, outcome/unknown rules and independent catalog |
 | [Evaluation Protocol](evaluation-protocol.md) | Future matching/denominators, topology-first success, resource proposals and report boundary |
 | [Implemented Observation Contract](observation-contract.md) | M3C APIs, wire keys, coordinates, limits, replay, diagnostics and security |
+| [Implemented Topology Contract](topology-contract.md) | M3D APIs, evidence, conservative connectivity, bounds, comparison and M3E prerequisites |
 
 ## M3B implemented boundary
 
@@ -71,8 +72,11 @@ M3C implements only bytes intake → strict original-frame observations → stat
 replay in `circuit_image`, with separate handcrafted response examples. Exact
 [APIs/limits/wire contract](observation-contract.md) and
 [verification checkpoint](implementation-plan.md#m3c-intake-observation-and-replay-checkpoint)
-are documented. No live/local recognizer, graph, review or executable circuit is
-produced. Root README and existing M1/M2/v0.1 functionality are preserved.
+are documented. M3D additionally reconstructs unapproved candidate connectivity;
+[its contract](topology-contract.md) and [checkpoint](implementation-plan.md#m3d-topology-reconstruction-checkpoint)
+record the prepared-observation evaluation boundary. No live/local recognizer,
+reviewed M1 document or executable image circuit is produced. Root README and
+existing M1/M2/v0.1 functionality are preserved.
 
 Image → local safe intake → untrusted observations → candidate topology/value
 claims → explicit correction and snapshot confirmation → image-origin M1 document

@@ -1,8 +1,39 @@
 # M3 evaluation and tests
 
-**Plan only: no images, goldens, tests, recognition metrics or live calls are
-created/run in M3A.** [Implementation Plan](implementation-plan.md) owns gates;
+**M3A's original plan is retained below; M3B/M3C and the M3D offline topology
+lane are recorded as later checkpoints. No live recognition is measured.**
+[Implementation Plan](implementation-plan.md) owns gates;
 [Vision Boundary](vision-boundary.md) owns consent and privacy.
+
+## M3D prepared-observation lane
+
+Implemented reconstruction and independent comparison are specified by the
+[Topology Contract](topology-contract.md). Run the focused 74 tests with:
+
+```powershell
+python -X utf8 -m unittest tests.test_m3_topology tests.test_m3_topology_evaluation
+```
+
+There are 45 reconstruction/fail-closed tests and 29 evaluation tests (catalog
+loops use subtests, not inflated test counts). Sixteen separately prepared M3C
+inputs are source-bound to unchanged M3B PNGs. Golden targets are loaded only
+after prediction reconstruction. Twelve unique-supported topologies pass exact
+comparison: 82/82 pins and 46/46 required joined pairs; no false added or missing
+primary joins. All 12 authored required-review issues surface on the correct
+localized targets. Ambiguous crossing and gap retain both local choices without
+selection; missing bulk and unsupported BJT are excluded from exact eligibility.
+
+Negative predictions test wrong joins/splits, polarity and D/S swaps, wrong type,
+missed/duplicate pins/components, wrong label attachment and added ground. The
+scorer rejects stale evidence, invalid target identities/references and counts
+wrong-target review as a miss. Geometry matching is one-to-one before role/type
+comparison; max-cardinality/weight/tie behavior is explicitly exercised. These
+are reconstruction scores **given prepared observations**, not recognition scores.
+
+No live adapter, network, LTspice, review UI, promotion or admission is exercised.
+Broader recognition, held-out data and review-precision tests below remain future
+work. Full-suite results are recorded in the
+[M3D checkpoint](implementation-plan.md#m3d-topology-reconstruction-checkpoint).
 
 ## Owned independent fixture strategy
 

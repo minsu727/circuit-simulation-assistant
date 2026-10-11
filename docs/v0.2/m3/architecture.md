@@ -1,6 +1,7 @@
 # M3 architecture
 
-**Proposed contract, not implemented.** [Index](README.md) owns scope/baseline;
+**Broader architecture remains proposed. M3C observations and M3D unapproved
+topology now have [implemented contracts](topology-contract.md).** [Index](README.md) owns scope/baseline;
 [Candidate Contract](candidate-contract.md) owns records and
 [Review Contract](review-contract.md) owns promotion.
 

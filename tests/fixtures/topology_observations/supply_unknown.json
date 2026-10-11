@@ -1,0 +1,497 @@
+{
+  "version": "m3-observations-1",
+  "image": {
+    "source_identity_sha256": "5a8b44d7941ec8d97b8abdb9696287dbdf1e84354a2e2eda98208e9cb7dea005",
+    "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+    "normalized_sha256": "7a21196eac2de35c04c04acab14f55738f7d94d703a7a4586749483f3195f820",
+    "transform_sha256": "9f2b93d074d6d898321375f9cfdb821d8c48424f395325f9a2b1d9556f209503"
+  },
+  "coordinate_frame": "original_pixels",
+  "provider": {
+    "provider_id": "static-replay",
+    "provider_version": "1",
+    "model_id": null,
+    "model_version": null,
+    "adapter_version": "m3-static-1",
+    "catalog_version": "m3-images-1",
+    "prompt_version": null,
+    "mode": "replay"
+  },
+  "coverage": "reported_complete",
+  "observations": [
+    {
+      "id": "R1",
+      "kind": "symbol",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          285,
+          230,
+          30,
+          100
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R1.a",
+      "kind": "pin",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            300,
+            230
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R1",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R1.b",
+      "kind": "pin",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            300,
+            330
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R1",
+        "role": "b"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "text_R1",
+      "kind": "text",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          285,
+          190,
+          120,
+          30
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "10k",
+        "purpose": "value",
+        "component_ref": "R1",
+        "value": {
+          "raw_scalar": "10k",
+          "raw_unit": "ohm",
+          "notation": "printed_engineering",
+          "si_value": "10000",
+          "unit": "ohm"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R2",
+      "kind": "symbol",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          600,
+          395,
+          100,
+          30
+        ],
+        "points": [],
+        "orientation": "r0"
+      },
+      "data": {
+        "classification": "supported",
+        "component_type": "resistor",
+        "observed_name": "resistor",
+        "reference_text": "R2"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R2.a",
+      "kind": "pin",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            600,
+            410
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R2",
+        "role": "a"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "R2.b",
+      "kind": "pin",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            700,
+            410
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {
+        "component_ref": "R2",
+        "role": "b"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "text_R2",
+      "kind": "text",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          600,
+          355,
+          120,
+          30
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "1k",
+        "purpose": "value",
+        "component_ref": "R2",
+        "value": {
+          "raw_scalar": "1k",
+          "raw_unit": "ohm",
+          "notation": "printed_engineering",
+          "si_value": "1000",
+          "unit": "ohm"
+        }
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "supply0",
+      "kind": "wire_segment",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            300,
+            170
+          ],
+          [
+            300,
+            230
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "output0",
+      "kind": "wire_segment",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            300,
+            330
+          ],
+          [
+            300,
+            410
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "output1",
+      "kind": "wire_segment",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            300,
+            410
+          ],
+          [
+            600,
+            410
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "return0",
+      "kind": "wire_segment",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": null,
+        "points": [
+          [
+            700,
+            410
+          ],
+          [
+            820,
+            410
+          ]
+        ],
+        "orientation": "unknown"
+      },
+      "data": {},
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "vdd",
+      "kind": "supply_label",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          270,
+          125,
+          75,
+          32
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "VDD",
+        "attachment_ref": "supply0"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "vout",
+      "kind": "label",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          540,
+          370,
+          90,
+          32
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "VOUT",
+        "attachment_ref": "output1"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    },
+    {
+      "id": "return_label",
+      "kind": "label",
+      "source_sha256": "8e10fb8ad475f47db4c7d961904a03f1eff1b97e64907a58a600d43edb6ae5aa",
+      "geometry": {
+        "bbox": [
+          770,
+          430,
+          105,
+          32
+        ],
+        "points": [],
+        "orientation": "unknown"
+      },
+      "data": {
+        "raw_text": "RETURN",
+        "attachment_ref": "return0"
+      },
+      "confidence": {
+        "score": null,
+        "basis": "synthetic",
+        "calibrated": false
+      },
+      "uncertainty": {
+        "state": "provisional",
+        "reasons": [],
+        "related_refs": [],
+        "alternatives": []
+      }
+    }
+  ]
+}

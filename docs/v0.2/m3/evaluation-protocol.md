@@ -1,9 +1,11 @@
 # M3B future evaluation protocol — `m3-evaluation-1`
 
-This is an evaluation **specification**, not an implemented recognition/topology
-scorer. Inputs are the [owned catalog](../../../tests/fixtures/schematic_images/README.md)
-and [independent annotation contract](fixture-annotations.md). All current tests
-check fixture integrity only. There are no accuracy, latency or cost measurements.
+This specification now has a bounded **M3D prepared-observation topology scorer**
+documented in the [Topology Contract](topology-contract.md); broader recognition,
+reviewed-snapshot and live performance evaluation remains proposed. Inputs use
+the [owned catalog](../../../tests/fixtures/schematic_images/README.md) and
+[independent annotation contract](fixture-annotations.md). There are no actual
+AI recognition-accuracy, live-extraction latency or API-cost measurements.
 
 ## Future input and report boundary
 

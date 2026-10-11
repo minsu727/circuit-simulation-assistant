@@ -1,8 +1,9 @@
 # M3 candidate contract
 
 **M3C observation/intake subset is implemented in the
-[Observation Contract](observation-contract.md); candidate/review/promotion layers
-below remain proposed.** This contract is separate
+[Observation Contract](observation-contract.md); M3D hypotheses/claims are fixed
+in the [Topology Contract](topology-contract.md). Review/promotion layers below
+remain proposed.** This contract is separate
 from [M1 data types](../m1/data-model.md), especially the existing M1 `Candidate`
 record, which contains only an ambiguity ID/description. Do not extend that
 record into a Vision response.
@@ -22,7 +23,9 @@ No object references back to parents; use bounded IDs and immutable snapshots.
 The planned namespace is a separate `circuit_image` package, not `circuit_ir`.
 Names below describe responsibilities, not a public API for the future layers.
 The implemented observation subset fixes the former M3C wire placeholders;
-Claim/CandidateCircuit/review/conversion are not implemented.
+M3D now implements its separate unapproved topology view and evidence-linked
+claims. The broader CandidateCircuit/review/conversion proposals below are not
+implemented.
 
 ## Minimal proposed records
 
