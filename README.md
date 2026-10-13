@@ -38,37 +38,42 @@ Review Target `V(vout)`, select/enter Reference `V(vin)`, and confirm Decade / 1
 
 ## Screenshots
 
-Trace 이름과 승인 조건을 확인한 뒤 AC 결과를 측정하고, 소자 값별 비교와 Transient / DC 응답으로 이어지는 흐름입니다.
+Natural-language request → editable simulation settings → explicit approval → LTspice execution → deterministic measurements and analysis summary.
+
+### 1. Circuit & Request
 
 <p align="center">
-  <a href="docs/screenshots/01_trace_suggestion.png"><img src="docs/screenshots/01_trace_suggestion.png" alt="Trace suggestion for V(out), required-signal warning, and disabled execution approval" width="800"></a><br>
-  <em>Review trace suggestions and required signals before approving execution.</em>
+  <a href="docs/screenshots/01_request.png"><img src="docs/screenshots/01_request.png" alt="Circuit upload and natural-language AC simulation request" width="800"></a><br>
+  <em>Upload an LTspice schematic and describe the simulation in natural language.</em>
 </p>
+
+### 2. Simulation Review
 
 <p align="center">
-  <a href="docs/screenshots/02_ac_response.png"><img src="docs/screenshots/02_ac_response.png" alt="AC voltage gain versus frequency with the minus 3 dB level and bandwidth marker" width="800"></a><br>
-  <em>Inspect deterministic AC gain and the interpolated -3 dB bandwidth.</em>
+  <a href="docs/screenshots/02_simulation_review.png"><img src="docs/screenshots/02_simulation_review.png" alt="Editable AC settings for target and reference signals, sweep range, points, and measurements" width="800"></a><br>
+  <em>Review and edit the extracted simulation settings before approval.</em>
 </p>
 
-<details>
-<summary>Parameter Sweep · Transient · DC Sweep 결과 더 보기</summary>
+### 3. Approve & Run
 
 <p align="center">
-  <a href="docs/screenshots/03_parameter_sweep_results.png"><img src="docs/screenshots/03_parameter_sweep_results.png" alt="R1 parameter sweep comparison table with gain, bandwidth, and measurement status" width="800"></a><br>
-  <em>Compare gain and bandwidth across R1 values, retaining unavailable bandwidth at 5kΩ.</em>
+  <a href="docs/screenshots/03_approve_run.png"><img src="docs/screenshots/03_approve_run.png" alt="Reviewed AC conditions and explicit execution approval before Run Simulation" width="800"></a><br>
+  <em>Explicitly approve the reviewed conditions, then run LTspice on an execution copy.</em>
 </p>
+
+### 4. Measured Results — Featured Result
 
 <p align="center">
-  <a href="docs/screenshots/04_transient_waveform.png"><img src="docs/screenshots/04_transient_waveform.png" alt="Transient voltage waveforms for V(vout) and V(vin)" width="800"></a><br>
-  <em>Inspect output and reference voltage waveforms in the time domain.</em>
+  <a href="docs/screenshots/04_ac_results.png"><img src="docs/screenshots/04_ac_results.png" alt="Measured AC low-frequency gain, minus 3 dB level, bandwidth, and gain-frequency graph" width="900"></a><br>
+  <em>Inspect deterministic AC measurements and the gain-frequency curve with its -3 dB crossing.</em>
 </p>
+
+### 5. Analysis Summary
 
 <p align="center">
-  <a href="docs/screenshots/05_dc_sweep.png"><img src="docs/screenshots/05_dc_sweep.png" alt="DC sweep of V(vout) against V2 with the selected sweep point marked" width="800"></a><br>
-  <em>Inspect V(vout) across a V2 sweep and locate the selected operating point.</em>
+  <a href="docs/screenshots/05_analysis_summary.png"><img src="docs/screenshots/05_analysis_summary.png" alt="Analysis Summary with confirmed AC measurements and their availability status" width="800"></a><br>
+  <em>Review confirmed measurements in the Analysis Summary; circuit-cause inference is separate.</em>
 </p>
-
-</details>
 
 ## Architecture
 
